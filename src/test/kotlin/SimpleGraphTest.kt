@@ -15,170 +15,231 @@ internal class SimpleGraphTest {
     @BeforeEach
     fun setup() {
         g = SimpleGraph()
-        m = getFieldValue("m", g, g.javaClass)
+        // create test graph with vertices { 1, 2, 3, 4, 5, 6 }
+        // and edges { (1,2), (1,3), (3,4), (3,5) }
+        m = HashMap()
+        m[1] = mutableSetOf(2, 3)
+        m[2] = mutableSetOf(1)
+        m[3] = mutableSetOf(1, 4, 5)
+        m[4] = mutableSetOf(3)
+        m[5] = mutableSetOf(3)
+        m[6] = mutableSetOf() // isolated vertex
+        setFieldValue("m", g, g.javaClass, m)
+    }
+
+    private fun assertVerticesExist(vararg verts: Int) {
+        for (v in verts) {
+            assertContains(m, v)
+        }
+    }
+
+    private fun assertVerticesDontExist(vararg verts: Int) {
+        for (v in verts) {
+            assertTrue { v !in m }
+        }
+    }
+
+    private fun assertEdgesExist(vararg edges: Pair<Int, Int>) {
+        for ((v1, v2) in edges) {
+            assertContains(m, v1)
+            assertContains(m, v2)
+            assertTrue { v2 in m[v1]!! }
+            assertTrue { v1 in m[v2]!! }
+        }
+    }
+
+    private fun assertEdgesDontExist(vararg edges: Pair<Int, Int>) {
+        for ((v1, v2) in edges) {
+            if (v1 in m) {
+                assertTrue { v2 !in m[v1]!! }
+            }
+            if (v2 in m) {
+                assertTrue { v1 !in m[v2]!! }
+            }
+        }
+    }
+
+    private fun assertEdgeCountEquals(expectedEdgeCount: Int) {
+        assertEquals(expectedEdgeCount, m.values.sumOf { it.size } / 2)
     }
 
     @Test
     fun `add new vertex`() {
-        assertTrue { g.addVertex(1) }
-        assertContains(m, 1)
-        assertEquals(1, m.size)
-        assertEquals(0, m[1]!!.size)
+        assertTrue { g.addVertex(7) }
+        // check state of graph
+        assertVerticesExist(1, 2, 3, 4, 5, 6, 7)
+        assertEquals(7, m.size)
+        assertEdgesExist(Pair(1,2), Pair(1,3), Pair(3,4), Pair(3,5))
+        assertEdgeCountEquals(4)
+        assertEquals(0, m[7]!!.size)
     }
 
     @Test
     fun `add existing vertex`() {
-        g.addVertex(1)
         assertFalse { g.addVertex(1) }
-        assertContains(m, 1)
-        assertEquals(1, m.size)
+        // check state of graph
+        assertVerticesExist(1, 2, 3, 4, 5, 6)
+        assertEquals(6, m.size)
+        assertEdgesExist(Pair(1,2), Pair(1,3), Pair(3,4), Pair(3,5))
+        assertEdgeCountEquals(4)
     }
 
     @Test
-    fun `remove existing vertex`() {
-        g.addVertex(1)
-        assertTrue { g.removeVertex(1) }
-        assertTrue { 1 !in m }
-        assertEquals(0, m.size)
+    fun `remove existing isolated vertex`() {
+        assertTrue { g.removeVertex(6) }
+        // check state of the graph
+        assertVerticesExist(1, 2, 3, 4, 5)
+        assertEquals(5, m.size)
+        assertEdgesExist(Pair(1,2), Pair(1,3), Pair(3,4), Pair(3,5))
+        assertEdgeCountEquals(4)
+    }
+
+    @Test
+    fun `remove existing vertex that has neighbors`() {
+        assertTrue { g.removeVertex(3) }
+        // check state of the graph
+        assertVerticesExist(1, 2, 4, 5, 6)
+        assertEquals(5, m.size)
+        assertEdgesExist(Pair(1,2))
+        assertEdgeCountEquals(1)
     }
 
     @Test
     fun `remove vertex that is not part of the graph`() {
-        g.addVertex(1)
-        assertFalse { g.removeVertex(2) }
-        assertTrue { 1 in m }
-        assertTrue { 2 !in m }
-        assertEquals(1, m.size)
+        assertFalse { g.removeVertex(7) }
+        // check state of graph
+        assertVerticesExist(1, 2, 3, 4, 5, 6)
+        assertEquals(6, m.size)
+        assertEdgesExist(Pair(1,2), Pair(1,3), Pair(3,4), Pair(3,5))
+        assertEdgeCountEquals(4)
     }
 
     @Test
     fun `check if vertex is contained that is not there`() {
-        assertFalse { 1 in g }
+        assertFalse { 7 in g }
     }
 
     @Test
     fun `check if vertex is contained that is present`() {
-        g.addVertex(7)
-        assertTrue{ 7 in g }
+        assertTrue{ 1 in g }
     }
 
     @Test
     fun `checking degree of missing vertex throws exception`() {
-        assertThrows<IllegalArgumentException> { g.degreeOf(3) }
+        assertThrows<IllegalArgumentException> { g.degreeOf(7) }
     }
 
     @Test
     fun `degree of isolated vertex is 0`() {
-        g.addVertex(7)
-        assertEquals(0, g.degreeOf(7))
+        assertEquals(0, g.degreeOf(6))
     }
 
     @Test
-    fun `check degrees in path of length 3`() {
-        g.addVertex(1)
-        g.addVertex(2)
-        g.addVertex(3)
-        g.addEdge(1,2)
-        g.addEdge(2,3)
-
-        assertEquals(1, g.degreeOf(1))
-        assertEquals(2, g.degreeOf(2))
-        assertEquals(1, g.degreeOf(3))
-
+    fun `check degrees of vertices with neighbors`() {
+        assertEquals(2, g.degreeOf(1))
+        assertEquals(1, g.degreeOf(2))
+        assertEquals(3, g.degreeOf(3))
+        assertEquals(1, g.degreeOf(4))
+        assertEquals(1, g.degreeOf(5))
     }
 
     @Test
     fun `add edge between existing vertices`() {
-        g.addVertex(1)
-        g.addVertex(2)
-        assertTrue { g.addEdge(1, 2) }
-        assertContains(m[1]!!, 2)
-        assertContains(m[2]!!, 1)
+        assertTrue { g.addEdge(1, 6) }
+        // check state of graph
+        assertVerticesExist(1, 2, 3, 4, 5, 6)
+        assertEquals(6, m.size)
+        assertEdgesExist(Pair(1,2), Pair(1,3), Pair(3,4), Pair(3,5), Pair(1,6))
+        assertEdgeCountEquals(5)
     }
 
     @Test
     fun `add edge between vertices that both do not exist`() {
-        assertThrows<IllegalArgumentException> { g.addEdge(1, 2) }
-        assertTrue { 1 !in m }
-        assertTrue { 2 !in m }
-        assertEquals(0, m.size)
+        assertThrows<IllegalArgumentException> { g.addEdge(7, 8) }
+        // check state of graph
+        assertVerticesExist(1, 2, 3, 4, 5, 6)
+        assertEquals(6, m.size)
+        assertEdgesExist(Pair(1,2), Pair(1,3), Pair(3,4), Pair(3,5))
+        assertEdgeCountEquals(4)
     }
 
     @Test
     fun `add edge between vertices where the first one does not exist`() {
-        g.addVertex(1)
-        assertThrows<IllegalArgumentException> { g.addEdge(2, 1) }
-        assertTrue { 1 in m }
-        assertTrue { 2 !in m }
-        assertEquals(1, m.size)
-        assertTrue { 2 !in m[1]!! }
+        assertThrows<IllegalArgumentException> { g.addEdge(7, 1) }
+        // check state of graph
+        assertVerticesExist(1, 2, 3, 4, 5, 6)
+        assertEquals(6, m.size)
+        assertEdgesExist(Pair(1,2), Pair(1,3), Pair(3,4), Pair(3,5))
+        assertEdgeCountEquals(4)
     }
 
     @Test
     fun `add edge between vertices where the second one does not exist`() {
-        g.addVertex(1)
-        assertThrows<IllegalArgumentException> { g.addEdge(1, 2) }
-        assertTrue { 1 in m }
-        assertTrue { 2 !in m }
-        assertEquals(1, m.size)
-        assertTrue { 2 !in m[1]!! }
+        assertThrows<IllegalArgumentException> { g.addEdge(1, 7) }
+        // check state of graph
+        assertVerticesExist(1, 2, 3, 4, 5, 6)
+        assertEquals(6, m.size)
+        assertEdgesExist(Pair(1,2), Pair(1,3), Pair(3,4), Pair(3,5))
+        assertEdgeCountEquals(4)
     }
 
     @Test
     fun `add edge that already exists`() {
-        g.addVertex(1)
-        g.addVertex(2)
-        g.addEdge(1, 2)
         assertFalse { g.addEdge(1, 2) }
-        assertContains(m[1]!!, 2)
-        assertContains(m[2]!!, 1)
+        // check state of graph
+        assertVerticesExist(1, 2, 3, 4, 5, 6)
+        assertEquals(6, m.size)
+        assertEdgesExist(Pair(1,2), Pair(1,3), Pair(3,4), Pair(3,5))
+        assertEdgeCountEquals(4)
     }
 
     @Test
     fun `remove existing edge`() {
-        g.addVertex(1)
-        g.addVertex(2)
-        g.addEdge(1, 2)
         assertTrue { g.removeEdge(1, 2) }
-        assertContains(m, 1)
-        assertContains(m, 2)
-        assertTrue { 2 !in m[1]!! }
-        assertTrue { 1 !in m[2]!! }
+        // check state of graph
+        assertVerticesExist(1, 2, 3, 4, 5, 6)
+        assertEquals(6, m.size)
+        assertEdgesExist(Pair(1,3), Pair(3,4), Pair(3,5))
+        assertEdgeCountEquals(3)
     }
 
     @Test
     fun `remove edge that does not exist between two existing vertices`() {
-        g.addVertex(1)
-        g.addVertex(2)
-        assertFalse { g.removeEdge(1, 2) }
-        assertContains(m, 1)
-        assertContains(m, 2)
-        assertTrue { 2 !in m[1]!! }
-        assertTrue { 1 !in m[2]!! }
+        assertFalse { g.removeEdge(1, 6) }
+        // check state of graph
+        assertVerticesExist(1, 2, 3, 4, 5, 6)
+        assertEquals(6, m.size)
+        assertEdgesExist(Pair(1,2), Pair(1,3), Pair(3,4), Pair(3,5))
+        assertEdgeCountEquals(4)
     }
 
     @Test
     fun `remove edge that does not exist between two vertices that do not exist`() {
-        assertThrows<IllegalArgumentException> { g.removeEdge(1, 2) }
-        assertTrue { 1 !in m }
-        assertTrue { 2 !in m }
+        assertThrows<IllegalArgumentException> { g.removeEdge(7, 8) }
+        // check state of graph
+        assertVerticesExist(1, 2, 3, 4, 5, 6)
+        assertEquals(6, m.size)
+        assertEdgesExist(Pair(1,2), Pair(1,3), Pair(3,4), Pair(3,5))
+        assertEdgeCountEquals(4)
     }
 
     @Test
     fun `remove edge that does not exist between two vertices where the first one does not exist`() {
-        g.addVertex(2)
-        assertThrows<IllegalArgumentException> { g.removeEdge(1, 2) }
-        assertTrue { 1 !in m }
-        assertContains(m, 2)
-        assertTrue { 1 !in m[2]!! }
+        assertThrows<IllegalArgumentException> { g.removeEdge(7, 1) }
+        // check state of graph
+        assertVerticesExist(1, 2, 3, 4, 5, 6)
+        assertEquals(6, m.size)
+        assertEdgesExist(Pair(1,2), Pair(1,3), Pair(3,4), Pair(3,5))
+        assertEdgeCountEquals(4)
     }
 
     @Test
     fun `remove edge that does not exist between two vertices where the second one does not exist`() {
-        g.addVertex(2)
-        assertThrows<IllegalArgumentException> { g.removeEdge(2, 1) }
-        assertTrue { 1 !in m }
-        assertContains(m, 2)
-        assertTrue { 1 !in m[2]!! }
+        assertThrows<IllegalArgumentException> { g.removeEdge(1, 7) }
+        // check state of graph
+        assertVerticesExist(1, 2, 3, 4, 5, 6)
+        assertEquals(6, m.size)
+        assertEdgesExist(Pair(1,2), Pair(1,3), Pair(3,4), Pair(3,5))
+        assertEdgeCountEquals(4)
     }
 }
