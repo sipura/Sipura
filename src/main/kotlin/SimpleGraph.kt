@@ -10,6 +10,15 @@ open class SimpleGraph<V> {
         private set
 
 
+    /**
+     * Uses an immutable set because no elements should be removed from this set. The set that is
+     * returned is used in the internal data structure of this class. Removing elements from this
+     * set may cause incorrect behaviour of the graph in future calls.
+     */
+    val V: Set<V>
+        get() = map.keys
+
+
     private fun assertVertexExists(v: V, vertexName: String) {
         if (v !in map) throw IllegalArgumentException("Graph does not contain vertex $vertexName.")
     }
@@ -69,12 +78,23 @@ open class SimpleGraph<V> {
         return v1 in map[v2]!!
     }
 
+    fun forEachEdge(f: (V, V) -> Unit) {
+        val visited = mutableSetOf<V>()
+        for (v1 in map.keys) {
+            visited.add(v1)
+            for (v2 in map[v1]!!) {
+                if (v2 in visited) continue
+                f(v1, v2)
+            }
+        }
+    }
+
     /**
      * Uses an immutable set because no elements should be removed from this set. The set that is
      * returned is used in the internal data structure of this class. Removing elements from this
      * set may cause incorrect behaviour of the graph in future calls.
      */
-    fun neighbours(v: V): Set<V> {
+    fun neighbors(v: V): Set<V> {
         assertVertexExists(v, "v")
         return map[v]!!
     }

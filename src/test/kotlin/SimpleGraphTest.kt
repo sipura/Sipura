@@ -334,4 +334,59 @@ internal class SimpleGraphTest {
         g.removeVertex(1)
         assertEquals(5, g.n)
     }
+
+    @Test
+    fun `adding a new vertex also adds it to V`() {
+        assertFalse { 7 in g.V }
+        g.addVertex(7)
+        assertTrue { 7 in g.V }
+    }
+
+    @Test
+    fun `adding an existing vertex does not change V`() {
+        assertTrue { 6 in g.V }
+        g.addVertex(6)
+        assertTrue { 6 in g.V }
+    }
+
+    @Test
+    fun `removing an existing vertex also removes it from V`() {
+        assertTrue { 6 in g.V }
+        g.removeVertex(6)
+        assertFalse { 6 in g.V }
+    }
+
+    @Test
+    fun `removing a vertex that does not exist does not change V`() {
+        assertFalse { 7 in g.V }
+        g.removeVertex(7)
+        assertFalse { 7 in g.V }
+    }
+
+    @Test
+    fun `forEachEdge iterates over m edges`() {
+        var count = 0
+        g.forEachEdge { _, _ -> count++ }
+        assertEquals(g.m, count)
+    }
+
+    @Test
+    fun `neighbor set of isolated vertex is empty`() {
+        assertTrue { g.neighbors(6).isEmpty() }
+    }
+
+    @Test
+    fun `neighbor set of leaf has one vertex`() {
+        assertEquals(setOf(3), g.neighbors(5))
+    }
+
+    @Test
+    fun `neighbor set of vertex with multiple neighbors contains all neighbors`() {
+        assertEquals(setOf(1, 4, 5), g.neighbors(3))
+    }
+
+    @Test
+    fun `neighbors throws exception if vertex does not exist`() {
+        assertThrows<IllegalArgumentException> { g.neighbors(7) }
+    }
 }
