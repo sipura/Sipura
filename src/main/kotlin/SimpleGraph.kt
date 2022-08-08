@@ -1,50 +1,84 @@
 open class SimpleGraph<V> {
 
-    // If v1 and v2 are connected, then *v1 in m[v2]* and *v2 in m[v1]* has to hold
-    private val m = HashMap<V, MutableSet<V>>()
+    // If v1 and v2 are connected, then *v1 in map[v2]* and *v2 in map[v1]* has to hold
+    private val map = HashMap<V, MutableSet<V>>()
 
-    operator fun contains(v: V): Boolean = v in m
+    val n: Int
+        get() = map.size
+
+    var m: Int = 0
+        private set
+
+
+    private fun assertVertexExists(v: V, vertexName: String) {
+        if (v !in map) throw IllegalArgumentException("Graph does not contain vertex $vertexName.")
+    }
+
+    operator fun contains(v: V): Boolean = v in map
 
     fun addVertex(v: V): Boolean {
-        return if (v !in m) {
-            m[v] = mutableSetOf()
+        return if (v !in map) {
+            map[v] = mutableSetOf()
             true
         } else false
     }
 
     fun removeVertex(v: V): Boolean {
-        if (v !in m) return false
-        for (nb in m[v]!!) {
-            m[nb]!!.remove(v)
+        if (v !in map) return false
+        for (nb in map[v]!!) {
+            map[nb]!!.remove(v)
         }
-        m.remove(v)
+        m -= map[v]!!.size
+        map.remove(v)
         return true
     }
 
     fun degreeOf(v: V): Int {
-        if (v !in m) throw IllegalArgumentException("Graph does not contain the given vertex.")
-        return m[v]!!.size
+        assertVertexExists(v, "v")
+        return map[v]!!.size
     }
 
     fun addEdge(v1: V, v2: V): Boolean {
-        if (v1 !in m) throw IllegalArgumentException("Graph does not contain v1.")
-        if (v2 !in m) throw IllegalArgumentException("Graph does not contain v2.")
+        assertVertexExists(v1, "v1")
+        assertVertexExists(v2, "v2")
 
-        if (v1 in m[v2]!!) return false
+        if (v1 in map[v2]!!) return false
 
-        m[v1]!!.add(v2)
-        m[v2]!!.add(v1)
+        map[v1]!!.add(v2)
+        map[v2]!!.add(v1)
+        m++
         return true
     }
 
     fun removeEdge(v1: V, v2: V): Boolean {
-        if (v1 !in m) throw IllegalArgumentException("Graph does not contain v1.")
-        if (v2 !in m) throw IllegalArgumentException("Graph does not contain v2.")
+        assertVertexExists(v1, "v1")
+        assertVertexExists(v2, "v2")
 
-        if (v1 !in m[v2]!!) return false
+        if (v1 !in map[v2]!!) return false
 
-        m[v1]!!.remove(v2)
-        m[v2]!!.remove(v1)
+        map[v1]!!.remove(v2)
+        map[v2]!!.remove(v1)
+        m--
         return true
     }
+
+    fun hasEdge(v1: V, v2: V): Boolean {
+        assertVertexExists(v1, "v1")
+        assertVertexExists(v2, "v2")
+
+        return v1 in map[v2]!!
+    }
+
 }
+
+
+
+
+
+
+
+
+
+
+
+

@@ -10,57 +10,58 @@ import kotlin.test.assertTrue
 internal class SimpleGraphTest {
 
     lateinit var g: SimpleGraph<Int>
-    lateinit var m: HashMap<Int, MutableSet<Int>>
+    lateinit var map: HashMap<Int, MutableSet<Int>>
 
     @BeforeEach
     fun setup() {
         g = SimpleGraph()
         // create test graph with vertices { 1, 2, 3, 4, 5, 6 }
         // and edges { (1,2), (1,3), (3,4), (3,5) }
-        m = HashMap()
-        m[1] = mutableSetOf(2, 3)
-        m[2] = mutableSetOf(1)
-        m[3] = mutableSetOf(1, 4, 5)
-        m[4] = mutableSetOf(3)
-        m[5] = mutableSetOf(3)
-        m[6] = mutableSetOf() // isolated vertex
-        setFieldValue("m", g, g.javaClass, m)
+        map = HashMap()
+        map[1] = mutableSetOf(2, 3)
+        map[2] = mutableSetOf(1)
+        map[3] = mutableSetOf(1, 4, 5)
+        map[4] = mutableSetOf(3)
+        map[5] = mutableSetOf(3)
+        map[6] = mutableSetOf() // isolated vertex
+        setFieldValue("map", g, g.javaClass, map)
+        setFieldValue("m", g, g.javaClass, 4)
     }
 
     private fun assertVerticesExist(vararg verts: Int) {
         for (v in verts) {
-            assertContains(m, v)
+            assertContains(map, v)
         }
     }
 
     private fun assertVerticesDontExist(vararg verts: Int) {
         for (v in verts) {
-            assertTrue { v !in m }
+            assertTrue { v !in map }
         }
     }
 
     private fun assertEdgesExist(vararg edges: Pair<Int, Int>) {
         for ((v1, v2) in edges) {
-            assertContains(m, v1)
-            assertContains(m, v2)
-            assertTrue { v2 in m[v1]!! }
-            assertTrue { v1 in m[v2]!! }
+            assertContains(map, v1)
+            assertContains(map, v2)
+            assertTrue { v2 in map[v1]!! }
+            assertTrue { v1 in map[v2]!! }
         }
     }
 
     private fun assertEdgesDontExist(vararg edges: Pair<Int, Int>) {
         for ((v1, v2) in edges) {
-            if (v1 in m) {
-                assertTrue { v2 !in m[v1]!! }
+            if (v1 in map) {
+                assertTrue { v2 !in map[v1]!! }
             }
-            if (v2 in m) {
-                assertTrue { v1 !in m[v2]!! }
+            if (v2 in map) {
+                assertTrue { v1 !in map[v2]!! }
             }
         }
     }
 
     private fun assertEdgeCountEquals(expectedEdgeCount: Int) {
-        assertEquals(expectedEdgeCount, m.values.sumOf { it.size } / 2)
+        assertEquals(expectedEdgeCount, map.values.sumOf { it.size } / 2)
     }
 
     @Test
@@ -68,10 +69,10 @@ internal class SimpleGraphTest {
         assertTrue { g.addVertex(7) }
         // check state of graph
         assertVerticesExist(1, 2, 3, 4, 5, 6, 7)
-        assertEquals(7, m.size)
+        assertEquals(7, map.size)
         assertEdgesExist(Pair(1,2), Pair(1,3), Pair(3,4), Pair(3,5))
         assertEdgeCountEquals(4)
-        assertEquals(0, m[7]!!.size)
+        assertEquals(0, map[7]!!.size)
     }
 
     @Test
@@ -79,7 +80,7 @@ internal class SimpleGraphTest {
         assertFalse { g.addVertex(1) }
         // check state of graph
         assertVerticesExist(1, 2, 3, 4, 5, 6)
-        assertEquals(6, m.size)
+        assertEquals(6, map.size)
         assertEdgesExist(Pair(1,2), Pair(1,3), Pair(3,4), Pair(3,5))
         assertEdgeCountEquals(4)
     }
@@ -89,7 +90,7 @@ internal class SimpleGraphTest {
         assertTrue { g.removeVertex(6) }
         // check state of the graph
         assertVerticesExist(1, 2, 3, 4, 5)
-        assertEquals(5, m.size)
+        assertEquals(5, map.size)
         assertEdgesExist(Pair(1,2), Pair(1,3), Pair(3,4), Pair(3,5))
         assertEdgeCountEquals(4)
     }
@@ -99,7 +100,7 @@ internal class SimpleGraphTest {
         assertTrue { g.removeVertex(3) }
         // check state of the graph
         assertVerticesExist(1, 2, 4, 5, 6)
-        assertEquals(5, m.size)
+        assertEquals(5, map.size)
         assertEdgesExist(Pair(1,2))
         assertEdgeCountEquals(1)
     }
@@ -109,7 +110,7 @@ internal class SimpleGraphTest {
         assertFalse { g.removeVertex(7) }
         // check state of graph
         assertVerticesExist(1, 2, 3, 4, 5, 6)
-        assertEquals(6, m.size)
+        assertEquals(6, map.size)
         assertEdgesExist(Pair(1,2), Pair(1,3), Pair(3,4), Pair(3,5))
         assertEdgeCountEquals(4)
     }
@@ -148,7 +149,7 @@ internal class SimpleGraphTest {
         assertTrue { g.addEdge(1, 6) }
         // check state of graph
         assertVerticesExist(1, 2, 3, 4, 5, 6)
-        assertEquals(6, m.size)
+        assertEquals(6, map.size)
         assertEdgesExist(Pair(1,2), Pair(1,3), Pair(3,4), Pair(3,5), Pair(1,6))
         assertEdgeCountEquals(5)
     }
@@ -158,7 +159,7 @@ internal class SimpleGraphTest {
         assertThrows<IllegalArgumentException> { g.addEdge(7, 8) }
         // check state of graph
         assertVerticesExist(1, 2, 3, 4, 5, 6)
-        assertEquals(6, m.size)
+        assertEquals(6, map.size)
         assertEdgesExist(Pair(1,2), Pair(1,3), Pair(3,4), Pair(3,5))
         assertEdgeCountEquals(4)
     }
@@ -168,7 +169,7 @@ internal class SimpleGraphTest {
         assertThrows<IllegalArgumentException> { g.addEdge(7, 1) }
         // check state of graph
         assertVerticesExist(1, 2, 3, 4, 5, 6)
-        assertEquals(6, m.size)
+        assertEquals(6, map.size)
         assertEdgesExist(Pair(1,2), Pair(1,3), Pair(3,4), Pair(3,5))
         assertEdgeCountEquals(4)
     }
@@ -178,7 +179,7 @@ internal class SimpleGraphTest {
         assertThrows<IllegalArgumentException> { g.addEdge(1, 7) }
         // check state of graph
         assertVerticesExist(1, 2, 3, 4, 5, 6)
-        assertEquals(6, m.size)
+        assertEquals(6, map.size)
         assertEdgesExist(Pair(1,2), Pair(1,3), Pair(3,4), Pair(3,5))
         assertEdgeCountEquals(4)
     }
@@ -188,7 +189,7 @@ internal class SimpleGraphTest {
         assertFalse { g.addEdge(1, 2) }
         // check state of graph
         assertVerticesExist(1, 2, 3, 4, 5, 6)
-        assertEquals(6, m.size)
+        assertEquals(6, map.size)
         assertEdgesExist(Pair(1,2), Pair(1,3), Pair(3,4), Pair(3,5))
         assertEdgeCountEquals(4)
     }
@@ -198,7 +199,7 @@ internal class SimpleGraphTest {
         assertTrue { g.removeEdge(1, 2) }
         // check state of graph
         assertVerticesExist(1, 2, 3, 4, 5, 6)
-        assertEquals(6, m.size)
+        assertEquals(6, map.size)
         assertEdgesExist(Pair(1,3), Pair(3,4), Pair(3,5))
         assertEdgeCountEquals(3)
     }
@@ -208,7 +209,7 @@ internal class SimpleGraphTest {
         assertFalse { g.removeEdge(1, 6) }
         // check state of graph
         assertVerticesExist(1, 2, 3, 4, 5, 6)
-        assertEquals(6, m.size)
+        assertEquals(6, map.size)
         assertEdgesExist(Pair(1,2), Pair(1,3), Pair(3,4), Pair(3,5))
         assertEdgeCountEquals(4)
     }
@@ -218,7 +219,7 @@ internal class SimpleGraphTest {
         assertThrows<IllegalArgumentException> { g.removeEdge(7, 8) }
         // check state of graph
         assertVerticesExist(1, 2, 3, 4, 5, 6)
-        assertEquals(6, m.size)
+        assertEquals(6, map.size)
         assertEdgesExist(Pair(1,2), Pair(1,3), Pair(3,4), Pair(3,5))
         assertEdgeCountEquals(4)
     }
@@ -228,7 +229,7 @@ internal class SimpleGraphTest {
         assertThrows<IllegalArgumentException> { g.removeEdge(7, 1) }
         // check state of graph
         assertVerticesExist(1, 2, 3, 4, 5, 6)
-        assertEquals(6, m.size)
+        assertEquals(6, map.size)
         assertEdgesExist(Pair(1,2), Pair(1,3), Pair(3,4), Pair(3,5))
         assertEdgeCountEquals(4)
     }
@@ -238,7 +239,7 @@ internal class SimpleGraphTest {
         assertThrows<IllegalArgumentException> { g.removeEdge(1, 7) }
         // check state of graph
         assertVerticesExist(1, 2, 3, 4, 5, 6)
-        assertEquals(6, m.size)
+        assertEquals(6, map.size)
         assertEdgesExist(Pair(1,2), Pair(1,3), Pair(3,4), Pair(3,5))
         assertEdgeCountEquals(4)
     }
