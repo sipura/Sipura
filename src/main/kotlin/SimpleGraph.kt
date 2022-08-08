@@ -69,6 +69,16 @@ open class SimpleGraph<V> {
         return v1 in map[v2]!!
     }
 
+    /**
+     * Uses an immutable set because no elements should be removed from this set. The set that is
+     * returned is used in the internal data structure of this class. Removing elements from this
+     * set may cause incorrect behaviour of the graph in future calls.
+     */
+    fun neighbours(v: V): Set<V> {
+        assertVertexExists(v, "v")
+        return map[v]!!
+    }
+
 }
 
 
