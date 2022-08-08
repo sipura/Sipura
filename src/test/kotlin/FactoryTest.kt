@@ -5,6 +5,8 @@ import kotlin.test.assertEquals
 
 internal class FactoryTest {
 
+    private val mapName = "map"
+    
     @Nested
     internal inner class Path {
 
@@ -18,14 +20,14 @@ internal class FactoryTest {
         fun `path of length 0 is just empty graph`() {
             val g = Factory.createPath(0)
             val correctMap = mapOf<Int, Set<Int>>()
-            assertEquals(correctMap, getFieldValue("m", g, g.javaClass))
+            assertEquals(correctMap, getFieldValue(mapName, g, g.javaClass))
         }
 
         @Test
         fun `path of length 1 is one isolated vertex`() {
             val g = Factory.createPath(1)
             val correctMap = mapOf(1 to emptySet<Int>())
-            assertEquals(correctMap, getFieldValue("m", g, g.javaClass))
+            assertEquals(correctMap, getFieldValue(mapName, g, g.javaClass))
         }
 
         @Test
@@ -38,7 +40,7 @@ internal class FactoryTest {
                 4 to setOf(3, 5),
                 5 to setOf(4)
             )
-            assertEquals(correctMap, getFieldValue("m", g, g.javaClass))
+            assertEquals(correctMap, getFieldValue(mapName, g, g.javaClass))
         }
 
         @Test
@@ -51,7 +53,7 @@ internal class FactoryTest {
             )
             for (i in 2 until n) correctMap[i] = setOf(i - 1, i + 1)
 
-            assertEquals(correctMap, getFieldValue("m", g, g.javaClass))
+            assertEquals(correctMap, getFieldValue(mapName, g, g.javaClass))
         }
     }
 
@@ -73,7 +75,7 @@ internal class FactoryTest {
                 2 to setOf(1,3),
                 3 to setOf(1,2),
             )
-            assertEquals(correctMap, getFieldValue("m", g, g.javaClass))
+            assertEquals(correctMap, getFieldValue(mapName, g, g.javaClass))
         }
 
         @Test
@@ -86,7 +88,7 @@ internal class FactoryTest {
                 4 to setOf(3,5),
                 5 to setOf(1,4),
             )
-            assertEquals(correctMap, getFieldValue("m", g, g.javaClass))
+            assertEquals(correctMap, getFieldValue(mapName, g, g.javaClass))
         }
 
         @Test
@@ -99,7 +101,7 @@ internal class FactoryTest {
             )
             for (i in 2 until n) correctMap[i] = setOf(i-1, i+1)
 
-            assertEquals(correctMap, getFieldValue("m", g, g.javaClass))
+            assertEquals(correctMap, getFieldValue(mapName, g, g.javaClass))
         }
     }
 
@@ -121,7 +123,7 @@ internal class FactoryTest {
                 2 to setOf(1,3),
                 3 to setOf(1,2),
             )
-            assertEquals(correctMap, getFieldValue("m", g, g.javaClass))
+            assertEquals(correctMap, getFieldValue(mapName, g, g.javaClass))
         }
 
     }
@@ -137,7 +139,7 @@ internal class FactoryTest {
         @Test
         fun `if both sides have size 0, you get the empty graph`() {
             val g = Factory.createBipartite(0, 0)
-            assertEquals(HashMap<Int, Set<Int>>(), getFieldValue("m", g, g.javaClass))
+            assertEquals(HashMap<Int, Set<Int>>(), getFieldValue(mapName, g, g.javaClass))
         }
 
         @Test
@@ -145,7 +147,7 @@ internal class FactoryTest {
             val g = Factory.createBipartite(13, 0)
             val correctMap = HashMap<Int, Set<Int>>()
             for(i in 1..13) correctMap[i] = emptySet()
-            assertEquals(correctMap, getFieldValue("m", g, g.javaClass))
+            assertEquals(correctMap, getFieldValue(mapName, g, g.javaClass))
         }
     }
 
@@ -161,7 +163,7 @@ internal class FactoryTest {
         fun `create star of two vertices`() {
             val g = Factory.createStar(2)
             val correctMap = mapOf(1 to setOf(2), 2 to setOf(1))
-            assertEquals(correctMap, getFieldValue("m", g, g.javaClass))
+            assertEquals(correctMap, getFieldValue(mapName, g, g.javaClass))
         }
 
         @Test
@@ -173,7 +175,7 @@ internal class FactoryTest {
                 correctMap[1]!!.add(i)
                 correctMap[i] = mutableSetOf(1)
             }
-            assertEquals(correctMap, getFieldValue("m", g, g.javaClass))
+            assertEquals(correctMap, getFieldValue(mapName, g, g.javaClass))
         }
 
     }
