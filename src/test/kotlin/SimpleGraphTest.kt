@@ -243,4 +243,95 @@ internal class SimpleGraphTest {
         assertEdgesExist(Pair(1,2), Pair(1,3), Pair(3,4), Pair(3,5))
         assertEdgeCountEquals(4)
     }
+
+    @Test
+    fun `m is increased by 1 after adding a new edge`() {
+        assertEquals(4, g.m)
+        g.addEdge(1,6)
+        assertEquals(5, g.m)
+    }
+
+    @Test
+    fun `m is not increased when an edge is added that already exists`() {
+        assertEquals(4, g.m)
+        g.addEdge(1,2)
+        assertEquals(4, g.m)
+    }
+
+    @Test
+    fun `m is decreased by 1 after an existing edge gets removed`() {
+        assertEquals(4, g.m)
+        g.removeEdge(1,2)
+        assertEquals(3, g.m)
+    }
+
+    @Test
+    fun `m is not decreased when an edge is removed that does not exist`() {
+        assertEquals(4, g.m)
+        g.removeEdge(1,6)
+        assertEquals(4, g.m)
+    }
+
+    @Test
+    fun `m is decreased when a vertex with neighbours is removed`() {
+        assertEquals(4, g.m)
+        g.removeVertex(3)
+        assertEquals(1, g.m)
+    }
+
+    @Test
+    fun `m stays the same when an isolated vertex is removed`() {
+        assertEquals(4, g.m)
+        g.removeVertex(6)
+        assertEquals(4, g.m)
+    }
+
+    @Test
+    fun `m stays the same when an isolated vertex is added`() {
+        assertEquals(4, g.m)
+        g.addVertex(7)
+        assertEquals(4, g.m)
+    }
+
+    @Test
+    fun `edge can be checked after it is added`() {
+        assertFalse { g.hasEdge(1,6) }
+        g.addEdge(1,6)
+        assertTrue { g.hasEdge(1,6) }
+    }
+
+    @Test
+    fun `edge is gone after it gets removed`() {
+        assertTrue { g.hasEdge(1,3) }
+        g.removeEdge(1,3)
+        assertFalse { g.hasEdge(1,3) }
+    }
+
+    @Test
+    fun `edge still exists after unsuccessful addition`() {
+        assertTrue { g.hasEdge(1,3) }
+        g.addEdge(1,3)
+        assertTrue { g.hasEdge(1,3) }
+    }
+
+    @Test
+    fun `edge still does not exist after unsuccessful removal`() {
+        assertFalse { g.hasEdge(1,6) }
+        g.removeEdge(1,6)
+        assertFalse { g.hasEdge(1,6) }
+    }
+
+    @Test
+    fun `vertex count increases by 1 after a vertex is added`() {
+        assertEquals(6, g.n)
+        g.addVertex(7)
+        assertEquals(7, g.n)
+    }
+
+    @Test
+    fun `vertex count decreases by 1 after a vertex is removed`() {
+        assertEquals(6, g.n)
+        g.removeVertex(1)
+        assertEquals(5, g.n)
+    }
 }
