@@ -125,6 +125,17 @@ open class SimpleGraph<V> {
         return map[v]!!
     }
 
+    /**
+     * shallow copy
+     */
+    fun copy(): SimpleGraph<V> {
+        val copy = SimpleGraph<V>()
+
+        for (v in V) copy.addVertex(v)
+        forEachEdge { v1, v2 -> copy.addEdge(v1, v2) }
+
+        return copy
+    }
 }
 
 

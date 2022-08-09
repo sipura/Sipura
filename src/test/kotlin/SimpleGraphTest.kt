@@ -389,4 +389,22 @@ internal class SimpleGraphTest {
     fun `neighbors throws exception if vertex does not exist`() {
         assertThrows<IllegalArgumentException> { g.neighbors(7) }
     }
+
+    @Test
+    fun `copy is the same`() {
+        val copy = g.copy()
+
+        assertEquals(copy.m, g.m)
+        copy.forEachEdge { v1, v2 -> assertTrue { g.hasEdge(v1, v2) } }
+
+    }
+
+    @Test
+    fun `copy can be modified for integer-vertices`() {
+        val copy = g.copy()
+        copy.removeVertex(1)
+
+        assertFalse { 1 in copy }
+        assertTrue{ 1 in g }
+    }
 }
