@@ -236,4 +236,22 @@ internal class ConnectivityTest {
         }
     }
 
+    @Nested
+    internal inner class ShortestPath {
+
+        @Test
+        fun `shortest path between leafs in path5 is 1-2-3-4-5`() {
+            assertEquals(listOf(1,2,3,4,5), Connectivity.shortestPath(path5, 1, 5))
+        }
+
+        @Test
+        fun `shortest path between corners of star goes through center`() {
+            assertEquals(listOf(2,1,3), Connectivity.shortestPath(star4plus1, 2, 3))
+        }
+
+        @Test
+        fun `shortest path in complete graph is just one edge`() {
+            assertEquals(listOf(2,5), Connectivity.shortestPath(Factory.createCompleteGraph(6), 2, 5))
+        }
+    }
 }

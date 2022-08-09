@@ -81,23 +81,21 @@ object Connectivity {
         return getConnectedComponent(g, g.V.first()).size == g.n
     }
 
-    fun <V> distance(g: SimpleGraph<V>, v1: V, v2: V): Int {
+    fun <V> distance(g: SimpleGraph<V>, v1: V, v2: V): Int = shortestPath(g, v1, v2).size - 1
+
+    fun <V> shortestPath(g: SimpleGraph<V>, vStart: V, vEnd: V): List<V> {
         if (g.n == 0) throw IllegalArgumentException("Connectivity for empty graph is ambiguous, so exception for good measure")
-        if (v1 !in g.V) throw IllegalArgumentException("Graph does not contain vertex v1")
-        if (v2 !in g.V) throw IllegalArgumentException("Graph does not contain vertex v2")
+        if (vStart !in g.V) throw IllegalArgumentException("Graph does not contain vertex vStart")
+        if (vEnd !in g.V) throw IllegalArgumentException("Graph does not contain vertex vEnd")
 
-        val bfsIter = Traversal.breadthFirstSearchIterator(g, v1)
-
+        val bfs = Traversal.breadthFirstSearchIterator(g, vEnd)
         val dist = HashMap<V, Int>()
         for (v in g.V) dist[v] = Int.MAX_VALUE
-        dist[v1] = 0
-
+        dist[vEnd] = 0
         val prev = HashMap<V, V>()
 
-        while (bfsIter.hasNext()) {
-            val curr : V = bfsIter.next()
-
-            if (curr == v2) return dist[curr]!!
+        for (curr in bfs) {
+            if (curr == vStart) break
 
             for (nb in g.neighbors(curr)) {
                 if (dist[curr]!! + 1 < dist[nb]!!) {
@@ -107,7 +105,11 @@ object Connectivity {
             }
         }
 
-        throw IllegalStateException("there does not exist a path between the two vertices")
-    }
+        if (dist[vStart] == Int.MAX_VALUE) throw IllegalStateException()
 
+        // restore path
+        val l = LinkedList(listOf(vStart))
+        while (l.last != vEnd) { l.addLast(prev[l.last]) }
+        return l
+    }
 }
