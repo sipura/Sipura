@@ -165,6 +165,11 @@ internal class SimpleGraphTest {
     }
 
     @Test
+    fun `error when trying to add a loop`() {
+        assertThrows<IllegalArgumentException> { g.addEdge(1, 1) }
+    }
+
+    @Test
     fun `add edge between vertices where the first one does not exist`() {
         assertThrows<IllegalArgumentException> { g.addEdge(7, 1) }
         // check state of graph

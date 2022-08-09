@@ -65,6 +65,7 @@ open class SimpleGraph<V> {
     fun addEdge(v1: V, v2: V): Boolean {
         assertVertexExists(v1, "v1")
         assertVertexExists(v2, "v2")
+        if (v1 == v2) throw IllegalArgumentException("no loops are allowed")
 
         if (v1 in map[v2]!!) return false
 
