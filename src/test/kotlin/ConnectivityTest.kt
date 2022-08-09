@@ -143,6 +143,35 @@ internal class ConnectivityTest {
     }
 
     @Nested
+    internal inner class NumberOfConnectedComponents {
+
+        @Test
+        fun `empty graph has 0 components`() {
+            val g = SimpleGraph<Int>() // is empty
+            assertEquals(0, Connectivity.numberOfConnectedComponents(g))
+        }
+
+        @Test
+        fun `path5 has one component`() {
+            assertEquals(1, Connectivity.numberOfConnectedComponents(path5))
+        }
+
+        @Test
+        fun `check that union of path3, path2 and one isolated vertex has 3 components`() {
+
+            val g = SimpleGraph<Int>()
+            for (v in 1..6) g.addVertex(v)
+            g.addEdge(1, 2)
+            g.addEdge(2, 3)
+            g.addEdge(4, 5)
+
+            val res = Connectivity.numberOfConnectedComponents(g)
+            assertEquals(3, res)
+        }
+
+    }
+
+    @Nested
     internal inner class IsConnected {
 
         @Test
@@ -158,37 +187,6 @@ internal class ConnectivityTest {
         @Test
         fun `star4 with one isolated vertex is not connected`() {
             assertFalse { Connectivity.isConnected(star4plus1) }
-        }
-    }
-
-    @Nested
-    internal inner class IsTree {
-
-        @Test
-        fun `one isolated vertex is a (trivial) tree`() {
-            val g = SimpleGraph<Int>()
-            g.addVertex(7)
-            assertTrue { Connectivity.isTree(g) }
-        }
-
-        @Test
-        fun `triangle is not a tree`() {
-            assertFalse { Connectivity.isTree(Factory.createCycle(3)) }
-        }
-
-        @Test
-        fun `path5 is a tree`() {
-            assertTrue { Connectivity.isTree(path5) }
-        }
-
-        @Test
-        fun `star4 with one isolated vertex is not a tree`() {
-            assertFalse { Connectivity.isTree(star4plus1) }
-        }
-
-        @Test
-        fun `bipartite graph of size (4, 7) is not a tree`() {
-            assertFalse { Connectivity.isTree(Factory.createBipartite(4, 7)) }
         }
     }
 

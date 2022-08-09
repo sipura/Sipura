@@ -33,12 +33,26 @@ object Connectivity {
         return result
     }
 
+    /**
+     * Unlike [listAllConnectedComponents] does not need to store all components in memory at the same time
+     */
+    fun <V> numberOfConnectedComponents(g: SimpleGraph<V>): Int {
+        val seen = HashSet<V>()
+        var count = 0
+
+        for (v in g.V) {
+            if (v !in seen) {
+                seen.addAll(getConnectedComponent(g, v))
+                count++
+            }
+        }
+
+        return count
+    }
+
     fun <V> isConnected(g: SimpleGraph<V>): Boolean {
         if (g.n == 0) throw IllegalArgumentException("Connectivity for empty graph is ambiguous, so exception for good measure")
         return getConnectedComponent(g, g.V.first()).size == g.n
     }
-
-    fun <V> isTree(g: SimpleGraph<V>): Boolean =
-        (g.m == g.n - 1) && isConnected(g) // fail fast: checking edge count runs in constant time
 
 }
