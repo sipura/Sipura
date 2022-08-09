@@ -1,8 +1,13 @@
-import org.junit.jupiter.api.Assertions.*
+import Factory.createCompleteGraph
+import Factory.createPath
+import Factory.createStar
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import kotlin.test.assertEquals
 
 internal class GraphTraitTest {
 
@@ -203,6 +208,29 @@ internal class GraphTraitTest {
         @Test
         fun `empty graph is not cubic`() {
             assertThrows<IllegalArgumentException>{GraphTrait.isCubic(SimpleGraph<Int>())}
+        }
+    }
+
+    @Nested
+    internal inner class HIndex {
+        @Test
+        fun star4() {
+            assertEquals(1, GraphTrait.hIndex(createStar(4)))
+        }
+
+        @Test
+        fun path5() {
+            assertEquals(2, GraphTrait.hIndex(createPath(5)))
+        }
+
+        @Test
+        fun clique8() {
+            assertEquals(7, GraphTrait.hIndex(createCompleteGraph(8)))
+        }
+
+        @Test
+        fun emptyGraph() {
+            assertThrows<IllegalArgumentException> {  GraphTrait.hIndex(SimpleGraph<Int>()) }
         }
     }
 }

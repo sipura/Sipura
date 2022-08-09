@@ -407,4 +407,23 @@ internal class SimpleGraphTest {
         assertFalse { 1 in copy }
         assertTrue{ 1 in g }
     }
+
+    @Test
+    fun `check max-degree for graph with maximal degree of 3`() {
+        assertEquals(3, g.maxDegree())
+    }
+
+    @Test
+    fun `graph of isolated vertices has maximal degree of 0`() {
+        val g1 = SimpleGraph<Int>()
+        g1.addVertex(1)
+        g1.addVertex(2)
+        assertEquals(0, g1.maxDegree())
+    }
+
+    @Test
+    fun `path has maximal degree of 2`() {
+        assertEquals(2, Factory.createPath(7).maxDegree())
+    }
+
 }

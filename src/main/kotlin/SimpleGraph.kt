@@ -136,6 +136,11 @@ open class SimpleGraph<V> {
 
         return copy
     }
+
+    /**
+     * runtime: O([n])  ->  for every vertex, the degree gets checked in constant time
+     */
+    fun maxDegree(): Int = V.maxOf { degreeOf(it) }
 }
 
 
