@@ -6,7 +6,7 @@ import kotlin.test.assertEquals
 internal class FactoryTest {
 
     private val mapName = "map"
-    
+
     @Nested
     internal inner class Path {
 
@@ -71,9 +71,9 @@ internal class FactoryTest {
         fun `cycle of length 3 is a triangle`() {
             val g = Factory.createCycle(3)
             val correctMap = mapOf(
-                1 to setOf(2,3),
-                2 to setOf(1,3),
-                3 to setOf(1,2),
+                1 to setOf(2, 3),
+                2 to setOf(1, 3),
+                3 to setOf(1, 2),
             )
             assertEquals(correctMap, getFieldValue(mapName, g, g.javaClass))
         }
@@ -82,11 +82,11 @@ internal class FactoryTest {
         fun `cycle of length 5 is correct`() {
             val g = Factory.createCycle(5)
             val correctMap = mapOf(
-                1 to setOf(2,5),
-                2 to setOf(1,3),
-                3 to setOf(2,4),
-                4 to setOf(3,5),
-                5 to setOf(1,4),
+                1 to setOf(2, 5),
+                2 to setOf(1, 3),
+                3 to setOf(2, 4),
+                4 to setOf(3, 5),
+                5 to setOf(1, 4),
             )
             assertEquals(correctMap, getFieldValue(mapName, g, g.javaClass))
         }
@@ -97,9 +97,9 @@ internal class FactoryTest {
             val g = Factory.createCycle(n)
             val correctMap = mutableMapOf(
                 1 to setOf(2, n),
-                n to setOf(1, n-1),
+                n to setOf(1, n - 1),
             )
-            for (i in 2 until n) correctMap[i] = setOf(i-1, i+1)
+            for (i in 2 until n) correctMap[i] = setOf(i - 1, i + 1)
 
             assertEquals(correctMap, getFieldValue(mapName, g, g.javaClass))
         }
@@ -117,11 +117,11 @@ internal class FactoryTest {
 
         @Test
         fun `complete graph of size 3 is a triangle`() {
-            val g = Factory.createCycle(3)
+            val g = Factory.createCompleteGraph(3)
             val correctMap = mapOf(
-                1 to setOf(2,3),
-                2 to setOf(1,3),
-                3 to setOf(1,2),
+                1 to setOf(2, 3),
+                2 to setOf(1, 3),
+                3 to setOf(1, 2),
             )
             assertEquals(correctMap, getFieldValue(mapName, g, g.javaClass))
         }
@@ -146,7 +146,7 @@ internal class FactoryTest {
         fun `if one side has size 0, the other side has isolated vertices`() {
             val g = Factory.createBipartite(13, 0)
             val correctMap = HashMap<Int, Set<Int>>()
-            for(i in 1..13) correctMap[i] = emptySet()
+            for (i in 1..13) correctMap[i] = emptySet()
             assertEquals(correctMap, getFieldValue(mapName, g, g.javaClass))
         }
     }

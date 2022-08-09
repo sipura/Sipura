@@ -53,10 +53,10 @@ object Factory {
     fun createBipartite(sizeA: Int, sizeB: Int): SimpleGraph<Int> {
         if (sizeA < 0 || sizeB < 0) throw IllegalArgumentException()
         return SimpleGraph<Int>().apply {
-            (1..sizeA+sizeB).forEach { addVertex(it) }
+            (1..(sizeA + sizeB)).forEach { addVertex(it) }
             for (i in 1..sizeA) {
-                for (j in sizeA + 1..sizeA + sizeB) {
-                    if (i != j) addEdge(i, j)
+                for (j in (sizeA + 1)..(sizeA + sizeB)) {
+                    addEdge(i, j)
                 }
             }
         }

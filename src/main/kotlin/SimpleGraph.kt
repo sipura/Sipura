@@ -23,8 +23,14 @@ open class SimpleGraph<V> {
         if (v !in map) throw IllegalArgumentException("Graph does not contain vertex $vertexName.")
     }
 
+    /**
+     * runtime: O(1)  ->  constant
+     */
     operator fun contains(v: V): Boolean = v in map
 
+    /**
+     * runtime: O(1)  ->  constant
+     */
     fun addVertex(v: V): Boolean {
         return if (v !in map) {
             map[v] = mutableSetOf()
@@ -32,6 +38,9 @@ open class SimpleGraph<V> {
         } else false
     }
 
+    /**
+     * runtime: O([degreeOf] [v])  ->  each neighbour needs to be updated that [v] is not in its neighbourhood anymore
+     */
     fun removeVertex(v: V): Boolean {
         if (v !in map) return false
         for (nb in map[v]!!) {
@@ -42,11 +51,17 @@ open class SimpleGraph<V> {
         return true
     }
 
+    /**
+     * runtime: O(1)  ->  constant
+     */
     fun degreeOf(v: V): Int {
         assertVertexExists(v, "v")
         return map[v]!!.size
     }
 
+    /**
+     * runtime: O(1)  ->  constant
+     */
     fun addEdge(v1: V, v2: V): Boolean {
         assertVertexExists(v1, "v1")
         assertVertexExists(v2, "v2")
@@ -59,6 +74,9 @@ open class SimpleGraph<V> {
         return true
     }
 
+    /**
+     * runtime: O(1)  ->  constant
+     */
     fun removeEdge(v1: V, v2: V): Boolean {
         assertVertexExists(v1, "v1")
         assertVertexExists(v2, "v2")
@@ -71,6 +89,9 @@ open class SimpleGraph<V> {
         return true
     }
 
+    /**
+     * runtime: O(1)  ->  constant
+     */
     fun hasEdge(v1: V, v2: V): Boolean {
         assertVertexExists(v1, "v1")
         assertVertexExists(v2, "v2")
@@ -78,6 +99,9 @@ open class SimpleGraph<V> {
         return v1 in map[v2]!!
     }
 
+    /**
+     * runtime: O( [m] * [f] )  ->  calls [f] for each edge
+     */
     fun forEachEdge(f: (V, V) -> Unit) {
         val visited = mutableSetOf<V>()
         for (v1 in map.keys) {
@@ -93,6 +117,8 @@ open class SimpleGraph<V> {
      * Uses an immutable set because no elements should be removed from this set. The set that is
      * returned is used in the internal data structure of this class. Removing elements from this
      * set may cause incorrect behaviour of the graph in future calls.
+     *
+     * runtime: O(1)  ->  constant. This is possible the neighbourhood that is already stored gets returned.
      */
     fun neighbors(v: V): Set<V> {
         assertVertexExists(v, "v")
