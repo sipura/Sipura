@@ -1,15 +1,40 @@
+import java.util.*
+
 object Connectivity {
 
     /**
-     * Does a BFS starting from [v1]. If [v2] gets hit, the BFS gets cancelled and immediately *true* is returned.
-     * Once the BFS finishes exploring the whole connected component without finding [v2], *false* is returned.
+     * Does two BFSs at the same time starting from and alternating between [v1] and [v2]. Once one of them finds a
+     * vertex that the other already found the function immediately stops and returns *true*. If one of the BFS ends
+     * without that occurring then the function also stops and returns *false*.
      */
     fun <V> checkIfConnected(g: SimpleGraph<V>, v1: V, v2: V): Boolean {
         if (v1 !in g.V) throw IllegalArgumentException("Graph does not contain vertex v1")
         if (v2 !in g.V) throw IllegalArgumentException("Graph does not contain vertex v2")
 
-        val iter = Traversal.breadthFirstSearchIterator(g, v1) // doesn't matter which one
-        iter.forEach { if (it == v2) return true }
+        val queue1 = LinkedList(listOf(v1))
+        val seen1 = mutableSetOf(v1)
+
+        val queue2 = LinkedList(listOf(v2))
+        val seen2 = mutableSetOf(v2)
+
+        while (queue1.isNotEmpty() && queue2.isNotEmpty()) {
+            val next1: V = queue1.removeFirst()
+            for (nb in g.neighbors(next1)) {
+                if (nb !in seen1) {
+                    if (nb in seen2) return true
+                    queue1.addLast(nb)
+                    seen1.add(nb)
+                }
+            }
+            val next2: V = queue2.removeFirst()
+            for (nb in g.neighbors(next2)) {
+                if (nb !in seen2) {
+                    if (nb in seen1) return true
+                    queue2.addLast(nb)
+                    seen2.add(nb)
+                }
+            }
+        }
 
         return false // traversal finished without hit
     }
