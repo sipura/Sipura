@@ -2,6 +2,7 @@ import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 
 internal class GraphTraitTest {
 
@@ -105,5 +106,103 @@ internal class GraphTraitTest {
         }
 
 
+    }
+
+    @Nested
+    internal inner class IsKRegular {
+
+        @Test
+        fun `path5 is not 2-regular`() {
+            assertFalse { GraphTrait.iskRegular(path5, 2) }
+        }
+
+        @Test
+        fun `normal cube is 3-regular aka cubic`() {
+            val cube = SimpleGraph<Int>()
+            (1..8).forEach { cube.addVertex(it) }
+
+            cube.addEdge(1,2)
+            cube.addEdge(1,3)
+            cube.addEdge(2,4)
+            cube.addEdge(3,4)
+
+            cube.addEdge(1,5)
+            cube.addEdge(2,6)
+            cube.addEdge(3,7)
+            cube.addEdge(4,8)
+
+            cube.addEdge(5,6)
+            cube.addEdge(5,7)
+            cube.addEdge(6,8)
+            cube.addEdge(7,8)
+
+            assertTrue  { GraphTrait.iskRegular(cube, 3) }
+        }
+
+        @Test
+        fun `cycle5 is 2-regular`() {
+            val g = Factory.createCycle(5)
+            assertTrue  { GraphTrait.iskRegular(g, 2) }
+        }
+
+        @Test
+        fun `throws exception for k equal -2`() {
+            val g = Factory.createCycle(5)
+            assertThrows<IllegalArgumentException>  { GraphTrait.iskRegular(g, -2) }
+        }
+
+    }
+
+
+    @Nested
+    internal inner class IsCubic {
+
+        @Test
+        fun `path5 is not cubic`() {
+            assertFalse { GraphTrait.isCubic(path5) }
+        }
+
+        @Test
+        fun `normal cube is cubic`() {
+            val cube = SimpleGraph<Int>()
+            (1..8).forEach { cube.addVertex(it) }
+
+            cube.addEdge(1,2)
+            cube.addEdge(1,3)
+            cube.addEdge(2,4)
+            cube.addEdge(3,4)
+
+            cube.addEdge(1,5)
+            cube.addEdge(2,6)
+            cube.addEdge(3,7)
+            cube.addEdge(4,8)
+
+            cube.addEdge(5,6)
+            cube.addEdge(5,7)
+            cube.addEdge(6,8)
+            cube.addEdge(7,8)
+
+            assertTrue  { GraphTrait.isCubic(cube) }
+        }
+
+        @Test
+        fun `complete4 is cubic`() {
+            val g = SimpleGraph<Int>()
+            (1..4).forEach { g.addVertex(it) }
+
+            g.addEdge(1,2)
+            g.addEdge(1,3)
+            g.addEdge(1,4)
+            g.addEdge(2,3)
+            g.addEdge(2,4)
+            g.addEdge(3,4)
+
+            assertTrue  { GraphTrait.isCubic(g) }
+        }
+
+        @Test
+        fun `empty graph is not cubic`() {
+            assertThrows<IllegalArgumentException>{GraphTrait.isCubic(SimpleGraph<Int>())}
+        }
     }
 }
