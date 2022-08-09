@@ -1,4 +1,5 @@
 import java.util.*
+import kotlin.collections.HashMap
 
 object Connectivity {
 
@@ -78,6 +79,35 @@ object Connectivity {
     fun <V> isConnected(g: SimpleGraph<V>): Boolean {
         if (g.n == 0) throw IllegalArgumentException("Connectivity for empty graph is ambiguous, so exception for good measure")
         return getConnectedComponent(g, g.V.first()).size == g.n
+    }
+
+    fun <V> distance(g: SimpleGraph<V>, v1: V, v2: V): Int {
+        if (g.n == 0) throw IllegalArgumentException("Connectivity for empty graph is ambiguous, so exception for good measure")
+        if (v1 !in g.V) throw IllegalArgumentException("Graph does not contain vertex v1")
+        if (v2 !in g.V) throw IllegalArgumentException("Graph does not contain vertex v2")
+
+        val bfsIter = Traversal.breadthFirstSearchIterator(g, v1)
+
+        val dist = HashMap<V, Int>()
+        for (v in g.V) dist[v] = Int.MAX_VALUE
+        dist[v1] = 0
+
+        val prev = HashMap<V, V>()
+
+        while (bfsIter.hasNext()) {
+            val curr : V = bfsIter.next()
+
+            if (curr == v2) return dist[curr]!!
+
+            for (nb in g.neighbors(curr)) {
+                if (dist[curr]!! + 1 < dist[nb]!!) {
+                    dist[nb] = dist[curr]!! + 1
+                    prev[nb] = curr
+                }
+            }
+        }
+
+        throw IllegalStateException("there does not exist a path between the two vertices")
     }
 
 }

@@ -190,4 +190,50 @@ internal class ConnectivityTest {
         }
     }
 
+    @Nested
+    internal inner class Distance {
+
+        @Test
+        fun `distance of leafs in path5 is 4`() {
+            assertEquals(4, Connectivity.distance(path5, 1, 5))
+        }
+
+        @Test
+        fun `distance of vertex to itself is 0`() {
+            assertEquals(0, Connectivity.distance(path5, 2, 2))
+        }
+
+        @Test
+        fun `distance of neighbours is 1`() {
+            assertEquals(1, Connectivity.distance(path5, 3, 4))
+        }
+
+        @Test
+        fun `distance of two corners of star is 2`() {
+            assertEquals(2, Connectivity.distance(star4plus1, 2, 3))
+        }
+
+        @Test
+        fun `distance of some inner vertices in path100 is correct`() {
+            assertEquals(52-37, Connectivity.distance(Factory.createPath(100), 37, 52))
+        }
+
+        @Test
+        fun `distance of any two vertices in complete graph is 1`() {
+            val g = Factory.createCompleteGraph(10)
+            for (v1 in g.V) {
+                for (v2 in g.V) {
+                    if (v1 != v2) {
+                        assertEquals(1, Connectivity.distance(g, v1, v2))
+                    }
+                }
+            }
+        }
+
+        @Test
+        fun `throws exception if no connecting path exists`() {
+            assertThrows<IllegalStateException> { Connectivity.distance(star4plus1, 1, 5) }
+        }
+    }
+
 }
