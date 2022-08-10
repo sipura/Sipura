@@ -54,4 +54,28 @@ internal class UtilsTest {
         }
     }
 
+    @Nested
+    internal inner class UnionSize {
+
+        @Test
+        fun `{1 2 3} and {6 7} have union of size 5`() {
+            assertEquals(5, Utils.unionSize(setOf(1, 2, 3), setOf(6, 7)))
+        }
+
+        @Test
+        fun `{1 2 3} and {3 4 5} have union of size 5`() {
+            assertEquals(5, Utils.unionSize(setOf(1, 2, 3), setOf(3, 4, 5)))
+        }
+
+        @Test
+        fun `{ } and {3 4 5} have union of size 3`() {
+            assertEquals(3, Utils.unionSize(setOf(), setOf(3, 4, 5)))
+        }
+
+        @Test
+        fun `{3 4} and {3 4 5} have union of size 3`() {
+            assertEquals(3, Utils.unionSize(setOf(3, 4), setOf(3, 4, 5)))
+        }
+    }
+
 }
