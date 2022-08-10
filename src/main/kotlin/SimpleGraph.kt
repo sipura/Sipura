@@ -174,4 +174,31 @@ open class SimpleGraph<V> {
 
         }
     }
+
+    /**
+     * returns edge each twice, as Pair(v1, v2) and as Pair(v2, v1)
+     */
+    fun getEdgeOnceIterator(): Iterator<Pair<V, V>> {
+        return object : Iterator<Pair<V, V>> {
+
+            var eCtr = 0
+
+            val iter = getEdgeTwiceIterator()
+            val seen = mutableSetOf<Pair<V, V>>()
+
+            override fun hasNext() = eCtr < m
+
+            override fun next(): Pair<V, V> {
+                while (iter.hasNext()) {
+                    val next = iter.next()
+                    if (Pair(next.second, next.first) !in seen) {
+                        eCtr++
+                        seen.add(next)
+                        return next
+                    }
+                }
+                throw IllegalStateException()
+            }
+        }
+    }
 }

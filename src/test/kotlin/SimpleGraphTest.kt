@@ -442,7 +442,7 @@ internal class SimpleGraphTest {
     }
 
     @Test
-    fun `edge list path5`() {
+    fun `edge twice iterator test`() {
         val edgesFromIterator = g.getEdgeTwiceIterator().asSequence().toList()
         val edgesCorrect = listOf(
             1 to 2,
@@ -453,6 +453,18 @@ internal class SimpleGraphTest {
             3 to 5,
             4 to 3,
             5 to 3
+        )
+        assertEquals(edgesCorrect, edgesFromIterator)
+    }
+
+    @Test
+    fun `edge once iterator test`() {
+        val edgesFromIterator = g.getEdgeOnceIterator().asSequence().toList()
+        val edgesCorrect = listOf(
+            1 to 2,
+            1 to 3,
+            3 to 4,
+            3 to 5,
         )
         assertEquals(edgesCorrect, edgesFromIterator)
     }
