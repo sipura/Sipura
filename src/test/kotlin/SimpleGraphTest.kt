@@ -250,6 +250,16 @@ internal class SimpleGraphTest {
     }
 
     @Test
+    fun `trying to remove a loop throws exception`() {
+        assertThrows<IllegalArgumentException> { g.removeEdge(1, 1) }
+    }
+
+    @Test
+    fun `trying to check if graph contains a loop throws exception`() {
+        assertThrows<IllegalArgumentException> { g.hasEdge(1, 1) }
+    }
+
+    @Test
     fun `m is increased by 1 after adding a new edge`() {
         assertEquals(4, g.m)
         g.addEdge(1, 6)
@@ -431,4 +441,19 @@ internal class SimpleGraphTest {
         assertEquals(2, Factory.createPath(7).maxDegree())
     }
 
+    @Test
+    fun `edge list path5`() {
+        val edgesFromIterator = g.getEdgeTwiceIterator().asSequence().toList()
+        val edgesCorrect = listOf(
+            1 to 2,
+            1 to 3,
+            2 to 1,
+            3 to 1,
+            3 to 4,
+            3 to 5,
+            4 to 3,
+            5 to 3
+        )
+        assertEquals(edgesCorrect, edgesFromIterator)
+    }
 }

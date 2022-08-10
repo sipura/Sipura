@@ -6,6 +6,9 @@ open class SimpleGraph<V> {
     val n: Int
         get() = map.size
 
+    /**
+     * runtime: O(1)  ->  constant, because [m] gets updated every time an edge gets added or removed
+     */
     var m: Int = 0
         private set
 
@@ -81,6 +84,7 @@ open class SimpleGraph<V> {
     fun removeEdge(v1: V, v2: V): Boolean {
         assertVertexExists(v1, "v1")
         assertVertexExists(v2, "v2")
+        if (v1 == v2) throw IllegalArgumentException("no loops are allowed")
 
         if (v1 !in map[v2]!!) return false
 
@@ -94,6 +98,7 @@ open class SimpleGraph<V> {
      * runtime: O(1)  ->  constant
      */
     fun hasEdge(v1: V, v2: V): Boolean {
+        if (v1 == v2) throw IllegalArgumentException("no loops are allowed. this is likely a false input")
         assertVertexExists(v1, "v1")
         assertVertexExists(v2, "v2")
 
@@ -142,16 +147,31 @@ open class SimpleGraph<V> {
      * runtime: O([n])  ->  for every vertex, the degree gets checked in constant time
      */
     fun maxDegree(): Int = V.maxOf { degreeOf(it) }
+
+    /**
+     * returns edge each twice, as Pair(v1, v2) and as Pair(v2, v1)
+     */
+    fun getEdgeTwiceIterator(): Iterator<Pair<V, V>> {
+        return object : Iterator<Pair<V, V>> {
+
+            var eCtr = 0
+
+            val v1Iterator = map.keys.iterator()
+            var v1Curr = v1Iterator.next()
+            var v2Iterator = neighbors(v1Curr).iterator()
+
+            override fun hasNext() = eCtr < 2 * m
+
+            override fun next(): Pair<V, V> {
+                while (!v2Iterator.hasNext()) {
+                    v1Curr = v1Iterator.next()
+                    v2Iterator = neighbors(v1Curr).iterator()
+                }
+
+                eCtr++
+                return Pair(v1Curr, v2Iterator.next())
+            }
+
+        }
+    }
 }
-
-
-
-
-
-
-
-
-
-
-
-
