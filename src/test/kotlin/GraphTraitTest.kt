@@ -118,7 +118,7 @@ internal class GraphTraitTest {
 
         @Test
         fun `path5 is not 2-regular`() {
-            assertFalse { GraphTrait.iskRegular(path5, 2) }
+            assertFalse { GraphTrait.isKRegular(path5, 2) }
         }
 
         @Test
@@ -141,19 +141,19 @@ internal class GraphTraitTest {
             cube.addEdge(6,8)
             cube.addEdge(7,8)
 
-            assertTrue  { GraphTrait.iskRegular(cube, 3) }
+            assertTrue { GraphTrait.isKRegular(cube, 3) }
         }
 
         @Test
         fun `cycle5 is 2-regular`() {
             val g = Factory.createCycle(5)
-            assertTrue  { GraphTrait.iskRegular(g, 2) }
+            assertTrue { GraphTrait.isKRegular(g, 2) }
         }
 
         @Test
         fun `throws exception for k equal -2`() {
             val g = Factory.createCycle(5)
-            assertThrows<IllegalArgumentException>  { GraphTrait.iskRegular(g, -2) }
+            assertThrows<IllegalArgumentException> { GraphTrait.isKRegular(g, -2) }
         }
 
     }

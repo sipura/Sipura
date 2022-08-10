@@ -1,5 +1,4 @@
 import java.util.*
-import kotlin.collections.HashMap
 
 object Connectivity {
 
@@ -81,8 +80,6 @@ object Connectivity {
         return getConnectedComponent(g, g.V.first()).size == g.n
     }
 
-    fun <V> distance(g: SimpleGraph<V>, v1: V, v2: V): Int = shortestPath(g, v1, v2).size - 1
-
     fun <V> shortestPath(g: SimpleGraph<V>, vStart: V, vEnd: V): List<V> {
         if (g.n == 0) throw IllegalArgumentException("Connectivity for empty graph is ambiguous, so exception for good measure")
         if (vStart !in g.V) throw IllegalArgumentException("Graph does not contain vertex vStart")
@@ -109,7 +106,14 @@ object Connectivity {
 
         // restore path
         val l = LinkedList(listOf(vStart))
-        while (l.last != vEnd) { l.addLast(prev[l.last]) }
+        while (l.last != vEnd) {
+            l.addLast(prev[l.last])
+        }
         return l
     }
+
+    /**
+     * @return The number of edges in the shortest path from [v1] to [v2] in graph [g]
+     */
+    fun <V> distance(g: SimpleGraph<V>, v1: V, v2: V): Int = shortestPath(g, v1, v2).size - 1
 }

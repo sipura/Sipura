@@ -4,11 +4,11 @@ import Factory.createStar
 import VertexSets.countCoveredEdges
 import VertexSets.cutSize
 import VertexSets.getLeafs
-import VertexSets.isDominatingSet
 import VertexSets.isIndependentSet
 import VertexSets.isVertexCover
 import VertexSets.treeCenter
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
@@ -53,60 +53,35 @@ internal class VertexSetsTest {
         @Test
         fun star() {
             val g = createStar(10)
-            assertTrue {isIndependentSet(setOf(2, 3, 4, 5, 6), g)}
-            assertFalse { isIndependentSet(setOf(1, 4), g) }
-            assertFalse { isIndependentSet(setOf(1, 2, 5, 7), g)}
+            assertTrue { isIndependentSet(g, setOf(2, 3, 4, 5, 6)) }
+            assertFalse { isIndependentSet(g, setOf(1, 4)) }
+            assertFalse { isIndependentSet(g, setOf(1, 2, 5, 7)) }
         }
 
         @Test
         fun path() {
             val g = createPath(10)
-            assertTrue{isIndependentSet(setOf(1, 3, 6, 8), g)}
-            assertFalse{isIndependentSet(setOf(1, 2), g)}
-            assertFalse{isIndependentSet(setOf(1, 4, 5, 7), g)}
+            assertTrue { isIndependentSet(g, setOf(1, 3, 6, 8)) }
+            assertFalse { isIndependentSet(g, setOf(1, 2)) }
+            assertFalse { isIndependentSet(g, setOf(1, 4, 5, 7)) }
         }
     }
 
     @Nested
     internal inner class IsVertexCover {
-        @Test
-        fun star() {
-            val g = createStar(10)
-            assertTrue{isVertexCover(setOf(1), g)}
-            assertTrue{isVertexCover((2..10).toSet(), g)}
-            assertFalse{isVertexCover(setOf(2, 4), g)}
-        }
-
-        @Test
-        fun path() {
-            val g = createPath(7)
-            assertFalse{isVertexCover(setOf(1, 5, 7), g)}
-
-            assertTrue{isVertexCover((1..7).toSet(), g)}
-            assertTrue{isVertexCover(setOf(1, 3, 5, 7), g)}
-            assertFalse{isVertexCover(setOf(1), g)}
-        }
-    }
-
-    @Nested
-    internal inner class IsDominatingSet {
 
         @Test
         fun star() {
             val g = createStar(10)
-            assertTrue{isDominatingSet(setOf(1), g)}
-            assertTrue{isDominatingSet((2..10).toSet(), g)}
-            assertFalse{isDominatingSet(setOf(2, 4), g)}
+            assertTrue { isVertexCover(g, setOf(1)) }
+            assertTrue { isVertexCover(g, (2..10).toSet()) }
+            assertFalse { isVertexCover(g, setOf(2, 4)) }
         }
 
-        @Test
-        fun path() {
-            val g = createPath(7)
-            assertFalse{isDominatingSet(setOf(1, 5, 7), g)}
-
-            assertTrue{isDominatingSet((1..7).toSet(), g)}
-            assertTrue{isDominatingSet(setOf(1, 4, 7), g)}
-            assertFalse{isDominatingSet(setOf(1), g)}
+        @Test // 1-2-3-4
+        fun `the endpoints of path4 are not a vertex cover`() {
+            val g = createPath(4)
+            assertFalse { isVertexCover(g, setOf(1, 4)) }
         }
     }
 
@@ -116,16 +91,16 @@ internal class VertexSetsTest {
         @Test
         fun star() {
             val g = createStar(10)
-            assertEquals(9, countCoveredEdges(setOf(1), g))
-            assertEquals(3, countCoveredEdges(setOf(3, 6, 8), g))
+            assertEquals(9, countCoveredEdges(g, setOf(1)))
+            assertEquals(3, countCoveredEdges(g, setOf(3, 6, 8)))
         }
 
         @Test
         fun path() {
             val g = createPath(7)
-            assertEquals(2, countCoveredEdges(setOf(3), g))
-            assertEquals(3, countCoveredEdges(setOf(3, 4), g))
-            assertEquals(6, countCoveredEdges(setOf(2, 4, 6), g))
+            assertEquals(2, countCoveredEdges(g, setOf(3)))
+            assertEquals(3, countCoveredEdges(g, setOf(3, 4)))
+            assertEquals(6, countCoveredEdges(g, setOf(2, 4, 6)))
         }
     }
 
@@ -145,9 +120,10 @@ internal class VertexSetsTest {
         }
 
         @Test
-        fun `cutsize of the empty subset is 0`() {
+        fun `cut size of the empty subset is 0`() {
             val g = createPath(4)
             assertEquals(0, cutSize(g, setOf()))
         }
+
     }
 }

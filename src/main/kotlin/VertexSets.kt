@@ -1,16 +1,20 @@
+import Utils.isDisjoint
+
 object VertexSets {
 
     fun <V> getLeafs(g: SimpleGraph<V>): MutableSet<V> =
         g.V.filterTo(HashSet()) { g.degreeOf(it) == 1 }
 
     /**
-     * assumes that [g] is a tree.
+     * assumes that [tree] is a tree.
      *
-     * Works by creating a copy of [g] and then repeatedly
-     * removing all leafs of [g], until only the center remains.
+     * Works by creating a copy of [tree] and then repeatedly
+     * removing all leafs of [tree], until only the center remains.
+     *
+     * runtime: O(n)
      */
-    fun <V> treeCenter(g: SimpleGraph<V>): MutableSet<V> {
-        val copy = g.copy()
+    fun <V> treeCenter(tree: SimpleGraph<V>): MutableSet<V> {
+        val copy = tree.copy()
         var leafs = HashSet(getLeafs(copy))
 
         while (copy.n > 2) {
@@ -30,11 +34,11 @@ object VertexSets {
      * @see <a href="https://en.wikipedia.org/wiki/Independent_set_(graph_theory)">Wikipedia page</a>
      * @return True iff [S] is an independent set of [g]
      */
-    fun <V> isIndependentSet(S: Set<V>, g: SimpleGraph<V>): Boolean {
-        for (s in S)
-            if (g.neighbors(s).any { it in S })
+    fun <V> isIndependentSet(g: SimpleGraph<V>, S: Set<V>): Boolean {
+        for (s in S) {
+            if (!isDisjoint(g.neighbors(s), S))
                 return false
-
+        }
         return true
     }
 
@@ -42,50 +46,32 @@ object VertexSets {
      * @see <a href="https://en.wikipedia.org/wiki/Vertex_cover">Wikipedia page</a>
      * @return True iff [S] is a vertex cover of [g]
      */
-    fun <V> isVertexCover(S: Set<V>, g: SimpleGraph<V>): Boolean {
-        val x = HashSet(S) // copy-constructor
-        for (s in S) { // add neighbours for all
-            x.addAll(g.neighbors(s))
-        }
-
-        return x.size == g.n
-    }
-
-    /**
-     * @see <a href="https://en.wikipedia.org/wiki/Dominating_set">Wikipedia page</a>
-     * @return True iff [S] is a dominating set of [g]
-     */
-    fun <V> isDominatingSet(S: Set<V>, g: SimpleGraph<V>): Boolean {
-        for (v in g.V subtract S) {
-            var hasDominatingNeighbour = false
-            for (nb in g.neighbors(v))
-                if (nb in S)
-                    hasDominatingNeighbour = true
-
-            if (!hasDominatingNeighbour)
-                return false
-        }
-        return true
-    }
+    fun <V> isVertexCover(g: SimpleGraph<V>, S: Set<V>): Boolean = countCoveredEdges(g, S) == g.m
 
     /**
      * @see <a href="https://tcs.rwth-aachen.de/~langer/pub/partial-vc-wg08.pdf">Wikipedia page</a>
      * @return How many edges are covered by [S]
      */
-    fun <V> countCoveredEdges(S: Set<V>, g: SimpleGraph<V>): Int {
-        var counter = 0
-        // don't count edges with both ends in S twice
-        for (v in S)
-            for (w in g.neighbors(v))
-                if (w !in S || (w in S && v.hashCode() < w.hashCode()))
-                    counter++
-        return counter
+    fun <V> countCoveredEdges(g: SimpleGraph<V>, S: Set<V>): Int {
+        var counterOnce = 0
+        var counterTwice = 0
+
+        for (s in S) {
+            for (nb in g.neighbors(s)) {
+                if (nb !in S)
+                    counterOnce++
+                else
+                    counterTwice++
+            }
+        }
+
+        return counterOnce + (counterTwice / 2)
     }
 
     /**
      * Assumes that [S] is a subset of the vertices of [g].
      */
     fun <V> cutSize(g: SimpleGraph<V>, S: Collection<V>): Int =
-        S.sumOf { v -> g.neighbors(v).count { it !in S } }
+        S.sumOf { s -> g.neighbors(s).count { it !in S } }
 
 }

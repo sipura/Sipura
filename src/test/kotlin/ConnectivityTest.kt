@@ -246,12 +246,28 @@ internal class ConnectivityTest {
 
         @Test
         fun `shortest path between corners of star goes through center`() {
-            assertEquals(listOf(2,1,3), Connectivity.shortestPath(star4plus1, 2, 3))
+            assertEquals(listOf(2, 1, 3), Connectivity.shortestPath(star4plus1, 2, 3))
         }
 
         @Test
         fun `shortest path in complete graph is just one edge`() {
-            assertEquals(listOf(2,5), Connectivity.shortestPath(Factory.createCompleteGraph(6), 2, 5))
+            assertEquals(listOf(2, 5), Connectivity.shortestPath(Factory.createCompleteGraph(6), 2, 5))
+        }
+
+        @Test
+        fun `cycle5 has paths of length 2 and 3`() {
+            assertEquals(listOf(5, 1, 2), Connectivity.shortestPath(Factory.createCycle(5), 5, 2))
+        }
+
+        @Test
+        fun `throws exception if disconnected`() {
+            assertThrows<IllegalStateException> { Connectivity.shortestPath(star4plus1, 1, 5) }
+        }
+
+        @Test
+        fun `shortest path from a vertex to itself is just the vertex`() {
+            assertEquals(listOf(2), Connectivity.shortestPath(path5, 2, 2))
+
         }
     }
 }
