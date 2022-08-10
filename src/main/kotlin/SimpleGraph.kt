@@ -184,18 +184,19 @@ open class SimpleGraph<V> {
             var eCtr = 0
 
             val iter = getEdgeTwiceIterator()
-            val seen = mutableSetOf<Pair<V, V>>()
+            val seen = mutableSetOf<V>()
 
             override fun hasNext() = eCtr < m
 
             override fun next(): Pair<V, V> {
                 while (iter.hasNext()) {
                     val next = iter.next()
-                    if (Pair(next.second, next.first) !in seen) {
-                        eCtr++
-                        seen.add(next)
-                        return next
-                    }
+
+                    if (next.second in seen) continue
+
+                    eCtr++
+                    seen.add(next.first)
+                    return next
                 }
                 throw IllegalStateException()
             }
