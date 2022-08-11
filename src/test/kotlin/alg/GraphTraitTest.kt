@@ -1,8 +1,9 @@
 package alg
 
 import Samples
-import generate.Factory
+import generate.Factory.createBipartite
 import generate.Factory.createCompleteGraph
+import generate.Factory.createCycle
 import generate.Factory.createLine
 import generate.Factory.createStar
 import graphs.SimpleGraph
@@ -27,7 +28,7 @@ internal class GraphTraitTest {
 
         @Test
         fun `triangle is not a tree`() {
-            assertFalse { GraphTrait.isTree(Factory.createCycle(3)) }
+            assertFalse { GraphTrait.isTree(createCycle(3)) }
         }
 
         @Test
@@ -42,7 +43,7 @@ internal class GraphTraitTest {
 
         @Test
         fun `bipartite graph of size (4, 7) is not a tree`() {
-            assertFalse { GraphTrait.isTree(Factory.createBipartite(4, 7)) }
+            assertFalse { GraphTrait.isTree(createBipartite(4, 7)) }
         }
     }
 
@@ -145,16 +146,56 @@ internal class GraphTraitTest {
 
         @Test
         fun `cycle5 is 2-regular`() {
-            val g = Factory.createCycle(5)
+            val g = createCycle(5)
             assertTrue { GraphTrait.isKRegular(g, 2) }
         }
 
         @Test
         fun `throws exception for k equal -2`() {
-            val g = Factory.createCycle(5)
+            val g = createCycle(5)
             assertThrows<IllegalArgumentException> { GraphTrait.isKRegular(g, -2) }
         }
 
+    }
+
+
+    @Nested
+    internal inner class IsBipartite {
+
+        @Test
+        fun `path5 is bipartite`() {
+            assertTrue { GraphTrait.isBipartite(createLine(5)) }
+        }
+
+        @Test
+        fun `cycle4 is not bipartite`() {
+            assertTrue { GraphTrait.isBipartite(createCycle(4)) }
+        }
+
+        @Test
+        fun `cycle5 is not bipartite`() {
+            assertFalse { GraphTrait.isBipartite(createCycle(5)) }
+        }
+
+        @Test
+        fun `star4 and 1 isolated is bipartite`() {
+            assertTrue { GraphTrait.isBipartite(Samples.star4Plus1IsolatedVertex()) }
+        }
+
+        @Test
+        fun `complete7 is not bipartite`() {
+            assertFalse { GraphTrait.isBipartite(createCompleteGraph(8)) }
+        }
+
+        @Test
+        fun `single vertex is bipartite`() {
+            assertTrue { GraphTrait.isBipartite(createLine(1)) }
+        }
+
+        @Test
+        fun `bipartite graph of size (10, 13) is bipartite (surprisingly)`() {
+            assertTrue { GraphTrait.isBipartite(createBipartite(10, 13)) }
+        }
     }
 
 

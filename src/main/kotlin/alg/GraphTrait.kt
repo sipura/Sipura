@@ -21,6 +21,28 @@ object GraphTrait {
 
     fun <V> isCubic(g: SimpleGraph<V>): Boolean = isKRegular(g, 3)
 
+    fun <V> isBipartite(g: SimpleGraph<V>): Boolean {
+        val components: MutableCollection<MutableSet<V>> = Connectivity.listAllConnectedComponents(g).values
+
+        for (component in components) {
+            val layerIter = Traversal.breadthFirstSearchLayerIterator(g, component.first())
+
+            val sides = HashMap<V, Int>()
+            var toggle = 1
+
+            for (layer in layerIter) {
+                for (v in layer) {
+                    sides[v] = toggle
+                    if (g.neighbors(v).any { sides[it] == toggle }) {
+                        return false
+                    }
+                }
+                toggle = -toggle
+            }
+        }
+        return true
+    }
+
     /**
      * Runtime: O([g].maxDegree)
      *
