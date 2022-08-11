@@ -151,7 +151,15 @@ open class SimpleGraph<V> {
     /**
      * returns edge each twice, as Pair(v1, v2) and as Pair(v2, v1)
      */
-    fun getEdgeTwiceIterator(): Iterator<Pair<V, V>> {
+    fun edgeTwiceIterator(): Iterator<Pair<V, V>> {
+
+        if (n == 0) { // please wash your eyes
+            return object : Iterator<Pair<V, V>> {
+                override fun hasNext() = false
+                override fun next(): Pair<V, V> = throw NoSuchElementException("Traversal has finished")
+            }
+        }
+
         return object : Iterator<Pair<V, V>> {
 
             var eCtr = 0
@@ -163,6 +171,7 @@ open class SimpleGraph<V> {
             override fun hasNext() = eCtr < 2 * m
 
             override fun next(): Pair<V, V> {
+                if (!hasNext()) throw NoSuchElementException("Traversal has finished")
                 while (!v2Iterator.hasNext()) {
                     v1Curr = v1Iterator.next()
                     v2Iterator = neighbors(v1Curr).iterator()
@@ -178,12 +187,12 @@ open class SimpleGraph<V> {
     /**
      * returns edge each twice, as Pair(v1, v2) and as Pair(v2, v1)
      */
-    fun getEdgeOnceIterator(): Iterator<Pair<V, V>> {
+    fun edgeIterator(): Iterator<Pair<V, V>> {
         return object : Iterator<Pair<V, V>> {
 
             var eCtr = 0
 
-            val iter = getEdgeTwiceIterator()
+            val iter = edgeTwiceIterator()
             val seen = mutableSetOf<V>()
 
             override fun hasNext() = eCtr < m
@@ -198,7 +207,7 @@ open class SimpleGraph<V> {
                     seen.add(next.first)
                     return next
                 }
-                throw IllegalStateException()
+                throw NoSuchElementException("Traversal has finished")
             }
         }
     }

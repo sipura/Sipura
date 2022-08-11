@@ -36,10 +36,10 @@ internal class VertexCoverTest {
             assertTrue { VertexCover.decisionVertexCover(g, k = 4) }
         }
 
-        @Test // takes approx 2.7 seconds
-        fun `path19 is false for all k less than 9`() {
+        @Test
+        fun `path39 is false for all k less than 9`() {
             val n = 39
-            val g = Factory.createLine(39)
+            val g = Factory.createLine(n)
             val optK = (n - 1) / 2
             for (k in 0 until optK) {
                 assertFalse { VertexCover.decisionVertexCover(g, k) }

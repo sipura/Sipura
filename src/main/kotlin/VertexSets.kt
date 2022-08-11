@@ -47,7 +47,7 @@ object VertexSets {
      * @return True iff [S] is a vertex cover of [g]
      */
     fun <V> isVertexCover(g: SimpleGraph<V>, S: Set<V>): Boolean =
-        g.getEdgeOnceIterator().asSequence().all { (v1, v2) -> v1 in S || v2 in S }
+        g.edgeIterator().asSequence().all { (v1, v2) -> v1 in S || v2 in S }
 
     /**
      * @see <a href="https://tcs.rwth-aachen.de/~langer/pub/partial-vc-wg08.pdf">Wikipedia page</a>

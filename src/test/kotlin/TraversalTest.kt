@@ -68,7 +68,7 @@ internal class TraversalTest {
         }
 
         @Test
-        fun `start BFS in the center of a path`() {
+        fun `start BFS in the center of a line`() {
             val iter = Traversal.breadthFirstSearchLayerIterator(path5, 3)
             assertTrue { iter.next() == setOf(3) }
             assertEquals(setOf(2, 4), iter.next())

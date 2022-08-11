@@ -443,7 +443,7 @@ internal class SimpleGraphTest {
 
     @Test
     fun `edge twice iterator test`() {
-        val edgesFromIterator = g.getEdgeTwiceIterator().asSequence().toList()
+        val edgesFromIterator = g.edgeTwiceIterator().asSequence().toList()
         val edgesCorrect = listOf(
             1 to 2,
             1 to 3,
@@ -458,8 +458,25 @@ internal class SimpleGraphTest {
     }
 
     @Test
+    fun `throws exception when calling next() on edge twice iterator when hasNext() is false`() {
+        val g = Factory.createLine(2)
+        val iter = g.edgeTwiceIterator()
+        iter.next()
+        iter.next()
+        assertFalse { iter.hasNext() }
+        assertThrows<NoSuchElementException> { iter.next() }
+    }
+
+    @Test
+    fun `empty graph does not throw exception when creating edge-twice-iterator`() {
+        val g = SimpleGraph<Int>()
+        val iter = g.edgeTwiceIterator() // should not throw exception
+        assertFalse { iter.hasNext() }
+    }
+
+    @Test
     fun `edge once iterator test`() {
-        val edgesFromIterator = g.getEdgeOnceIterator().asSequence().toList()
+        val edgesFromIterator = g.edgeIterator().asSequence().toList()
         val edgesCorrect = listOf(
             1 to 2,
             1 to 3,
@@ -467,5 +484,21 @@ internal class SimpleGraphTest {
             3 to 5,
         )
         assertEquals(edgesCorrect, edgesFromIterator)
+    }
+
+    @Test
+    fun `throws exception when calling next() on edge-once-iterator when hasNext() is false`() {
+        val g = Factory.createLine(2)
+        val iter = g.edgeIterator()
+        iter.next()
+        assertFalse { iter.hasNext() }
+        assertThrows<NoSuchElementException> { iter.next() }
+    }
+
+    @Test
+    fun `empty graph does not throw exception when creating edge-once-iterator`() {
+        val g = SimpleGraph<Int>()
+        val iter = g.edgeIterator() // should not throw exception
+        assertFalse { iter.hasNext() }
     }
 }
