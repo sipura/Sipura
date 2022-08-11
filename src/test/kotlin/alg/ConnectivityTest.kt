@@ -1,5 +1,6 @@
 package alg
 
+import GraphConstants
 import generate.Factory
 import graphs.SimpleGraph
 import org.junit.jupiter.api.Assertions.assertFalse
@@ -18,26 +19,9 @@ internal class ConnectivityTest {
 
     @BeforeEach
     fun setup() {
-        path5 = SimpleGraph()
-        path5.addVertex(1)
-        path5.addVertex(2)
-        path5.addVertex(3)
-        path5.addVertex(4)
-        path5.addVertex(5)
-        path5.addEdge(1, 2)
-        path5.addEdge(2, 3)
-        path5.addEdge(3, 4)
-        path5.addEdge(4, 5)
+        path5 = Factory.createLine(5)
 
-        star4plus1 = SimpleGraph()
-        star4plus1.addVertex(1)
-        star4plus1.addVertex(2)
-        star4plus1.addVertex(3)
-        star4plus1.addVertex(4)
-        star4plus1.addVertex(5)
-        star4plus1.addEdge(1, 2)
-        star4plus1.addEdge(1, 3)
-        star4plus1.addEdge(1, 4)
+        star4plus1 = GraphConstants.`star4 plus 1 isolated vertex`()
     }
 
     @Nested
