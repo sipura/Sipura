@@ -1,5 +1,3 @@
-import java.io.File
-
 // temporary file for testing
 
 fun main() {
@@ -34,42 +32,4 @@ fun prettyTime(millis: Long): String {
         ms %= 1000L
     }
     return "%d:%02d:%02d.%03d".format(h, m, s, ms)
-}
-
-fun importSimpleGraphFromFile(filePath: String): SimpleGraph<Int> {
-    val result = SimpleGraph<Int>()
-    val regex = Regex("[0-9]+ [0-9]+")
-    val inputFile = File(filePath)
-    inputFile.forEachLine {
-        val line = cleanLine(it)
-        if (line.matches(regex)) {
-            val nums = line.split(' ', '\t')
-            if (nums.size == 2) {
-                try {
-                    val first = Integer.parseInt(nums[0])
-                    val second = Integer.parseInt(nums[1])
-                    result.addVertex(first)
-                    result.addVertex(second)
-                    if (first != second) result.addEdge(first, second)
-                } catch (e: NumberFormatException) {
-                    println("Could not parse Int")
-                }
-            }
-        }
-    }
-    return result
-}
-
-fun cleanLine(curLine: String): String {
-    var result = curLine.replace('\t', ' ')
-    while (result.contains("  ")) {
-        result = result.replace("  ", " ")
-    }
-    while (result.startsWith(" ")) {
-        result = result.removePrefix(" ")
-    }
-    while (result.endsWith(" ")) {
-        result = result.removeSuffix(" ")
-    }
-    return result
 }

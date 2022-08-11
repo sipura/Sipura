@@ -73,11 +73,11 @@ object GraphIO {
             throw FileAlreadyExistsException(outputFile)
         } else {
             outputFile.createNewFile()
-            val out = PrintStream(outputFile)
-            g.forEachEdge { v1, v2 ->
-                out.println(lineCreator(v1, v2))
+            with(PrintStream(outputFile)) {
+                g.forEachEdge { v1, v2 ->
+                    this.println(lineCreator(v1, v2))
+                }
             }
-            out.close()
         }
     }
 
