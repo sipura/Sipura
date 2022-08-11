@@ -28,14 +28,14 @@ internal class SimpleGraphTest {
         setFieldValue("m", g, g.javaClass, 4)
     }
 
-    private fun assertVerticesExist(vararg verts: Int) {
-        for (v in verts) {
+    private fun assertVerticesExist(vararg vertices: Int) {
+        for (v in vertices) {
             assertContains(map, v)
         }
     }
 
-    private fun assertVerticesDontExist(vararg verts: Int) {
-        for (v in verts) {
+    private fun assertVerticesDontExist(vararg vertices: Int) {
+        for (v in vertices) {
             assertTrue { v !in map }
         }
     }
