@@ -5,7 +5,7 @@ import java.io.File
 fun main() {
     val dirPath = "D:\\lucas\\OneDrive\\Uni\\6. Semester\\Bachelorarbeit\\Repositories\\data\\"
     val filePath = dirPath + "network repository\\brain\\bn-human-BNU_1_0025890_session_1.edges"
-    val g = importSimpleGraphFromFile(filePath)
+    val g = GraphIO.importSimpleGraphFromFileWithInts(filePath)
     println("n: ${g.n}, m: ${g.m}")
     val temp = System.currentTimeMillis()
     for (i in 1..100) {
