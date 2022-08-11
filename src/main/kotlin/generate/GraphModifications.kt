@@ -36,4 +36,18 @@ object GraphModifications {
         return subgraph
     }
 
+    fun <V> union(g1: SimpleGraph<V>, g2: SimpleGraph<V>): SimpleGraph<V> {
+        val res = SimpleGraph<V>()
+        g1.V.forEach { res.addVertex(it) }
+        g2.V.forEach { res.addVertex(it) }
+
+        for ((v1, v2) in g1.edgeIterator()) {
+            res.addEdge(v1, v2)
+        }
+        for ((v1, v2) in g2.edgeIterator()) {
+            res.addEdge(v1, v2)
+        }
+
+        return res
+    }
 }

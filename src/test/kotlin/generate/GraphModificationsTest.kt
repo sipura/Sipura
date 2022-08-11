@@ -3,6 +3,7 @@ package generate
 import generate.Factory.createCycle
 import generate.Factory.createLine
 import generate.GraphModifications.inducedSubgraph
+import graphs.SimpleGraph
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -52,4 +53,20 @@ internal class GraphModificationsTest {
 
     }
 
+    @Nested
+    internal inner class Union {
+
+        @Test
+        fun `union of two disjoint lines`() {
+            val line123 = createLine(3)
+            val line45 = SimpleGraph<Int>()
+            line45.addVertex(4)
+            line45.addVertex(5)
+            line45.addEdge(4, 5)
+            val res = GraphModifications.union(line123, line45)
+
+            assertEquals(5, res.n)
+            assertEquals(3, res.m)
+        }
+    }
 }
