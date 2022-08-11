@@ -1,11 +1,14 @@
 package alg
 
-import GraphConstants
+import Samples
+import alg.Connectivity.getConnectedComponent
+import alg.Connectivity.shortestPath
 import generate.Factory
+import generate.Factory.createCompleteGraph
+import generate.Factory.createLine
 import graphs.SimpleGraph
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertSame
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -14,50 +17,40 @@ import kotlin.test.assertTrue
 
 internal class ConnectivityTest {
 
-    lateinit var path5: SimpleGraph<Int>
-    lateinit var star4plus1: SimpleGraph<Int>
-
-    @BeforeEach
-    fun setup() {
-        path5 = Factory.createLine(5)
-
-        star4plus1 = GraphConstants.`star4 plus 1 isolated vertex`()
-    }
-
     @Nested
     internal inner class CheckIfConnected {
 
         @Test
         fun `two leafs of a path5 are connected `() {
-            assertTrue { Connectivity.checkIfConnected(path5, 1, 5) }
+            assertTrue { Connectivity.checkIfConnected(createLine(5), 1, 5) }
         }
 
         @Test
         fun `isolated vertex is not connected to any other vertex`() {
-            path5.addVertex(6)
+            val g = createLine(5).apply { addVertex(6) }
             for (i in 1..5) {
-                assertFalse { Connectivity.checkIfConnected(path5, i, 6) }
+                assertFalse { Connectivity.checkIfConnected(g, i, 6) }
             }
         }
 
         @Test
         fun `throws error if first vertex does not exist`() {
-            assertThrows<IllegalArgumentException> { Connectivity.checkIfConnected(path5, 13, 1) }
+            assertThrows<IllegalArgumentException> { Connectivity.checkIfConnected(createLine(5), 13, 1) }
         }
 
         @Test
         fun `throws error if second vertex does not exist`() {
-            assertThrows<IllegalArgumentException> { Connectivity.checkIfConnected(path5, 1, 13) }
+            assertThrows<IllegalArgumentException> { Connectivity.checkIfConnected(createLine(5), 1, 13) }
         }
 
         @Test
         fun `throws error if both vertices do not exist`() {
-            assertThrows<IllegalArgumentException> { Connectivity.checkIfConnected(path5, 13, 42) }
+            assertThrows<IllegalArgumentException> { Connectivity.checkIfConnected(createLine(5), 13, 42) }
         }
 
         @Test
         fun `vertex is connected to itself`() {
-            assertTrue { Connectivity.checkIfConnected(path5, 2, 2) }
+            assertTrue { Connectivity.checkIfConnected(createLine(5), 2, 2) }
         }
     }
 
@@ -66,25 +59,25 @@ internal class ConnectivityTest {
 
         @Test
         fun `component of a vertex in path5 is the whole graph`() {
-            val component = Connectivity.getConnectedComponent(path5, 1)
+            val component = getConnectedComponent(createLine(5), 1)
             assertEquals(setOf(1, 2, 3, 4, 5), component)
         }
 
         @Test
         fun `result can be modified`() {
-            val component: MutableSet<Int> = Connectivity.getConnectedComponent(path5, 1)
+            val component: MutableSet<Int> = getConnectedComponent(createLine(5), 1)
             assertTrue { 3 in component }
             component.remove(3)
             assertFalse { 3 in component }
-            assertTrue { 3 in path5 } // graph is unchanged
+            assertTrue { 3 in createLine(5) } // graph is unchanged
         }
 
         @Test
         fun `does not include other components`() {
-            var component: MutableSet<Int> = Connectivity.getConnectedComponent(star4plus1, 2)
+            var component = getConnectedComponent(Samples.star4Plus1IsolatedVertex(), 2)
             assertEquals(setOf(1, 2, 3, 4), component) // vertex 5 is not included
 
-            component = Connectivity.getConnectedComponent(star4plus1, 5)
+            component = getConnectedComponent(Samples.star4Plus1IsolatedVertex(), 5)
             assertEquals(setOf(5), component) // vertex 5 is isolated
         }
     }
@@ -141,7 +134,7 @@ internal class ConnectivityTest {
 
         @Test
         fun `path5 has one component`() {
-            assertEquals(1, Connectivity.numberOfConnectedComponents(path5))
+            assertEquals(1, Connectivity.numberOfConnectedComponents(createLine(5)))
         }
 
         @Test
@@ -169,12 +162,12 @@ internal class ConnectivityTest {
 
         @Test
         fun `path5 is connected`() {
-            assertTrue { Connectivity.isConnected(path5) }
+            assertTrue { Connectivity.isConnected(createLine(5)) }
         }
 
         @Test
         fun `star4 with one isolated vertex is not connected`() {
-            assertFalse { Connectivity.isConnected(star4plus1) }
+            assertFalse { Connectivity.isConnected(Samples.star4Plus1IsolatedVertex()) }
         }
     }
 
@@ -183,32 +176,32 @@ internal class ConnectivityTest {
 
         @Test
         fun `distance of leafs in path5 is 4`() {
-            assertEquals(4, Connectivity.distance(path5, 1, 5))
+            assertEquals(4, Connectivity.distance(createLine(5), 1, 5))
         }
 
         @Test
         fun `distance of vertex to itself is 0`() {
-            assertEquals(0, Connectivity.distance(path5, 2, 2))
+            assertEquals(0, Connectivity.distance(createLine(5), 2, 2))
         }
 
         @Test
         fun `distance of neighbours is 1`() {
-            assertEquals(1, Connectivity.distance(path5, 3, 4))
+            assertEquals(1, Connectivity.distance(createLine(5), 3, 4))
         }
 
         @Test
         fun `distance of two corners of star is 2`() {
-            assertEquals(2, Connectivity.distance(star4plus1, 2, 3))
+            assertEquals(2, Connectivity.distance(Samples.star4Plus1IsolatedVertex(), 2, 3))
         }
 
         @Test
         fun `distance of some inner vertices in path100 is correct`() {
-            assertEquals(52 - 37, Connectivity.distance(Factory.createLine(100), 37, 52))
+            assertEquals(52 - 37, Connectivity.distance(createLine(100), 37, 52))
         }
 
         @Test
         fun `distance of any two vertices in complete graph is 1`() {
-            val g = Factory.createCompleteGraph(10)
+            val g = createCompleteGraph(10)
             for (v1 in g.V) {
                 for (v2 in g.V) {
                     if (v1 != v2) {
@@ -220,7 +213,13 @@ internal class ConnectivityTest {
 
         @Test
         fun `throws exception if no connecting path exists`() {
-            assertThrows<IllegalStateException> { Connectivity.distance(star4plus1, 1, 5) }
+            assertThrows<IllegalStateException> {
+                Connectivity.distance(
+                    Samples.star4Plus1IsolatedVertex(),
+                    1,
+                    5
+                )
+            }
         }
     }
 
@@ -229,32 +228,44 @@ internal class ConnectivityTest {
 
         @Test
         fun `shortest path between leafs in path5 is 1-2-3-4-5`() {
-            assertEquals(listOf(1, 2, 3, 4, 5), Connectivity.shortestPath(path5, 1, 5))
+            assertEquals(listOf(1, 2, 3, 4, 5), shortestPath(createLine(5), 1, 5))
         }
 
         @Test
         fun `shortest path between corners of star goes through center`() {
-            assertEquals(listOf(2, 1, 3), Connectivity.shortestPath(star4plus1, 2, 3))
+            assertEquals(
+                listOf(2, 1, 3), shortestPath(
+                    Samples.star4Plus1IsolatedVertex(),
+                    2,
+                    3
+                )
+            )
         }
 
         @Test
         fun `shortest path in complete graph is just one edge`() {
-            assertEquals(listOf(2, 5), Connectivity.shortestPath(Factory.createCompleteGraph(6), 2, 5))
+            assertEquals(listOf(2, 5), shortestPath(createCompleteGraph(6), 2, 5))
         }
 
         @Test
         fun `cycle5 has paths of length 2 and 3`() {
-            assertEquals(listOf(5, 1, 2), Connectivity.shortestPath(Factory.createCycle(5), 5, 2))
+            assertEquals(listOf(5, 1, 2), shortestPath(Factory.createCycle(5), 5, 2))
         }
 
         @Test
         fun `throws exception if disconnected`() {
-            assertThrows<IllegalStateException> { Connectivity.shortestPath(star4plus1, 1, 5) }
+            assertThrows<IllegalStateException> {
+                shortestPath(
+                    Samples.star4Plus1IsolatedVertex(),
+                    1,
+                    5
+                )
+            }
         }
 
         @Test
         fun `shortest path from a vertex to itself is just the vertex`() {
-            assertEquals(listOf(2), Connectivity.shortestPath(path5, 2, 2))
+            assertEquals(listOf(2), shortestPath(createLine(5), 2, 2))
 
         }
     }

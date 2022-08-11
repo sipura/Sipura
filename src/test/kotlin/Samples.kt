@@ -1,8 +1,8 @@
 import graphs.SimpleGraph
 
-object GraphConstants {
+object Samples {
 
-    fun `star4 plus 1 isolated vertex`(): SimpleGraph<Int> {
+    fun star4Plus1IsolatedVertex(): SimpleGraph<Int> {
         val star4plus1 = SimpleGraph<Int>()
         star4plus1.addVertex(1)
         star4plus1.addVertex(2)

@@ -1,6 +1,11 @@
+package utils
+
 import java.lang.reflect.Field
 import java.lang.reflect.Method
 
+/**
+ * These methods are used in the test, for example to access private fields.
+ */
 
 fun <O, V> getFieldValue(fieldName: String, o: O, oClass: Class<O>): V {
     val field: Field = oClass.getDeclaredField(fieldName)

@@ -1,9 +1,9 @@
 package generate
 
-import getFieldValue
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import utils.getFieldValue
 import kotlin.test.assertEquals
 
 internal class FactoryTest {

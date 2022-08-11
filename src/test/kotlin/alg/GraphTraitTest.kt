@@ -1,5 +1,6 @@
 package alg
 
+import Samples
 import generate.Factory
 import generate.Factory.createCompleteGraph
 import generate.Factory.createLine
@@ -7,40 +8,12 @@ import generate.Factory.createStar
 import graphs.SimpleGraph
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import kotlin.test.assertEquals
 
 internal class GraphTraitTest {
-
-    lateinit var path5: SimpleGraph<Int>
-    lateinit var star4plus1: SimpleGraph<Int>
-
-    @BeforeEach
-    fun setup() {
-        path5 = SimpleGraph()
-        path5.addVertex(1)
-        path5.addVertex(2)
-        path5.addVertex(3)
-        path5.addVertex(4)
-        path5.addVertex(5)
-        path5.addEdge(1, 2)
-        path5.addEdge(2, 3)
-        path5.addEdge(3, 4)
-        path5.addEdge(4, 5)
-
-        star4plus1 = SimpleGraph()
-        star4plus1.addVertex(1)
-        star4plus1.addVertex(2)
-        star4plus1.addVertex(3)
-        star4plus1.addVertex(4)
-        star4plus1.addVertex(5)
-        star4plus1.addEdge(1, 2)
-        star4plus1.addEdge(1, 3)
-        star4plus1.addEdge(1, 4)
-    }
 
     @Nested
     internal inner class IsTree {
@@ -59,12 +32,12 @@ internal class GraphTraitTest {
 
         @Test
         fun `path5 is a tree`() {
-            kotlin.test.assertTrue { GraphTrait.isTree(path5) }
+            kotlin.test.assertTrue { GraphTrait.isTree(createLine(5)) }
         }
 
         @Test
         fun `star4 with one isolated vertex is not a tree`() {
-            assertFalse { GraphTrait.isTree(star4plus1) }
+            assertFalse { GraphTrait.isTree(Samples.star4Plus1IsolatedVertex()) }
         }
 
         @Test
@@ -102,35 +75,38 @@ internal class GraphTraitTest {
 
         @Test
         fun `graph with single connectivity component is acyclic`() {
-            assertTrue { GraphTrait.isAcyclic(path5) }
+            assertTrue { GraphTrait.isAcyclic(createLine(5)) }
         }
 
         @Test
         fun `graph with single connectivity component is not acyclic`() {
-            path5.addEdge(5, 1)
-            assertFalse { GraphTrait.isAcyclic(path5) }
+            val g = createLine(5)
+            g.addEdge(5, 1)
+            assertFalse { GraphTrait.isAcyclic(g) }
         }
 
         @Test
         fun `graph with multiple connectivity components is acyclic`() {
-            assertTrue { GraphTrait.isAcyclic(star4plus1) }
+            assertTrue { GraphTrait.isAcyclic(Samples.star4Plus1IsolatedVertex()) }
         }
 
         @Test
         fun `graph with multiple connectivity components is not acyclic if one of them is not acyclic`() {
-            star4plus1.addEdge(2, 3)
-            assertFalse { GraphTrait.isAcyclic(star4plus1) }
+            val g = Samples.star4Plus1IsolatedVertex()
+            g.addEdge(2, 3)
+            assertFalse { GraphTrait.isAcyclic(g) }
         }
 
         @Test
         fun `graph with multiple connectivity components is not acyclic if all of them are not acyclic`() {
-            star4plus1.addEdge(2, 3)
-            star4plus1.addVertex(6)
-            star4plus1.addVertex(7)
-            star4plus1.addEdge(5, 6)
-            star4plus1.addEdge(5, 7)
-            star4plus1.addEdge(6, 7)
-            assertFalse { GraphTrait.isAcyclic(star4plus1) }
+            val g = Samples.star4Plus1IsolatedVertex()
+            g.addEdge(2, 3)
+            g.addVertex(6)
+            g.addVertex(7)
+            g.addEdge(5, 6)
+            g.addEdge(5, 7)
+            g.addEdge(6, 7)
+            assertFalse { GraphTrait.isAcyclic(g) }
         }
 
 
@@ -141,7 +117,7 @@ internal class GraphTraitTest {
 
         @Test
         fun `path5 is not 2-regular`() {
-            assertFalse { GraphTrait.isKRegular(path5, 2) }
+            assertFalse { GraphTrait.isKRegular(createLine(5), 2) }
         }
 
         @Test
@@ -187,7 +163,7 @@ internal class GraphTraitTest {
 
         @Test
         fun `path5 is not cubic`() {
-            assertFalse { GraphTrait.isCubic(path5) }
+            assertFalse { GraphTrait.isCubic(createLine(5)) }
         }
 
         @Test
