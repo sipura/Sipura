@@ -21,7 +21,7 @@ internal class VertexSetsTest {
         @Test
         fun `path5 has two leafs`() {
             val g = createPath(5)
-            assertEquals(setOf(1,5), getLeafs(g))
+            assertEquals(setOf(1, 5), getLeafs(g))
         }
 
         @Test
@@ -116,7 +116,7 @@ internal class VertexSetsTest {
         @Test
         fun `two middle vertices of path4 have cut of 2`() {
             val g = createPath(4)
-            assertEquals(2, cutSize(g, setOf(2,3)))
+            assertEquals(2, cutSize(g, setOf(2, 3)))
         }
 
         @Test

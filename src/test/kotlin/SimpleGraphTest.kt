@@ -420,7 +420,7 @@ internal class SimpleGraphTest {
         copy.removeVertex(1)
 
         assertFalse { 1 in copy }
-        assertTrue{ 1 in g }
+        assertTrue { 1 in g }
     }
 
     @Test

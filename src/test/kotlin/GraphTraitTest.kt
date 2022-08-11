@@ -103,7 +103,7 @@ internal class GraphTraitTest {
 
         @Test
         fun `graph with single connectivity component is not acyclic`() {
-            path5.addEdge(5,1)
+            path5.addEdge(5, 1)
             assertFalse { GraphTrait.isAcyclic(path5) }
         }
 
@@ -114,18 +114,18 @@ internal class GraphTraitTest {
 
         @Test
         fun `graph with multiple connectivity components is not acyclic if one of them is not acyclic`() {
-            star4plus1.addEdge(2,3)
+            star4plus1.addEdge(2, 3)
             assertFalse { GraphTrait.isAcyclic(star4plus1) }
         }
 
         @Test
         fun `graph with multiple connectivity components is not acyclic if all of them are not acyclic`() {
-            star4plus1.addEdge(2,3)
+            star4plus1.addEdge(2, 3)
             star4plus1.addVertex(6)
             star4plus1.addVertex(7)
-            star4plus1.addEdge(5,6)
-            star4plus1.addEdge(5,7)
-            star4plus1.addEdge(6,7)
+            star4plus1.addEdge(5, 6)
+            star4plus1.addEdge(5, 7)
+            star4plus1.addEdge(6, 7)
             assertFalse { GraphTrait.isAcyclic(star4plus1) }
         }
 
@@ -145,20 +145,20 @@ internal class GraphTraitTest {
             val cube = SimpleGraph<Int>()
             (1..8).forEach { cube.addVertex(it) }
 
-            cube.addEdge(1,2)
-            cube.addEdge(1,3)
-            cube.addEdge(2,4)
-            cube.addEdge(3,4)
+            cube.addEdge(1, 2)
+            cube.addEdge(1, 3)
+            cube.addEdge(2, 4)
+            cube.addEdge(3, 4)
 
-            cube.addEdge(1,5)
-            cube.addEdge(2,6)
-            cube.addEdge(3,7)
-            cube.addEdge(4,8)
+            cube.addEdge(1, 5)
+            cube.addEdge(2, 6)
+            cube.addEdge(3, 7)
+            cube.addEdge(4, 8)
 
-            cube.addEdge(5,6)
-            cube.addEdge(5,7)
-            cube.addEdge(6,8)
-            cube.addEdge(7,8)
+            cube.addEdge(5, 6)
+            cube.addEdge(5, 7)
+            cube.addEdge(6, 8)
+            cube.addEdge(7, 8)
 
             assertTrue { GraphTrait.isKRegular(cube, 3) }
         }
@@ -191,22 +191,22 @@ internal class GraphTraitTest {
             val cube = SimpleGraph<Int>()
             (1..8).forEach { cube.addVertex(it) }
 
-            cube.addEdge(1,2)
-            cube.addEdge(1,3)
-            cube.addEdge(2,4)
-            cube.addEdge(3,4)
+            cube.addEdge(1, 2)
+            cube.addEdge(1, 3)
+            cube.addEdge(2, 4)
+            cube.addEdge(3, 4)
 
-            cube.addEdge(1,5)
-            cube.addEdge(2,6)
-            cube.addEdge(3,7)
-            cube.addEdge(4,8)
+            cube.addEdge(1, 5)
+            cube.addEdge(2, 6)
+            cube.addEdge(3, 7)
+            cube.addEdge(4, 8)
 
-            cube.addEdge(5,6)
-            cube.addEdge(5,7)
-            cube.addEdge(6,8)
-            cube.addEdge(7,8)
+            cube.addEdge(5, 6)
+            cube.addEdge(5, 7)
+            cube.addEdge(6, 8)
+            cube.addEdge(7, 8)
 
-            assertTrue  { GraphTrait.isCubic(cube) }
+            assertTrue { GraphTrait.isCubic(cube) }
         }
 
         @Test
@@ -214,19 +214,19 @@ internal class GraphTraitTest {
             val g = SimpleGraph<Int>()
             (1..4).forEach { g.addVertex(it) }
 
-            g.addEdge(1,2)
-            g.addEdge(1,3)
-            g.addEdge(1,4)
-            g.addEdge(2,3)
-            g.addEdge(2,4)
-            g.addEdge(3,4)
+            g.addEdge(1, 2)
+            g.addEdge(1, 3)
+            g.addEdge(1, 4)
+            g.addEdge(2, 3)
+            g.addEdge(2, 4)
+            g.addEdge(3, 4)
 
-            assertTrue  { GraphTrait.isCubic(g) }
+            assertTrue { GraphTrait.isCubic(g) }
         }
 
         @Test
         fun `empty graph is not cubic`() {
-            assertThrows<IllegalArgumentException>{GraphTrait.isCubic(SimpleGraph<Int>())}
+            assertThrows<IllegalArgumentException> { GraphTrait.isCubic(SimpleGraph<Int>()) }
         }
     }
 
@@ -249,7 +249,7 @@ internal class GraphTraitTest {
 
         @Test
         fun emptyGraph() {
-            assertThrows<IllegalArgumentException> {  GraphTrait.hIndex(SimpleGraph<Int>()) }
+            assertThrows<IllegalArgumentException> { GraphTrait.hIndex(SimpleGraph<Int>()) }
         }
     }
 }

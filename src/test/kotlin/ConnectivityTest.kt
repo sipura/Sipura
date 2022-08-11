@@ -69,7 +69,7 @@ internal class ConnectivityTest {
 
         @Test
         fun `vertex is connected to itself`() {
-            assertTrue { Connectivity.checkIfConnected(path5, 2,2) }
+            assertTrue { Connectivity.checkIfConnected(path5, 2, 2) }
         }
     }
 
@@ -96,7 +96,7 @@ internal class ConnectivityTest {
             var component: MutableSet<Int> = Connectivity.getConnectedComponent(star4plus1, 2)
             assertEquals(setOf(1, 2, 3, 4), component) // vertex 5 is not included
 
-            component= Connectivity.getConnectedComponent(star4plus1, 5)
+            component = Connectivity.getConnectedComponent(star4plus1, 5)
             assertEquals(setOf(5), component) // vertex 5 is isolated
         }
     }
@@ -215,7 +215,7 @@ internal class ConnectivityTest {
 
         @Test
         fun `distance of some inner vertices in path100 is correct`() {
-            assertEquals(52-37, Connectivity.distance(Factory.createPath(100), 37, 52))
+            assertEquals(52 - 37, Connectivity.distance(Factory.createPath(100), 37, 52))
         }
 
         @Test
@@ -241,7 +241,7 @@ internal class ConnectivityTest {
 
         @Test
         fun `shortest path between leafs in path5 is 1-2-3-4-5`() {
-            assertEquals(listOf(1,2,3,4,5), Connectivity.shortestPath(path5, 1, 5))
+            assertEquals(listOf(1, 2, 3, 4, 5), Connectivity.shortestPath(path5, 1, 5))
         }
 
         @Test
