@@ -216,8 +216,9 @@ open class SimpleGraph<V> {
 
     override fun toString(): String {
         val builder = StringBuilder()
-        builder.append("n: $n\n")
-        builder.append("m: $m\n")
+        builder.append("n:          $n\n")
+        builder.append("m:          $m\n")
+        builder.append("max-degree: ${maxDegree()}\n")
         for (v1 in V)
             builder.append("$v1: [${neighbors(v1).joinToString()}]\n")
         return builder.toString()

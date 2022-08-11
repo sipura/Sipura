@@ -509,8 +509,9 @@ internal class SimpleGraphTest {
     @Test
     fun `test toString() on line4`() {
         val g = Factory.createLine(4)
-        val correctString = "n: 4\n" +
-                "m: 3\n" +
+        val correctString = "n:          4\n" +
+                "m:          3\n" +
+                "max-degree: 2\n" +
                 "1: [2]\n" +
                 "2: [1, 3]\n" +
                 "3: [2, 4]\n" +
