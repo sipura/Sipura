@@ -70,6 +70,25 @@ internal class GraphTraitTest {
     }
 
     @Nested
+    internal inner class IsComplete {
+
+        @Test
+        fun `triangle is complete`() {
+            assertTrue { GraphTrait.isComplete(createCompleteGraph(3)) }
+        }
+
+        @Test
+        fun `path4 is not complete`() {
+            assertFalse { GraphTrait.isComplete(createPath(4)) }
+        }
+
+        @Test
+        fun `complete graph of size 10 is complete`() {
+            assertTrue { GraphTrait.isComplete(createCompleteGraph(10)) }
+        }
+    }
+
+    @Nested
     internal inner class IsAcyclic {
 
         @Test
