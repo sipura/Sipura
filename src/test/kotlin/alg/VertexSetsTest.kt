@@ -1,12 +1,14 @@
-import Factory.createCycle
-import Factory.createLine
-import Factory.createStar
-import VertexSets.countCoveredEdges
-import VertexSets.cutSize
-import VertexSets.getLeafs
-import VertexSets.isIndependentSet
-import VertexSets.isVertexCover
-import VertexSets.treeCenter
+package alg
+
+import alg.VertexSets.countCoveredEdges
+import alg.VertexSets.cutSize
+import alg.VertexSets.getLeafs
+import alg.VertexSets.isIndependentSet
+import alg.VertexSets.isVertexCover
+import alg.VertexSets.treeCenter
+import generate.Factory.createCycle
+import generate.Factory.createLine
+import generate.Factory.createStar
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Nested

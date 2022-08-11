@@ -1,6 +1,6 @@
 package hard_problems
 
-import Factory
+import generate.Factory
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals

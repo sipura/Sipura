@@ -1,3 +1,6 @@
+import alg.Connectivity
+import generate.GraphIO
+
 // temporary file for testing
 
 fun main() {

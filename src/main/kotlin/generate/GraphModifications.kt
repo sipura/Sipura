@@ -1,4 +1,7 @@
-import Utils.intersection
+package generate
+
+import graphs.SimpleGraph
+import utils.Utils.intersection
 
 object GraphModifications {
 

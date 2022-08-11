@@ -1,6 +1,8 @@
-import Factory.createCycle
-import Factory.createLine
-import GraphModifications.inducedSubgraph
+package generate
+
+import generate.Factory.createCycle
+import generate.Factory.createLine
+import generate.GraphModifications.inducedSubgraph
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows

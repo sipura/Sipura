@@ -1,4 +1,7 @@
-import Utils.isDisjoint
+package alg
+
+import graphs.SimpleGraph
+import utils.Utils.isDisjoint
 
 object VertexSets {
 

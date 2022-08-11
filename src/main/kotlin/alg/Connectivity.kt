@@ -1,3 +1,6 @@
+package alg
+
+import graphs.SimpleGraph
 import java.util.*
 
 object Connectivity {
@@ -76,12 +79,12 @@ object Connectivity {
     }
 
     fun <V> isConnected(g: SimpleGraph<V>): Boolean {
-        if (g.n == 0) throw IllegalArgumentException("Connectivity for empty graph is ambiguous, so exception for good measure")
+        if (g.n == 0) throw IllegalArgumentException("alg.Connectivity for empty graph is ambiguous, so exception for good measure")
         return getConnectedComponent(g, g.V.first()).size == g.n
     }
 
     fun <V> shortestPath(g: SimpleGraph<V>, vStart: V, vEnd: V): List<V> {
-        if (g.n == 0) throw IllegalArgumentException("Connectivity for empty graph is ambiguous, so exception for good measure")
+        if (g.n == 0) throw IllegalArgumentException("alg.Connectivity for empty graph is ambiguous, so exception for good measure")
         if (vStart !in g.V) throw IllegalArgumentException("Graph does not contain vertex vStart")
         if (vEnd !in g.V) throw IllegalArgumentException("Graph does not contain vertex vEnd")
 

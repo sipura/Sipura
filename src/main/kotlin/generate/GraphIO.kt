@@ -1,3 +1,6 @@
+package generate
+
+import graphs.SimpleGraph
 import java.io.File
 import java.io.PrintStream
 

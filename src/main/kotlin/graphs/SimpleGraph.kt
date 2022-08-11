@@ -1,3 +1,5 @@
+package graphs
+
 open class SimpleGraph<V> {
 
     // If v1 and v2 are connected, then *v1 in map[v2]* and *v2 in map[v1]* has to hold
@@ -156,7 +158,7 @@ open class SimpleGraph<V> {
         if (n == 0) { // please wash your eyes
             return object : Iterator<Pair<V, V>> {
                 override fun hasNext() = false
-                override fun next(): Pair<V, V> = throw NoSuchElementException("Traversal has finished")
+                override fun next(): Pair<V, V> = throw NoSuchElementException("alg.Traversal has finished")
             }
         }
 
@@ -171,7 +173,7 @@ open class SimpleGraph<V> {
             override fun hasNext() = eCtr < 2 * m
 
             override fun next(): Pair<V, V> {
-                if (!hasNext()) throw NoSuchElementException("Traversal has finished")
+                if (!hasNext()) throw NoSuchElementException("alg.Traversal has finished")
                 while (!v2Iterator.hasNext()) {
                     v1Curr = v1Iterator.next()
                     v2Iterator = neighbors(v1Curr).iterator()
@@ -207,7 +209,7 @@ open class SimpleGraph<V> {
                     seen.add(next.first)
                     return next
                 }
-                throw NoSuchElementException("Traversal has finished")
+                throw NoSuchElementException("alg.Traversal has finished")
             }
         }
     }

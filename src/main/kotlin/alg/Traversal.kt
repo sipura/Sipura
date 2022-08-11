@@ -1,3 +1,6 @@
+package alg
+
+import graphs.SimpleGraph
 import java.util.*
 
 object Traversal {
@@ -14,7 +17,7 @@ object Traversal {
             override fun hasNext(): Boolean = queue.isNotEmpty()
 
             override fun next(): V {
-                if (!hasNext()) throw NoSuchElementException("Traversal has finished")
+                if (!hasNext()) throw NoSuchElementException("alg.Traversal has finished")
 
                 val next: V = queue.removeFirst()
                 for (nb in g.neighbors(next)) {
@@ -41,7 +44,7 @@ object Traversal {
             override fun hasNext(): Boolean = queue.isNotEmpty()
 
             override fun next(): MutableSet<V> {
-                if (!hasNext()) throw NoSuchElementException("Traversal has finished")
+                if (!hasNext()) throw NoSuchElementException("alg.Traversal has finished")
 
                 val res = HashSet<V>(queue)
                 val queueNew = LinkedList<V>()
@@ -73,7 +76,7 @@ object Traversal {
             override fun hasNext(): Boolean = queue.isNotEmpty()
 
             override fun next(): V {
-                if (!hasNext()) throw NoSuchElementException("Traversal has finished")
+                if (!hasNext()) throw NoSuchElementException("alg.Traversal has finished")
 
                 val next: V = queue.removeFirst()
                 for (nb in g.neighbors(next)) {

@@ -1,6 +1,10 @@
-import Factory.createCompleteGraph
-import Factory.createLine
-import Factory.createStar
+package alg
+
+import generate.Factory
+import generate.Factory.createCompleteGraph
+import generate.Factory.createLine
+import generate.Factory.createStar
+import graphs.SimpleGraph
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach

@@ -1,3 +1,6 @@
+package generate
+
+import getFieldValue
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows

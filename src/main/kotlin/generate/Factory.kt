@@ -1,3 +1,7 @@
+package generate
+
+import graphs.SimpleGraph
+
 object Factory {
 
     /**

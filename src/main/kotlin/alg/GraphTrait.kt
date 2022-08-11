@@ -1,3 +1,7 @@
+package alg
+
+import graphs.SimpleGraph
+
 object GraphTrait {
 
     fun <V> isTree(g: SimpleGraph<V>): Boolean =

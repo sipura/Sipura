@@ -1,4 +1,7 @@
-import Traversal.breadthFirstSearchLayerIterator
+package alg
+
+import alg.Traversal.breadthFirstSearchLayerIterator
+import graphs.SimpleGraph
 
 object Neighbors {
 

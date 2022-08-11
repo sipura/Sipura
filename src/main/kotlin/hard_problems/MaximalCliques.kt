@@ -1,3 +1,8 @@
+package hard_problems
+
+import graphs.SimpleGraph
+import utils.Utils
+
 object MaximalCliques {
 
     /**

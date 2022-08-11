@@ -1,4 +1,6 @@
-import Factory.createLine
+package alg
+
+import generate.Factory.createLine
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows

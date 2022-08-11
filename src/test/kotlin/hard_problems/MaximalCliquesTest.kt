@@ -1,3 +1,6 @@
+package hard_problems
+
+import graphs.SimpleGraph
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 

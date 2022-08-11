@@ -1,6 +1,6 @@
 package hard_problems
 
-import SimpleGraph
+import graphs.SimpleGraph
 
 object VertexCover {
 
