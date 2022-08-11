@@ -215,7 +215,7 @@ internal class ConnectivityTest {
 
         @Test
         fun `distance of some inner vertices in path100 is correct`() {
-            assertEquals(52 - 37, Connectivity.distance(Factory.createPath(100), 37, 52))
+            assertEquals(52 - 37, Connectivity.distance(Factory.createLine(100), 37, 52))
         }
 
         @Test

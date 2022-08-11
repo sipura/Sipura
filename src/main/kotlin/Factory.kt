@@ -3,7 +3,7 @@ object Factory {
     /**
      * @return A [SimpleGraph] of the form:          (1) - (2) - ... - (n-1) - (n)
      */
-    fun createPath(n: Int): SimpleGraph<Int> {
+    fun createLine(n: Int): SimpleGraph<Int> {
         if (n < 0) throw IllegalArgumentException("size can not be negative")
         return SimpleGraph<Int>().apply {
             (1..n).forEach { addVertex(it) }

@@ -1,5 +1,5 @@
 import Factory.createCompleteGraph
-import Factory.createPath
+import Factory.createLine
 import Factory.createStar
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -79,7 +79,7 @@ internal class GraphTraitTest {
 
         @Test
         fun `path4 is not complete`() {
-            assertFalse { GraphTrait.isComplete(createPath(4)) }
+            assertFalse { GraphTrait.isComplete(createLine(4)) }
         }
 
         @Test
@@ -239,7 +239,7 @@ internal class GraphTraitTest {
 
         @Test
         fun path5() {
-            assertEquals(2, GraphTrait.hIndex(createPath(5)))
+            assertEquals(2, GraphTrait.hIndex(createLine(5)))
         }
 
         @Test

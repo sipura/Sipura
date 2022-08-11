@@ -1,5 +1,5 @@
 import Factory.createCycle
-import Factory.createPath
+import Factory.createLine
 import Factory.createStar
 import VertexSets.countCoveredEdges
 import VertexSets.cutSize
@@ -20,7 +20,7 @@ internal class VertexSetsTest {
 
         @Test
         fun `path5 has two leafs`() {
-            val g = createPath(5)
+            val g = createLine(5)
             assertEquals(setOf(1, 5), getLeafs(g))
         }
 
@@ -36,7 +36,7 @@ internal class VertexSetsTest {
 
         @Test
         fun `path5 has one center vertex`() {
-            val g = createPath(5)
+            val g = createLine(5)
             assertEquals(setOf(3), treeCenter(g))
         }
 
@@ -60,7 +60,7 @@ internal class VertexSetsTest {
 
         @Test
         fun path() {
-            val g = createPath(10)
+            val g = createLine(10)
             assertTrue { isIndependentSet(g, setOf(1, 3, 6, 8)) }
             assertFalse { isIndependentSet(g, setOf(1, 2)) }
             assertFalse { isIndependentSet(g, setOf(1, 4, 5, 7)) }
@@ -80,7 +80,7 @@ internal class VertexSetsTest {
 
         @Test // 1-2-3-4
         fun `the endpoints of path4 are not a vertex cover`() {
-            val g = createPath(4)
+            val g = createLine(4)
             assertFalse { isVertexCover(g, setOf(1, 4)) }
         }
     }
@@ -97,7 +97,7 @@ internal class VertexSetsTest {
 
         @Test
         fun path() {
-            val g = createPath(7)
+            val g = createLine(7)
             assertEquals(2, countCoveredEdges(g, setOf(3)))
             assertEquals(3, countCoveredEdges(g, setOf(3, 4)))
             assertEquals(6, countCoveredEdges(g, setOf(2, 4, 6)))
@@ -115,13 +115,13 @@ internal class VertexSetsTest {
 
         @Test
         fun `two middle vertices of path4 have cut of 2`() {
-            val g = createPath(4)
+            val g = createLine(4)
             assertEquals(2, cutSize(g, setOf(2, 3)))
         }
 
         @Test
         fun `cut size of the empty subset is 0`() {
-            val g = createPath(4)
+            val g = createLine(4)
             assertEquals(0, cutSize(g, setOf()))
         }
 

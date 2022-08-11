@@ -438,7 +438,7 @@ internal class SimpleGraphTest {
 
     @Test
     fun `path has maximal degree of 2`() {
-        assertEquals(2, Factory.createPath(7).maxDegree())
+        assertEquals(2, Factory.createLine(7).maxDegree())
     }
 
     @Test

@@ -13,26 +13,26 @@ internal class FactoryTest {
 
         @Test
         fun `factory-method throws exception for path of negative length`() {
-            assertThrows<IllegalArgumentException> { Factory.createPath(-7) }
+            assertThrows<IllegalArgumentException> { Factory.createLine(-7) }
         }
 
         @Test
         fun `path of length 0 is just empty graph`() {
-            val g = Factory.createPath(0)
+            val g = Factory.createLine(0)
             val correctMap = mapOf<Int, Set<Int>>()
             assertEquals(correctMap, getFieldValue(mapName, g, g.javaClass))
         }
 
         @Test
         fun `path of length 1 is one isolated vertex`() {
-            val g = Factory.createPath(1)
+            val g = Factory.createLine(1)
             val correctMap = mapOf(1 to emptySet<Int>())
             assertEquals(correctMap, getFieldValue(mapName, g, g.javaClass))
         }
 
         @Test
         fun `path of length 5`() {
-            val g = Factory.createPath(5)
+            val g = Factory.createLine(5)
             val correctMap = mapOf(
                 1 to setOf(2),
                 2 to setOf(1, 3),
@@ -46,7 +46,7 @@ internal class FactoryTest {
         @Test
         fun `really long path`() {
             val n = 500_000
-            val g = Factory.createPath(n)
+            val g = Factory.createLine(n)
             val correctMap = mutableMapOf(
                 1 to setOf(2),
                 n to setOf(n - 1),
