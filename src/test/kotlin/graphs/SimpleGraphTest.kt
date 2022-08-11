@@ -505,4 +505,17 @@ internal class SimpleGraphTest {
         val iter = g.edgeIterator() // should not throw exception
         assertFalse { iter.hasNext() }
     }
+
+    @Test
+    fun `test toString() on line4`() {
+        val g = Factory.createLine(4)
+        val correctString = "n: 4\n" +
+                "m: 3\n" +
+                "1: [2]\n" +
+                "2: [1, 3]\n" +
+                "3: [2, 4]\n" +
+                "4: [3]\n"
+
+        assertEquals(correctString, g.toString())
+    }
 }

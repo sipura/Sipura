@@ -213,4 +213,14 @@ open class SimpleGraph<V> {
             }
         }
     }
+
+    override fun toString(): String {
+        val builder = StringBuilder()
+        builder.append("n: $n\n")
+        builder.append("m: $m\n")
+        for (v1 in V)
+            builder.append("$v1: [${neighbors(v1).joinToString()}]\n")
+        return builder.toString()
+    }
+
 }
