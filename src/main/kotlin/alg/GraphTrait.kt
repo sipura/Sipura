@@ -33,7 +33,7 @@ object GraphTrait {
             for (layer in layerIter) {
                 for (v in layer) {
                     sides[v] = toggle
-                    if (g.neighbors(v).any { sides[it] == toggle }) {
+                    if (g.neighbors(v).any { sides.getOrDefault(it, 0) == toggle }) {
                         return false
                     }
                 }
