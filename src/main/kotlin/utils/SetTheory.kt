@@ -1,5 +1,12 @@
 package utils
 
+/**
+ * Provides methods for working with sets. Some methods like [intersectionSize] are faster than alternatives,
+ * because this one for example doesn't create the union set, but just works by counting elements.
+ *
+ * Other methods like [isSubset] provide a naming that expresses the intent clearer than the original name [containsAll]
+ * in the Java-API.
+ */
 object SetTheory {
 
     /**
@@ -65,4 +72,9 @@ object SetTheory {
         else
             s2.none { it in s1 }
 
+
+    /**
+     * @return True if all elements of [s1] are also in [s2]
+     */
+    fun <E> isSubset(s1: Set<E>, s2: Set<E>): Boolean = s1.all { it in s2 }
 }

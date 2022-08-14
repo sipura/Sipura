@@ -2,6 +2,7 @@ package generate
 
 import graphs.SimpleGraph
 import utils.SetTheory.intersection
+import utils.SetTheory.isSubset
 
 object GraphRelations {
 
@@ -37,11 +38,11 @@ object GraphRelations {
     }
 
     fun <V> isSubgraph(sub: SimpleGraph<V>, g: SimpleGraph<V>): Boolean {
-        if (sub.V.any { it !in g.V }) return false
+        if (!isSubset(sub.V, g.V)) return false
         for ((v1, v2) in sub.edgeIterator()) {
             if (!g.hasEdge(v1, v2)) return false
         }
-
+        val x = HashSet<Int>()
         return true
     }
 
