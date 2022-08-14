@@ -12,17 +12,25 @@ object GraphIO {
      * to the graph with an edge between them.
      * If [lineParser] throws an [IllegalArgumentException] the current line is skipped.
      */
-    fun <V> importSimpleGraphFromFile(filePath: String, lineParser: (String) -> Pair<V, V>): SimpleGraph<V> {
+    fun <V> importSimpleGraphFromFile(
+        filePath: String,
+        commentPrefix: String = "#",
+        lineParser: (String) -> Pair<V, V>
+    ): SimpleGraph<V> {
         val g = SimpleGraph<V>()
         val inputFile = File(filePath)
         inputFile.forEachLine {
-            try {
-                val (v1, v2) = lineParser(it.trim())
-                g.addVertex(v1)
-                g.addVertex(v2)
-                g.addEdge(v1, v2)
-            } catch (e: IllegalArgumentException) {
-                // skip this line because it cant be parsed
+            val line = it.trim()
+            // ignore comments
+            if (!line.startsWith(commentPrefix)) {
+                try {
+                    val (v1, v2) = lineParser(line)
+                    g.addVertex(v1)
+                    g.addVertex(v2)
+                    g.addEdge(v1, v2)
+                } catch (e: IllegalArgumentException) {
+                    // skip this line because it cant be parsed
+                }
             }
         }
         return g
@@ -32,8 +40,8 @@ object GraphIO {
      * Imports a [SimpleGraph] with [Int] as the vertex type from the file located at [filePath].
      * Each line of the file has to match the Regex [0-9]+[ \t]+[0-9]+. Any line that does not match this is skipped.
      */
-    fun importSimpleGraphFromFileWithInts(filePath: String): SimpleGraph<Int> {
-        return importSimpleGraphFromFile(filePath) {
+    fun importSimpleGraphFromFileWithInts(filePath: String, commentPrefix: String = "#"): SimpleGraph<Int> {
+        return importSimpleGraphFromFile(filePath, commentPrefix) {
             val regex = Regex("[0-9]+[ \t]+[0-9]+")
             if (it.matches(regex)) {
                 val nums = it.split(' ', '\t')
@@ -50,8 +58,8 @@ object GraphIO {
      * Imports a [SimpleGraph] with [String] as the vertex type from the file located at [filePath].
      * Each line of the file has to match the Regex [^ \t]+[ \t]+[^ \t]+. Any line that does not match this is skipped.
      */
-    fun importSimpleGraphFromFileWithStrings(filePath: String): SimpleGraph<String> {
-        return importSimpleGraphFromFile(filePath) {
+    fun importSimpleGraphFromFileWithStrings(filePath: String, commentPrefix: String = "#"): SimpleGraph<String> {
+        return importSimpleGraphFromFile(filePath, commentPrefix) {
             val regex = Regex("[^ \t]+[ \t]+[^ \t]+")
             if (it.matches(regex)) {
                 val nums = it.split(' ', '\t')
