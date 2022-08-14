@@ -1,7 +1,7 @@
 package generate
 
 import graphs.SimpleGraph
-import utils.Utils.intersection
+import utils.SetTheory.intersection
 
 object GraphModifications {
 

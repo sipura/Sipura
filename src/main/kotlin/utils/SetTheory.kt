@@ -1,6 +1,6 @@
 package utils
 
-object Utils {
+object SetTheory {
 
     /**
      * This method runs faster than creating the set that contains

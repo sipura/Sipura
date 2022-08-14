@@ -1,7 +1,7 @@
 package alg
 
 import graphs.SimpleGraph
-import utils.Utils.isDisjoint
+import utils.SetTheory.isDisjoint
 
 object VertexSets {
 

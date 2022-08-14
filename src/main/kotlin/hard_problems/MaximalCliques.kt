@@ -1,7 +1,7 @@
 package hard_problems
 
 import graphs.SimpleGraph
-import utils.Utils
+import utils.SetTheory
 
 object MaximalCliques {
 
@@ -21,8 +21,8 @@ object MaximalCliques {
         val res = HashSet<Set<V>>()
         for (v in P.toSet()) {
             val newR = HashSet(R).apply { add(v) }
-            val newP = Utils.intersection(P, g.neighbors(v))
-            val newX = Utils.intersection(X, g.neighbors(v))
+            val newP = SetTheory.intersection(P, g.neighbors(v))
+            val newX = SetTheory.intersection(X, g.neighbors(v))
             res.addAll(listMaximalCliques(g, newR, newP, newX))
 
             P.remove(v)
