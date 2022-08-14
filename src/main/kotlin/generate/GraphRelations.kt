@@ -3,7 +3,7 @@ package generate
 import graphs.SimpleGraph
 import utils.SetTheory.intersection
 
-object GraphModifications {
+object GraphRelations {
 
     fun <V> complementGraph(g: SimpleGraph<V>): SimpleGraph<V> {
         val complement = SimpleGraph<V>()
@@ -34,6 +34,15 @@ object GraphModifications {
             }
         }
         return subgraph
+    }
+
+    fun <V> isSubgraph(sub: SimpleGraph<V>, g: SimpleGraph<V>): Boolean {
+        if (sub.V.any { it !in g.V }) return false
+        for ((v1, v2) in sub.edgeIterator()) {
+            if (!g.hasEdge(v1, v2)) return false
+        }
+
+        return true
     }
 
     fun <V> union(g1: SimpleGraph<V>, g2: SimpleGraph<V>): SimpleGraph<V> {
