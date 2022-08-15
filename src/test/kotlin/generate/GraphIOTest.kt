@@ -12,9 +12,9 @@ internal class GraphIOTest {
 
     val dirPath = "testFiles"
 
-    val nonExistingFilePath = "$dirPath\\testGraph0.graph"
-    val testFile1Path = "$dirPath\\testGraph1.graph"
-    val testFile2Path = "$dirPath\\testGraph2.graph"
+    val nonExistingFilePath = "$dirPath/testGraph0.graph"
+    val testFile1Path = "$dirPath/testGraph1.graph"
+    val testFile2Path = "$dirPath/testGraph2.graph"
 
     @BeforeEach
     fun setup() {
