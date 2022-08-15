@@ -16,4 +16,18 @@ object Adapter {
 
         return res
     }
+
+    fun <V> fromJGraphT(g: org.jgrapht.graph.SimpleGraph<V, DefaultEdge>): SimpleGraph<V> {
+        val res = SimpleGraph<V>()
+
+        for (v in g.vertexSet()) {
+            res.addVertex(v)
+        }
+        for (edge in g.edgeSet()) {
+            res.addEdge(g.getEdgeSource(edge), g.getEdgeTarget(edge))
+        }
+
+        return res
+    }
+
 }
