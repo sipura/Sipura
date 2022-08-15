@@ -14,6 +14,7 @@ repositories {
 dependencies {
     implementation("org.junit.jupiter:junit-jupiter:5.8.1")
     testImplementation(kotlin("test"))
+    implementation("org.jgrapht:jgrapht-core:1.5.1")
 }
 
 tasks.test {
