@@ -76,5 +76,5 @@ object SetTheory {
     /**
      * @return True if all elements of [s1] are also in [s2]
      */
-    fun <E> isSubset(s1: Set<E>, s2: Set<E>): Boolean = s1.all { it in s2 }
+    fun <E> isSubset(s1: Set<E>, s2: Set<E>): Boolean = s1.size <= s2.size && s1.all { it in s2 }
 }

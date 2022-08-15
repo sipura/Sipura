@@ -92,6 +92,19 @@ internal class GraphRelationsTest {
 
             assertFalse { isSubgraph(line2, twoSingles) }
         }
+
+        @Test
+        fun `triangle123 is not subgraph of triangle234`() {
+            val triangle123 = createCycle(3)
+
+            val triangle234 = SimpleGraph<Int>()
+            for (v in 2..4) triangle234.addVertex(v)
+            triangle234.addEdge(2, 3)
+            triangle234.addEdge(2, 4)
+            triangle234.addEdge(3, 4)
+
+            assertFalse { isSubgraph(triangle123, triangle234) }
+        }
     }
 
 

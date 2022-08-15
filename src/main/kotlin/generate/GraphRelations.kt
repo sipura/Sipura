@@ -39,10 +39,11 @@ object GraphRelations {
 
     fun <V> isSubgraph(sub: SimpleGraph<V>, g: SimpleGraph<V>): Boolean {
         if (!isSubset(sub.V, g.V)) return false
+        if (sub.m > g.m) return false
         for ((v1, v2) in sub.edgeIterator()) {
             if (!g.hasEdge(v1, v2)) return false
         }
-        val x = HashSet<Int>()
+
         return true
     }
 
