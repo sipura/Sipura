@@ -4,8 +4,16 @@ import graphs.SimpleGraph
 import utils.SetTheory.intersection
 import utils.SetTheory.isSubset
 
+/**
+ * Provides utility methods that arise when graphs stand in a relationship to each other,
+ * for example if one graph is a subgraph or the complement of another graph.
+ */
 object GraphRelations {
 
+    /**
+     * @return The complement graph of [g]. This means that the complement graph has the same vertices as [g],
+     * and two vertices are connected in the complement graph if and only if they are not connected in [g].
+     */
     fun <V> complementGraph(g: SimpleGraph<V>): SimpleGraph<V> {
         val complement = SimpleGraph<V>()
         for (v in g.V) complement.addVertex(v)
@@ -20,7 +28,10 @@ object GraphRelations {
     }
 
     /**
+     * @throws IllegalArgumentException if [S] is not a subset of the vertices [g].
      *
+     * @return The subgraph of [g] induced by the vertices in [S]. This means that if an edge is connected to a
+     * vertex outside of [S] it is not included in the subgraph.
      */
     fun <V> inducedSubgraph(g: SimpleGraph<V>, S: Set<V>): SimpleGraph<V> {
         val subgraph = SimpleGraph<V>()
@@ -37,6 +48,11 @@ object GraphRelations {
         return subgraph
     }
 
+    /**
+     * @return True if [sub] is a subgraph of [g], false otherwise.
+     *
+     * @see <a href="https://en.wikipedia.org/wiki/Glossary_of_graph_theory#subgraph</a>
+     */
     fun <V> isSubgraph(sub: SimpleGraph<V>, g: SimpleGraph<V>): Boolean {
         if (!isSubset(sub.V, g.V)) return false
         if (sub.m > g.m) return false
@@ -47,6 +63,9 @@ object GraphRelations {
         return true
     }
 
+    /**
+     * @return The graph that is the union of [g1] and [g2].
+     */
     fun <V> union(g1: SimpleGraph<V>, g2: SimpleGraph<V>): SimpleGraph<V> {
         val res = SimpleGraph<V>()
         g1.V.forEach { res.addVertex(it) }
@@ -55,6 +74,7 @@ object GraphRelations {
         for ((v1, v2) in g1.edgeIterator()) {
             res.addEdge(v1, v2)
         }
+
         for ((v1, v2) in g2.edgeIterator()) {
             res.addEdge(v1, v2)
         }
