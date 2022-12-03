@@ -81,12 +81,14 @@ class Partitioning<T> {
             if (equalElem == null) {
                 this += elem
                 representatives.add(elem)
-            } else addToSubset(equalElem, elem)
+            } else {
+                addToSubset(equalElem, elem)
+            }
         }
     }
 
     /**Adds all subsets of [other] as new subsets.
-     * This methods requires the elements of [other] to be disjoint from
+     * This method requires the elements of [other] to be disjoint from
      * the element in this <=> [other] may not contain an element that is already saved in this object.*/
     fun disjointUnion(other: Partitioning<T>) {
         other.elements().forEach { require(it !in this) }

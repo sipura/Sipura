@@ -38,7 +38,9 @@ open class SimpleGraph<V> {
         return if (v !in map) {
             map[v] = mutableSetOf()
             true
-        } else false
+        } else {
+            false
+        }
     }
 
     /**
