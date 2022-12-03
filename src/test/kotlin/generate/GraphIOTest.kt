@@ -15,7 +15,7 @@ import kotlin.test.Ignore
 
 internal class GraphIOTest {
 
-    val dirPath = "testFiles"
+    val dirPath = "graphfiles"
 
     val nonExistingFilePath = "$dirPath/testGraph0.graph"
     val testFile1Path = "$dirPath/testGraph1.graph"
