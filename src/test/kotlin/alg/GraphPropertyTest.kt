@@ -109,8 +109,6 @@ internal class GraphPropertyTest {
             g.addEdge(6, 7)
             assertFalse { GraphProperty.isAcyclic(g) }
         }
-
-
     }
 
     @Nested
@@ -155,9 +153,7 @@ internal class GraphPropertyTest {
             val g = createCycle(5)
             assertThrows<IllegalArgumentException> { GraphProperty.isKRegular(g, -2) }
         }
-
     }
-
 
     @Nested
     internal inner class IsBipartite {
@@ -197,7 +193,6 @@ internal class GraphPropertyTest {
             assertTrue { GraphProperty.isBipartite(createBipartite(10, 13)) }
         }
     }
-
 
     @Nested
     internal inner class IsCubic {

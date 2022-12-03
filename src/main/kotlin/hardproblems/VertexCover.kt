@@ -1,4 +1,4 @@
-package hard_problems
+package hardproblems
 
 import graphs.SimpleGraph
 
@@ -24,6 +24,5 @@ object VertexCover {
         }
 
         return checkVertex(v1) || checkVertex(v2)
-
     }
 }

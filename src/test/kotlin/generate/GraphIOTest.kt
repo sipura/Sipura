@@ -1,12 +1,17 @@
 package generate
 
-import org.junit.jupiter.api.*
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Nested
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.io.TempDir
 import java.io.File
 import java.io.FileNotFoundException
 import kotlin.test.Ignore
-
 
 internal class GraphIOTest {
 
@@ -18,12 +23,10 @@ internal class GraphIOTest {
 
     @BeforeEach
     fun setup() {
-
     }
 
     @AfterEach
     fun after() {
-
     }
 
     @Nested
@@ -146,7 +149,6 @@ internal class GraphIOTest {
             assertTrue { g.hasEdge("1", "3") }
             assertTrue { g.hasEdge("2", "3") }
         }
-
     }
 
     @Nested
@@ -183,8 +185,5 @@ internal class GraphIOTest {
             }
             assertEquals(3, lineCounter)
         }
-
     }
-
 }
-

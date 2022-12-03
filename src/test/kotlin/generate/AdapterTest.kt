@@ -107,5 +107,4 @@ internal class AdapterTest {
             for (i in 2..5) assertTrue { g.hasEdge(1, i) }
         }
     }
-
 }

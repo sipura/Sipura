@@ -84,5 +84,4 @@ internal class SetTheoryTest {
             assertEquals(3, SetTheory.unionSize(setOf(3, 4), setOf(3, 4, 5)))
         }
     }
-
 }

@@ -11,7 +11,6 @@ object Neighbors {
      * @return The closed [k]-neighborhood of vertex [v].
      */
     fun <V> closedNeighborsDistK(g: SimpleGraph<V>, v: V, k: Int): MutableSet<V> {
-
         val res = HashSet<V>()
         val iter = breadthFirstSearchLayerIterator(g, v)
         repeat(k + 1) { res.addAll(iter.next()) }
@@ -34,7 +33,6 @@ object Neighbors {
      * @return The closed [k]-neighborhood of vertex [v].
      */
     fun <V> openNeighborsDistK(g: SimpleGraph<V>, v: V, k: Int): MutableSet<V> {
-
         val iter = breadthFirstSearchLayerIterator(g, v)
         repeat(k) { iter.next() }
         return iter.next()

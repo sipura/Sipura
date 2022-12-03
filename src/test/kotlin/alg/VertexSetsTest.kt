@@ -126,6 +126,5 @@ internal class VertexSetsTest {
             val g = createLine(4)
             assertEquals(0, cutSize(g, setOf()))
         }
-
     }
 }

@@ -1,4 +1,4 @@
-package hard_problems
+package hardproblems
 
 import graphs.SimpleGraph
 import utils.SetTheory
@@ -14,9 +14,9 @@ object MaximalCliques {
         P: MutableSet<V>,
         X: MutableSet<V>
     ): Set<Set<V>> {
-
-        if (P.isEmpty() && X.isEmpty())
+        if (P.isEmpty() && X.isEmpty()) {
             return setOf(R)
+        }
 
         val res = HashSet<Set<V>>()
         for (v in P.toSet()) {

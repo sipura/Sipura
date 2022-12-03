@@ -39,8 +39,9 @@ object VertexSets {
      */
     fun <V> isIndependentSet(g: SimpleGraph<V>, S: Set<V>): Boolean {
         for (s in S) {
-            if (!isDisjoint(g.neighbors(s), S))
+            if (!isDisjoint(g.neighbors(s), S)) {
                 return false
+            }
         }
         return true
     }
@@ -62,10 +63,11 @@ object VertexSets {
 
         for (s in S) {
             for (nb in g.neighbors(s)) {
-                if (nb !in S)
+                if (nb !in S) {
                     counterOnce++
-                else
+                } else {
                     counterTwice++
+                }
             }
         }
 
@@ -79,5 +81,4 @@ object VertexSets {
      */
     fun <V> cutSize(g: SimpleGraph<V>, S: Collection<V>): Int =
         S.sumOf { s -> g.neighbors(s).count { it !in S } }
-
 }

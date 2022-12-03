@@ -1,7 +1,6 @@
 package generate
 
 import com.google.common.graph.GraphBuilder
-
 import graphs.SimpleGraph
 import org.jgrapht.graph.DefaultEdge
 
@@ -62,5 +61,4 @@ object Adapter {
 
         return res
     }
-
 }

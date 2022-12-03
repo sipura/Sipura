@@ -14,7 +14,6 @@ open class SimpleGraph<V> {
     var m: Int = 0
         private set
 
-
     /**
      * Uses an immutable set because no elements should be removed from this set. The set that is
      * returned is used in the internal data structure of this class. Removing elements from this
@@ -22,7 +21,6 @@ open class SimpleGraph<V> {
      */
     val V: Set<V>
         get() = map.keys
-
 
     private fun assertVertexExists(v: V, vertexName: String) {
         if (v !in map) throw IllegalArgumentException("Graph does not contain vertex $vertexName.")
@@ -154,7 +152,6 @@ open class SimpleGraph<V> {
      * returns edge each twice, as Pair(v1, v2) and as Pair(v2, v1)
      */
     fun edgeTwiceIterator(): Iterator<Pair<V, V>> {
-
         if (n == 0) { // please wash your eyes
             return object : Iterator<Pair<V, V>> {
                 override fun hasNext() = false
@@ -182,7 +179,6 @@ open class SimpleGraph<V> {
                 eCtr++
                 return Pair(v1Curr, v2Iterator.next())
             }
-
         }
     }
 
@@ -223,5 +219,4 @@ open class SimpleGraph<V> {
             builder.append("$v1: [${neighbors(v1).joinToString()}]\n")
         return builder.toString()
     }
-
 }

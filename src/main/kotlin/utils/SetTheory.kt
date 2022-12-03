@@ -20,10 +20,11 @@ object SetTheory {
      * @return This size of the union of [s1] and [s1].
      */
     fun <E> intersectionSize(s1: Set<E>, s2: Set<E>): Int =
-        if (s1.size < s2.size)
+        if (s1.size < s2.size) {
             s1.count { it in s2 }
-        else
+        } else {
             s2.count { it in s1 }
+        }
 
     /**
      * This function works by taking the smaller set of [s1] and [s2],
@@ -39,7 +40,6 @@ object SetTheory {
         if (s1.size < s2.size) {
             for (e in s1) {
                 if (e in s2) res.add(e)
-
             }
         } else {
             for (e in s2) {
@@ -61,11 +61,11 @@ object SetTheory {
      * @return This size of the union of [s1] and [s1].
      */
     fun <E> unionSize(s1: Set<E>, s2: Set<E>): Int =
-        if (s1.size < s2.size)
+        if (s1.size < s2.size) {
             s2.size + s1.count { it !in s2 }
-        else
+        } else {
             s1.size + s2.count { it !in s1 }
-
+        }
 
     /**
      * @return True iff [s1] and [s2] have no elements in common.
@@ -74,11 +74,11 @@ object SetTheory {
      * and then checking if no element of the smaller set is not contained in the other set.
      */
     fun <E> isDisjoint(s1: Set<E>, s2: Set<E>): Boolean =
-        if (s1.size < s2.size)
+        if (s1.size < s2.size) {
             s1.none { it in s2 }
-        else
+        } else {
             s2.none { it in s1 }
-
+        }
 
     /**
      * runtime: O( |s1| )

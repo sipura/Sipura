@@ -18,7 +18,6 @@ object Selection {
      * @return the top [k] elements of a collection.
      */
     fun <E> takeTopK(collection: Collection<E>, k: Int): List<E> {
-
         val heap = PriorityQueue<E>(Collections.reverseOrder())
         heap.addAll(collection)
 
@@ -26,5 +25,4 @@ object Selection {
         repeat(k) { res.add(heap.remove()) }
         return res
     }
-
 }

@@ -1,7 +1,7 @@
-package hard_problems
+package hardproblems
 
 import generate.Factory
-import hard_problems.VertexColoring.hasKColoring
+import hardproblems.VertexColoring.hasKColoring
 import org.junit.jupiter.api.Test
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue

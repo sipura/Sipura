@@ -15,7 +15,7 @@ class Partitioning<T> {
     fun elements(): Set<T> = m.keys
     fun size(): Int = m.size
 
-    //If one subset is {a, b}, then both a and b map to {a, b}. You only want to take the subset once.
+    // If one subset is {a, b}, then both a and b map to {a, b}. You only want to take the subset once.
     fun subsets() = m.values.distinct()
 
     /**@return *True* iff any subset contains [t]*/
@@ -64,7 +64,6 @@ class Partitioning<T> {
         m[elem]!!.toList().forEach { this -= it }
     }
 
-
     /**Adds all elements from [col] into this data structure. Elements for which [eqPredicate] returns *true* are
      * added into the same subset.
      *
@@ -100,11 +99,11 @@ class Partitioning<T> {
     fun merge(a: T, b: T) {
         require(a in this && b in this)
 
-        if (m[a] === m[b]) return       //a and b already are in the same subset
+        if (m[a] === m[b]) return // a and b already are in the same subset
 
-        val (x, y) = listOf(a, b).sortedBy { m[it]!!.size } //size of the subset m[x] is <= the size of the subset [my]
+        val (x, y) = listOf(a, b).sortedBy { m[it]!!.size } // size of the subset m[x] is <= the size of the subset [my]
 
-        m[x]!!.toList().forEach {   //adds the smaller subset into the other
+        m[x]!!.toList().forEach { // adds the smaller subset into the other
             m[y]!!.add(it)
             m[it] = m[y]!!
         }

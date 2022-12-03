@@ -93,7 +93,6 @@ internal class ConnectivityTest {
 
         @Test
         fun `check for union of path3, path2 and one isolated vertex`() {
-
             val g = SimpleGraph<Int>()
             for (v in 1..6) g.addVertex(v)
             g.addEdge(1, 2)
@@ -109,7 +108,7 @@ internal class ConnectivityTest {
                 3 to componentA,
                 4 to componentB,
                 5 to componentB,
-                6 to componentC,
+                6 to componentC
             )
 
             val res = Connectivity.listAllConnectedComponents(g)
@@ -120,7 +119,6 @@ internal class ConnectivityTest {
             assertSame(res[2], res[3])
             assertSame(res[4], res[5])
         }
-
     }
 
     @Nested
@@ -139,7 +137,6 @@ internal class ConnectivityTest {
 
         @Test
         fun `check that union of path3, path2 and one isolated vertex has 3 components`() {
-
             val g = SimpleGraph<Int>()
             for (v in 1..6) g.addVertex(v)
             g.addEdge(1, 2)
@@ -149,7 +146,6 @@ internal class ConnectivityTest {
             val res = Connectivity.numberOfConnectedComponents(g)
             assertEquals(3, res)
         }
-
     }
 
     @Nested
@@ -234,7 +230,8 @@ internal class ConnectivityTest {
         @Test
         fun `shortest path between corners of star goes through center`() {
             assertEquals(
-                listOf(2, 1, 3), shortestPath(
+                listOf(2, 1, 3),
+                shortestPath(
                     Samples.star4Plus1IsolatedVertex(),
                     2,
                     3
@@ -266,7 +263,6 @@ internal class ConnectivityTest {
         @Test
         fun `shortest path from a vertex to itself is just the vertex`() {
             assertEquals(listOf(2), shortestPath(createLine(5), 2, 2))
-
         }
     }
 }

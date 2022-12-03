@@ -41,16 +41,16 @@ class SegmentedList<T> {
     operator fun get(index: Int): T = values[index]
 
     /**Has constant runtime*/
-    operator fun contains(elem: T): Boolean = freq.getValue(elem) > 0       //uses default value 0
+    operator fun contains(elem: T): Boolean = freq.getValue(elem) > 0 // uses default value 0
 
-    /**Adds the element to to the end and creates a new segment for it*/
+    /**Adds the element to the end and creates a new segment for it*/
     operator fun plusAssign(elem: T) = plusAssign(listOf(elem))
 
     /**Appends all elements of [col] to the stack in *one* segment.*/
     operator fun plusAssign(col: Collection<T>) {
         segmentSizes.add((segmentSizes.lastOrNull() ?: 0) + col.size)
         for (elem in col) {
-            freq[elem] = freq.getValue(elem) + 1    //use default-value of 0
+            freq[elem] = freq.getValue(elem) + 1 // use default-value of 0
             values.add(elem)
         }
     }
@@ -59,19 +59,18 @@ class SegmentedList<T> {
     fun addToLast(col: Collection<T>) {
         segmentSizes[segmentSizes.size - 1] += col.size
         for (elem in col) {
-            freq[elem] = freq.getValue(elem) + 1    //use default-value of 0
+            freq[elem] = freq.getValue(elem) + 1 // use default-value of 0
             values.add(elem)
         }
-
     }
 
     /**Removes the last segment with all its entries.*/
     fun removeLastSegment() {
         val second_last_segmentSize = segmentSizes.getOrNull(segmentSizes.size - 2) ?: 0
         repeat(segmentSizes.last() - second_last_segmentSize) { // number of elements in last segment
-            freq[values.last()] = freq[values.last()]!! - 1 //decrease its frequency by 1
-            values.removeLast()    //remove last element
+            freq[values.last()] = freq[values.last()]!! - 1 // decrease its frequency by 1
+            values.removeLast() // remove last element
         }
-        segmentSizes.removeAt(segmentSizes.size - 1)  //remove last element
+        segmentSizes.removeAt(segmentSizes.size - 1) // remove last element
     }
 }

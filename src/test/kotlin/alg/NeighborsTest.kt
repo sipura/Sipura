@@ -16,7 +16,6 @@ internal class NeighborsTest {
             val correctNB = setOf(2, 3, 4, 5, 6)
             assertEquals(correctNB, Neighbors.closedNeighborsDistK(createLine(7), v = 4, k = 2))
         }
-
     }
 
     @Nested
@@ -27,7 +26,6 @@ internal class NeighborsTest {
             val correctNB = setOf(2, 6)
             assertEquals(correctNB, Neighbors.openNeighborsDistK(createLine(7), v = 4, k = 2))
         }
-
     }
 
     @Nested

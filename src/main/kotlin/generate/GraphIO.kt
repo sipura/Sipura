@@ -104,5 +104,4 @@ object GraphIO {
             "$v1 $v2"
         }
     }
-
 }

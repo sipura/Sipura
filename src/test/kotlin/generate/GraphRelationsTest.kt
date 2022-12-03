@@ -33,7 +33,6 @@ internal class GraphRelationsTest {
             assertEquals(1, complement.m)
             assertTrue { complement.hasEdge(1, 3) }
         }
-
     }
 
     @Nested
@@ -52,7 +51,6 @@ internal class GraphRelationsTest {
             assertEquals(1, sub.m)
             assertTrue { sub.hasEdge(1, 2) }
         }
-
     }
 
     @Nested
@@ -106,7 +104,6 @@ internal class GraphRelationsTest {
             assertFalse { isSubgraph(triangle123, triangle234) }
         }
     }
-
 
     @Nested
     internal inner class Union {

@@ -56,7 +56,6 @@ internal class TraversalTest {
             assertEquals(setOf(1, 5), iter.next())
             assertFalse { iter.hasNext() }
         }
-
     }
 
     @Nested
@@ -101,9 +100,7 @@ internal class TraversalTest {
             assertContains(setOf(1, 5), iter.next())
             assertFalse { iter.hasNext() }
         }
-
     }
-
 
     @Nested
     internal inner class DepthFirstSearchIterator {
@@ -146,6 +143,5 @@ internal class TraversalTest {
             assertTrue { result == listOf(3, 2, 1, 4, 5) || result == listOf(3, 4, 5, 2, 1) }
             assertFalse { iter.hasNext() }
         }
-
     }
 }

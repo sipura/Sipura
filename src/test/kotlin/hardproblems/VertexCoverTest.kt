@@ -1,4 +1,4 @@
-package hard_problems
+package hardproblems
 
 import generate.Factory
 import org.junit.jupiter.api.Nested
@@ -46,6 +46,5 @@ internal class VertexCoverTest {
             }
             assertTrue { VertexCover.decisionVertexCover(g, k = optK) }
         }
-
     }
 }

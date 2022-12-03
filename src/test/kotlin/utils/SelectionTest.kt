@@ -12,7 +12,6 @@ internal class SelectionTest {
         val res = Selection.takeTopK(l, 3)
         assertEquals(res.toSet(), setOf(8, 9, 10))
         assertEquals(3, res.size)
-
     }
 
     @Test
@@ -27,6 +26,5 @@ internal class SelectionTest {
     fun `throws NoSuchElementException when trying to take 10 elements from 1 2 3`() {
         val l = listOf(1, 2, 3)
         assertThrows<NoSuchElementException> { Selection.takeTopK(l, 10) }
-
     }
 }

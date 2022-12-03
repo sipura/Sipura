@@ -6,7 +6,6 @@ import java.util.*
 object Traversal {
 
     fun <V> breadthFirstSearchIterator(g: SimpleGraph<V>, v: V): Iterator<V> {
-
         if (v !in g.V) throw IllegalArgumentException("Graph does not contain vertex v")
 
         return object : Iterator<V> {
@@ -28,12 +27,10 @@ object Traversal {
                 }
                 return next
             }
-
         }
     }
 
     fun <V> breadthFirstSearchLayerIterator(g: SimpleGraph<V>, v: V): Iterator<MutableSet<V>> {
-
         if (v !in g.V) throw IllegalArgumentException("Graph does not contain vertex v")
 
         return object : Iterator<MutableSet<V>> {
@@ -60,12 +57,10 @@ object Traversal {
                 queue = queueNew
                 return res
             }
-
         }
     }
 
     fun <V> depthFirstSearchIterator(g: SimpleGraph<V>, v: V): Iterator<V> {
-
         if (v !in g.V) throw IllegalArgumentException("Graph does not contain vertex v")
 
         return object : Iterator<V> {
@@ -87,8 +82,6 @@ object Traversal {
                 }
                 return next
             }
-
         }
     }
-
 }
