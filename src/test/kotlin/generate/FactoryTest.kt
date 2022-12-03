@@ -178,5 +178,17 @@ internal class FactoryTest {
             }
             assertEquals(correctMap, getFieldValue(mapName, g, g.javaClass))
         }
+
+        @Test
+        fun `can't create star of size 0`() {
+            assertThrows<IllegalArgumentException> { Factory.createStar(0) }
+        }
+
+        @Test
+        fun `create star with just one vertex`() {
+            val g = Factory.createStar(1)
+            val correctMap = mapOf(1 to setOf<Int>())
+            assertEquals(correctMap, getFieldValue(mapName, g, g.javaClass))
+        }
     }
 }
