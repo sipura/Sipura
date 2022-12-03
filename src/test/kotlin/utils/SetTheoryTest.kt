@@ -33,7 +33,7 @@ internal class SetTheoryTest {
 
         @Test
         fun `{ } and { } are disjoint`() {
-            assertFalse { SetTheory.isDisjoint(setOf<Int>(), setOf()) }
+            assertTrue { SetTheory.isDisjoint(setOf<Int>(), setOf()) }
         }
     }
 
