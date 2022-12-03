@@ -66,6 +66,13 @@ object SetTheory {
         else
             s1.size + s2.count { it !in s1 }
 
+
+    /**
+     * @return True iff [s1] and [s2] have no elements in common.
+     *
+     * This function works by taking the smaller set of [s1] and [s2],
+     * and then checking if no element of the smaller set is not contained in the other set.
+     */
     fun <E> isDisjoint(s1: Set<E>, s2: Set<E>): Boolean =
         if (s1.size < s2.size)
             s1.none { it in s2 }
@@ -74,6 +81,9 @@ object SetTheory {
 
 
     /**
+     * runtime: O( |s1| )
+     * Is also fail fast if [s1] has more elements than [s2].
+     *
      * @return True if all elements of [s1] are also in [s2]
      */
     fun <E> isSubset(s1: Set<E>, s2: Set<E>): Boolean = s1.size <= s2.size && s1.all { it in s2 }

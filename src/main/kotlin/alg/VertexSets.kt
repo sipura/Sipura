@@ -74,6 +74,8 @@ object VertexSets {
 
     /**
      * Assumes that [S] is a subset of the vertices of [g].
+     *
+     * Counts the number of edges in [g] between vertices in [S] and vertices not in [S].
      */
     fun <V> cutSize(g: SimpleGraph<V>, S: Collection<V>): Int =
         S.sumOf { s -> g.neighbors(s).count { it !in S } }

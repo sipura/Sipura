@@ -62,14 +62,14 @@ internal class GraphRelationsTest {
         fun `line4 is subgraph of line7`() {
             val line4 = createLine(4)
             val line7 = createLine(7)
-            assertTrue { isSubgraph(line4,line7) }
+            assertTrue { isSubgraph(line4, line7) }
         }
 
         @Test
         fun `triangle is not subgraph of line4`() {
             val line4 = createCycle(3)
             val line7 = createLine(4)
-            assertFalse { isSubgraph(line4,line7) }
+            assertFalse { isSubgraph(line4, line7) }
         }
 
         @Test
@@ -79,7 +79,7 @@ internal class GraphRelationsTest {
             twoSingles.addVertex(2)
 
             val line2 = createLine(2)
-            assertTrue { isSubgraph(twoSingles,line2) }
+            assertTrue { isSubgraph(twoSingles, line2) }
         }
 
         @Test

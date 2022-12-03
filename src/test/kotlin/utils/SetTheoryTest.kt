@@ -30,6 +30,11 @@ internal class SetTheoryTest {
         fun `{3 4} and {3 4 5} are not disjoint`() {
             assertFalse { SetTheory.isDisjoint(setOf(3, 4), setOf(3, 4, 5)) }
         }
+
+        @Test
+        fun `{ } and { } are disjoint`() {
+            assertFalse { SetTheory.isDisjoint(setOf<Int>(), setOf()) }
+        }
     }
 
     @Nested

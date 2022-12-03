@@ -3,6 +3,15 @@ package alg
 import graphs.SimpleGraph
 import java.util.*
 
+/**
+ * Provides method to inspect the connectivity of a graph.
+ * This includes methods to check if a graph is connected, and to find the connected components of a graph.
+ * Also provides methods to find the shortest path between two vertices.
+ *
+ * For a specific vertex, information like its connected component and its distance to a given vertex can be found.
+ *
+ * For more information, see https://en.wikipedia.org/wiki/Connectivity_(graph_theory)
+ */
 object Connectivity {
 
     /**
