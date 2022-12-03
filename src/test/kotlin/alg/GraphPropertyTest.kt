@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import kotlin.test.assertEquals
 
-internal class GraphTraitTest {
+internal class GraphPropertyTest {
 
     @Nested
     internal inner class IsTree {
@@ -23,27 +23,27 @@ internal class GraphTraitTest {
         fun `one isolated vertex is a (trivial) tree`() {
             val g = SimpleGraph<Int>()
             g.addVertex(7)
-            kotlin.test.assertTrue { GraphTrait.isTree(g) }
+            kotlin.test.assertTrue { GraphProperty.isTree(g) }
         }
 
         @Test
         fun `triangle is not a tree`() {
-            assertFalse { GraphTrait.isTree(createCycle(3)) }
+            assertFalse { GraphProperty.isTree(createCycle(3)) }
         }
 
         @Test
         fun `path5 is a tree`() {
-            kotlin.test.assertTrue { GraphTrait.isTree(createLine(5)) }
+            kotlin.test.assertTrue { GraphProperty.isTree(createLine(5)) }
         }
 
         @Test
         fun `star4 with one isolated vertex is not a tree`() {
-            assertFalse { GraphTrait.isTree(Samples.star4Plus1IsolatedVertex()) }
+            assertFalse { GraphProperty.isTree(Samples.star4Plus1IsolatedVertex()) }
         }
 
         @Test
         fun `bipartite graph of size (4, 7) is not a tree`() {
-            assertFalse { GraphTrait.isTree(createBipartite(4, 7)) }
+            assertFalse { GraphProperty.isTree(createBipartite(4, 7)) }
         }
     }
 
@@ -52,17 +52,17 @@ internal class GraphTraitTest {
 
         @Test
         fun `triangle is complete`() {
-            assertTrue { GraphTrait.isComplete(createCompleteGraph(3)) }
+            assertTrue { GraphProperty.isComplete(createCompleteGraph(3)) }
         }
 
         @Test
         fun `path4 is not complete`() {
-            assertFalse { GraphTrait.isComplete(createLine(4)) }
+            assertFalse { GraphProperty.isComplete(createLine(4)) }
         }
 
         @Test
         fun `complete graph of size 10 is complete`() {
-            assertTrue { GraphTrait.isComplete(createCompleteGraph(10)) }
+            assertTrue { GraphProperty.isComplete(createCompleteGraph(10)) }
         }
     }
 
@@ -71,31 +71,31 @@ internal class GraphTraitTest {
 
         @Test
         fun `empty graph is acyclic`() {
-            assertTrue { GraphTrait.isAcyclic(SimpleGraph<Int>()) }
+            assertTrue { GraphProperty.isAcyclic(SimpleGraph<Int>()) }
         }
 
         @Test
         fun `graph with single connectivity component is acyclic`() {
-            assertTrue { GraphTrait.isAcyclic(createLine(5)) }
+            assertTrue { GraphProperty.isAcyclic(createLine(5)) }
         }
 
         @Test
         fun `graph with single connectivity component is not acyclic`() {
             val g = createLine(5)
             g.addEdge(5, 1)
-            assertFalse { GraphTrait.isAcyclic(g) }
+            assertFalse { GraphProperty.isAcyclic(g) }
         }
 
         @Test
         fun `graph with multiple connectivity components is acyclic`() {
-            assertTrue { GraphTrait.isAcyclic(Samples.star4Plus1IsolatedVertex()) }
+            assertTrue { GraphProperty.isAcyclic(Samples.star4Plus1IsolatedVertex()) }
         }
 
         @Test
         fun `graph with multiple connectivity components is not acyclic if one of them is not acyclic`() {
             val g = Samples.star4Plus1IsolatedVertex()
             g.addEdge(2, 3)
-            assertFalse { GraphTrait.isAcyclic(g) }
+            assertFalse { GraphProperty.isAcyclic(g) }
         }
 
         @Test
@@ -107,7 +107,7 @@ internal class GraphTraitTest {
             g.addEdge(5, 6)
             g.addEdge(5, 7)
             g.addEdge(6, 7)
-            assertFalse { GraphTrait.isAcyclic(g) }
+            assertFalse { GraphProperty.isAcyclic(g) }
         }
 
 
@@ -118,7 +118,7 @@ internal class GraphTraitTest {
 
         @Test
         fun `path5 is not 2-regular`() {
-            assertFalse { GraphTrait.isKRegular(createLine(5), 2) }
+            assertFalse { GraphProperty.isKRegular(createLine(5), 2) }
         }
 
         @Test
@@ -141,19 +141,19 @@ internal class GraphTraitTest {
             cube.addEdge(6, 8)
             cube.addEdge(7, 8)
 
-            assertTrue { GraphTrait.isKRegular(cube, 3) }
+            assertTrue { GraphProperty.isKRegular(cube, 3) }
         }
 
         @Test
         fun `cycle5 is 2-regular`() {
             val g = createCycle(5)
-            assertTrue { GraphTrait.isKRegular(g, 2) }
+            assertTrue { GraphProperty.isKRegular(g, 2) }
         }
 
         @Test
         fun `throws exception for k equal -2`() {
             val g = createCycle(5)
-            assertThrows<IllegalArgumentException> { GraphTrait.isKRegular(g, -2) }
+            assertThrows<IllegalArgumentException> { GraphProperty.isKRegular(g, -2) }
         }
 
     }
@@ -164,37 +164,37 @@ internal class GraphTraitTest {
 
         @Test
         fun `path5 is bipartite`() {
-            assertTrue { GraphTrait.isBipartite(createLine(5)) }
+            assertTrue { GraphProperty.isBipartite(createLine(5)) }
         }
 
         @Test
         fun `cycle4 is not bipartite`() {
-            assertTrue { GraphTrait.isBipartite(createCycle(4)) }
+            assertTrue { GraphProperty.isBipartite(createCycle(4)) }
         }
 
         @Test
         fun `cycle5 is not bipartite`() {
-            assertFalse { GraphTrait.isBipartite(createCycle(5)) }
+            assertFalse { GraphProperty.isBipartite(createCycle(5)) }
         }
 
         @Test
         fun `star4 and 1 isolated is bipartite`() {
-            assertTrue { GraphTrait.isBipartite(Samples.star4Plus1IsolatedVertex()) }
+            assertTrue { GraphProperty.isBipartite(Samples.star4Plus1IsolatedVertex()) }
         }
 
         @Test
         fun `complete7 is not bipartite`() {
-            assertFalse { GraphTrait.isBipartite(createCompleteGraph(8)) }
+            assertFalse { GraphProperty.isBipartite(createCompleteGraph(8)) }
         }
 
         @Test
         fun `single vertex is bipartite`() {
-            assertTrue { GraphTrait.isBipartite(createLine(1)) }
+            assertTrue { GraphProperty.isBipartite(createLine(1)) }
         }
 
         @Test
         fun `bipartite graph of size (10, 13) is bipartite (surprisingly)`() {
-            assertTrue { GraphTrait.isBipartite(createBipartite(10, 13)) }
+            assertTrue { GraphProperty.isBipartite(createBipartite(10, 13)) }
         }
     }
 
@@ -204,7 +204,7 @@ internal class GraphTraitTest {
 
         @Test
         fun `path5 is not cubic`() {
-            assertFalse { GraphTrait.isCubic(createLine(5)) }
+            assertFalse { GraphProperty.isCubic(createLine(5)) }
         }
 
         @Test
@@ -227,7 +227,7 @@ internal class GraphTraitTest {
             cube.addEdge(6, 8)
             cube.addEdge(7, 8)
 
-            assertTrue { GraphTrait.isCubic(cube) }
+            assertTrue { GraphProperty.isCubic(cube) }
         }
 
         @Test
@@ -242,12 +242,12 @@ internal class GraphTraitTest {
             g.addEdge(2, 4)
             g.addEdge(3, 4)
 
-            assertTrue { GraphTrait.isCubic(g) }
+            assertTrue { GraphProperty.isCubic(g) }
         }
 
         @Test
         fun `empty graph is not cubic`() {
-            assertThrows<IllegalArgumentException> { GraphTrait.isCubic(SimpleGraph<Int>()) }
+            assertThrows<IllegalArgumentException> { GraphProperty.isCubic(SimpleGraph<Int>()) }
         }
     }
 
@@ -255,22 +255,22 @@ internal class GraphTraitTest {
     internal inner class HIndex {
         @Test
         fun star4() {
-            assertEquals(1, GraphTrait.hIndex(createStar(4)))
+            assertEquals(1, GraphProperty.hIndex(createStar(4)))
         }
 
         @Test
         fun path5() {
-            assertEquals(2, GraphTrait.hIndex(createLine(5)))
+            assertEquals(2, GraphProperty.hIndex(createLine(5)))
         }
 
         @Test
         fun clique8() {
-            assertEquals(7, GraphTrait.hIndex(createCompleteGraph(8)))
+            assertEquals(7, GraphProperty.hIndex(createCompleteGraph(8)))
         }
 
         @Test
         fun emptyGraph() {
-            assertThrows<IllegalArgumentException> { GraphTrait.hIndex(SimpleGraph<Int>()) }
+            assertThrows<IllegalArgumentException> { GraphProperty.hIndex(SimpleGraph<Int>()) }
         }
     }
 }

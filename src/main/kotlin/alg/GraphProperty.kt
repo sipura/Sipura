@@ -2,7 +2,7 @@ package alg
 
 import graphs.SimpleGraph
 
-object GraphTrait {
+object GraphProperty {
 
     fun <V> isTree(g: SimpleGraph<V>): Boolean =
         (g.m == g.n - 1) && Connectivity.isConnected(g) // fail fast: checking edge count runs in constant time
