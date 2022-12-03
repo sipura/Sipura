@@ -15,7 +15,8 @@ fun main() {
     for (v in 1..4) g.addVertex(v)
     g.addEdge(1, 2)
     g.addEdge(1, 3)
-
+    // looks like:   2--1--3   4
+    
     println(g.m) // 2
     println(g.V) // {1, 2, 3, 4}
 
