@@ -51,12 +51,31 @@ object Connectivity {
         return false // traversal finished without hit
     }
 
+    /**
+     * Does a BFS starting from [v] and returns a set of all vertices that are reachable from [v].
+     *
+     * runtime: O(n + m)  ->  every vertex and every edge is visited
+     *
+     * @throws IllegalArgumentException if [v] is not in the graph
+     *
+     * @return a set of all vertices that are reachable from [v]
+     */
     fun <V> getConnectedComponent(g: SimpleGraph<V>, v: V): MutableSet<V> {
         if (v !in g.V) throw IllegalArgumentException("Graph does not contain vertex v")
 
         return Traversal.breadthFirstSearchIterator(g, v).asSequence().toMutableSet()
     }
 
+    /**
+     * Returns a map where the keys of which are all vertices in the graph and
+     * the values of which are the connected components, represented as sets of vertices.
+     *
+     * The connected components are disjoint, i.e. no vertex is contained in more than one connected component.
+     * The connected components are maximal, i.e. no vertex can be added to a connected component without
+     *
+     * @return a map where the keys of which are all vertices in the graph and the values are sets of the
+     * respective connected component.
+     */
     fun <V> listAllConnectedComponents(g: SimpleGraph<V>): MutableMap<V, MutableSet<V>> {
         val result = HashMap<V, MutableSet<V>>()
 
@@ -71,7 +90,9 @@ object Connectivity {
     }
 
     /**
-     * Unlike [listAllConnectedComponents] does not need to store all components in memory at the same time
+     * Unlike [listAllConnectedComponents] does not need to store all components in memory at the same time.
+     *
+     * @return The number of connected components in the graph.
      */
     fun <V> numberOfConnectedComponents(g: SimpleGraph<V>): Int {
         val seen = HashSet<V>()
@@ -87,11 +108,24 @@ object Connectivity {
         return count
     }
 
+    /**
+     * @throws IllegalArgumentException if [g] is empty.
+     *
+     * @return True if the graph is connected, false otherwise.
+     */
     fun <V> isConnected(g: SimpleGraph<V>): Boolean {
         if (g.n == 0) throw IllegalArgumentException("alg.Connectivity for empty graph is ambiguous, so exception for good measure")
         return getConnectedComponent(g, g.V.first()).size == g.n
     }
 
+    /**
+     * Returns the shortest path from [vStart] to [vEnd] by doing a BFS starting from [vStart].
+     * The result is stored in a list of vertices, where the first element is [vStart] and the last element is [vEnd].
+     *
+     * @throws IllegalArgumentException if [vStart] or [vEnd] is not in the graph or if [g] is empty.
+     *
+     * @return a list of vertices representing the shortest path from [vStart] to [vEnd].
+     */
     fun <V> shortestPath(g: SimpleGraph<V>, vStart: V, vEnd: V): List<V> {
         if (g.n == 0) throw IllegalArgumentException("alg.Connectivity for empty graph is ambiguous, so exception for good measure")
         if (vStart !in g.V) throw IllegalArgumentException("Graph does not contain vertex vStart")
@@ -125,6 +159,8 @@ object Connectivity {
     }
 
     /**
+     * The distance of two neighboring vertices is 1, and the distance of a vertex to itself is 0.
+     *
      * @return The number of edges in the shortest path from [v1] to [v2] in graph [g]
      */
     fun <V> distance(g: SimpleGraph<V>, v1: V, v2: V): Int = shortestPath(g, v1, v2).size - 1
