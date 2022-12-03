@@ -15,7 +15,7 @@ import kotlin.test.Ignore
 
 internal class GraphIOTest {
 
-    val dirPath = "graphfiles"
+    private val dirPath = "graphfiles"
 
     val nonExistingFilePath = "$dirPath/testGraph0.graph"
     val testFile1Path = "$dirPath/testGraph1.graph"
@@ -172,10 +172,10 @@ internal class GraphIOTest {
 
         @Test
         @Ignore
-        fun `exportSimpleGraphToFileSpaceSeperated exports graph correctly`(@TempDir tempDir: File) {
+        fun `exportSimpleGraphToFileSpaceSeparated exports graph correctly`(@TempDir tempDir: File) {
             val g = Factory.createLine(4)
             val outputFile = File(tempDir, "output.graph")
-            GraphIO.exportSimpleGraphToFileSpaceSeperated(g, outputFile.absolutePath)
+            GraphIO.exportSimpleGraphToFileSpaceSeparated(g, outputFile.absolutePath)
             val expected = mutableSetOf(setOf("1 2", "2 1"), setOf("2 3", "3 2"), setOf("3 4", "4 3"))
             var lineCounter = 0
             outputFile.forEachLine { line ->

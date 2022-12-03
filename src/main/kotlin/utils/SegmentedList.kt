@@ -27,7 +27,7 @@ class SegmentedList<T> {
     private val freq = HashMap<T, Int>().withDefault { 0 } // how often some element is contained
 
     /**entry at index *i* contains how many elements are stored in the segments 0,1,...,i-1,i summed up.
-     * For this class storing how many entries are just in segment i would also work, but we need the cumulative
+     * For this class storing how many entries are just in segment *i* would also work, but we need the cumulative
      * number of entries until segment i for stuff in the Main-Algorithm.*/
     val segmentSizes = ArrayList<Int>()
 

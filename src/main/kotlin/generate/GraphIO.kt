@@ -99,7 +99,7 @@ object GraphIO {
      * space character.
      * @throws FileAlreadyExistsException if the file located at [filePath] already exists.
      */
-    fun <V> exportSimpleGraphToFileSpaceSeperated(g: SimpleGraph<V>, filePath: String) {
+    fun <V> exportSimpleGraphToFileSpaceSeparated(g: SimpleGraph<V>, filePath: String) {
         exportSimpleGraphToFile(g, filePath) { v1, v2 ->
             "$v1 $v2"
         }

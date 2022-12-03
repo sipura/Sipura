@@ -13,7 +13,7 @@ import kotlin.test.assertTrue
 internal class SimpleGraphTest {
 
     lateinit var g: SimpleGraph<Int>
-    lateinit var map: HashMap<Int, MutableSet<Int>>
+    private lateinit var map: HashMap<Int, MutableSet<Int>>
 
     @BeforeEach
     fun setup() {
