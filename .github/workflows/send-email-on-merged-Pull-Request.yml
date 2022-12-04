@@ -8,7 +8,7 @@ jobs:
   send-email:
     runs-on: ubuntu-latest
     steps:
-      # - uses: actions/checkout@v2
+      - uses: actions/checkout@v2
       - uses: actions/send-email@v1
         with:
           to: hi@mgross.dev
@@ -16,5 +16,5 @@ jobs:
           body: |
             A pull request was just merged into branch 'main'.
             See the details here: {{ github.event.pull_request.html_url }}
-        # env:
-          # GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
