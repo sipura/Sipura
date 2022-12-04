@@ -81,4 +81,27 @@ object GraphRelations {
 
         return res
     }
+
+    /**
+     * @return The graph that is the disjoint union of [g1] and [g2].
+     */
+    fun <V1, V2> disjointUnion(g1: SimpleGraph<V1>, g2: SimpleGraph<V2>): SimpleGraph<Int> {
+        val res = SimpleGraph<Int>()
+        val map1 = HashMap<V1, Int>()
+        val map2 = HashMap<V2, Int>()
+        var nextIntVertex = 0
+        for (v1 in g1.V) {
+            map1[v1] = nextIntVertex
+            res.addVertex(nextIntVertex)
+            nextIntVertex++
+        }
+        for (v2 in g2.V) {
+            map2[v2] = nextIntVertex
+            res.addVertex(nextIntVertex)
+            nextIntVertex++
+        }
+        g1.forEachEdge { v1, v2 -> res.addEdge(map1[v1]!!, map1[v2]!!) }
+        g2.forEachEdge { v1, v2 -> res.addEdge(map2[v1]!!, map2[v2]!!) }
+        return res
+    }
 }
