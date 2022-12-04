@@ -14,9 +14,6 @@ open class SimpleGraph<V> {
     var m: Int = 0
         private set
 
-
-
-
     /**
      * Uses an immutable set because no elements should be removed from this set. The set that is
      * returned is used in the internal data structure of this class. Removing elements from this
