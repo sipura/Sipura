@@ -86,4 +86,19 @@ object GraphProperty {
 
         throw RuntimeException("Shouldn't reach this part as the h-index is always at least 0 per definition")
     }
+
+    /**
+     *  Checks if the graph has no triangles.
+     */
+    fun <V> isTriangleFree(g: SimpleGraph<V>): Boolean {
+        for (v in g.V) {
+            val neighbors = g.neighbors(v)
+            for (u in neighbors) {
+                for (w in neighbors) {
+                    if (u != w && g.hasEdge(u, w)) return false
+                }
+            }
+        }
+        return true
+    }
 }
