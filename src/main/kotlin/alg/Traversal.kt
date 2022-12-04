@@ -1,7 +1,7 @@
 package alg
 
 import graphs.SimpleGraph
-import java.util.*
+import java.util.LinkedList
 
 object Traversal {
 

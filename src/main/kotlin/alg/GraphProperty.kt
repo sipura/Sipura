@@ -54,9 +54,6 @@ object GraphProperty {
             val sides = HashMap<V, Int>()
             var toggle = 1
 
-
-
-
             for (layer in layerIter) {
                 for (v in layer) {
                     sides[v] = toggle
