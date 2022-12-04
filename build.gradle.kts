@@ -4,15 +4,15 @@ plugins {
     kotlin("jvm") version "1.6.20"
 }
 
-group = "org.LeonLucaMoritz"
-version = "1.0-SNAPSHOT"
+group = "org.sipura"
+version = "1.0.0"
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    implementation("org.junit.jupiter:junit-jupiter:5.8.1")
+    implementation("org.junit.jupiter:junit-jupiter:5.9.0")
     testImplementation(kotlin("test"))
     implementation("org.jgrapht:jgrapht-core:1.5.1")
     implementation("com.google.guava:guava:31.1-jre")
