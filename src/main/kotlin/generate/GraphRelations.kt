@@ -11,8 +11,12 @@ import utils.SetTheory.isSubset
 object GraphRelations {
 
     /**
-     * @return The complement graph of [g]. This means that the complement graph has the same vertices as [g],
-     * and two vertices are connected in the complement graph if and only if they are not connected in [g].
+     * Creates the complement graph of [g].
+     *
+     * The complement graph of [g] is the graph that contains the same vertices as [g] and any pair of vertices v1,v2
+     * is connected if and only if they are not connected in [g].
+     *
+     * @return The complement graph of [g].
      */
     fun <V> complementGraph(g: SimpleGraph<V>): SimpleGraph<V> {
         val complement = SimpleGraph<V>()
@@ -28,10 +32,15 @@ object GraphRelations {
     }
 
     /**
+     * Creates the subgraph of [g] induced by the vertices in [S].
+     *
+     * The subgraph of [g] that is induced by [S]
+     * is the smallest graph, i.e. the graph with the fewest vertices and edges, that contains all vertices from [g]
+     * that are in [S] and contains all edges (v1, v2) of [g] where v1 and v2 are both in [S].
+     *
      * @throws IllegalArgumentException if [S] is not a subset of the vertices [g].
      *
-     * @return The subgraph of [g] induced by the vertices in [S]. This means that if an edge is connected to a
-     * vertex outside of [S] it is not included in the subgraph.
+     * @return The subgraph of [g] induced by the vertices in [S].
      */
     fun <V> inducedSubgraph(g: SimpleGraph<V>, S: Set<V>): SimpleGraph<V> {
         val subgraph = SimpleGraph<V>()
@@ -49,6 +58,9 @@ object GraphRelations {
     }
 
     /**
+     * Checks if [sub] is a subgraph of [g]. This can only be true if the vertices used in [sub] are the same objects
+     * that are used as vertices in [g].
+     *
      * @return True if [sub] is a subgraph of [g], false otherwise.
      *
      * @see <a href="https://en.wikipedia.org/wiki/Glossary_of_graph_theory#subgraph</a>
@@ -64,6 +76,10 @@ object GraphRelations {
     }
 
     /**
+     * Creates the union graph of the two graphs [g1] and [g2]. This is done by simply adding all vertices and edges
+     * from the two graphs to the new union graph. If both graphs contain the same object as a vertex then those two
+     * vertices will be treated as the same vertex in the union graph.
+     *
      * @return The graph that is the union of [g1] and [g2].
      */
     fun <V> union(g1: SimpleGraph<V>, g2: SimpleGraph<V>): SimpleGraph<V> {
@@ -83,7 +99,11 @@ object GraphRelations {
     }
 
     /**
-     * @return The graph that is the disjoint union of [g1] and [g2].
+     * Creates the disjoint union of the two graphs [g1] and [g2]. This is done by mapping the vertices of both graphs
+     * to unique Integers and using those as vertices in the union graph. So even if the vertex sets of the two graphs
+     * are not disjoint they will be treated like they are.
+     *
+     * @return The [SimpleGraph] that is the disjoint union of [g1] and [g2] with Integers as vertices.
      */
     fun <V1, V2> disjointUnion(g1: SimpleGraph<V1>, g2: SimpleGraph<V2>): SimpleGraph<Int> {
         val res = SimpleGraph<Int>()
@@ -106,7 +126,14 @@ object GraphRelations {
     }
 
     /**
-     * @return The graph that is the union of [g1] and [g2] with their vertices mapped by [map1] and [map2] respectively.
+     * Creates the union of the two graphs [g1] and [g2] by using the provided maps [map1] and [map2] as the vertex
+     * mapping between the two graphs and the union graph. The maps may map two or more vertices to the same vertex.
+     * They may also not contain a mapping for some vertices. In that case those vertices and their incident edges will
+     * not be part of the union graph.
+     * @param map1 A [Map] mapping some or all vertices of [g1] to vertices in the union graph.
+     * @param map2 A [Map] mapping some or all vertices of [g1] to vertices in the union graph.
+     *
+     * @return The [SimpleGraph] that is the union of [g1] and [g2] with their vertices mapped by [map1] and [map2] respectively.
      */
     fun <V1, V2, V3> mappedUnion(
         g1: SimpleGraph<V1>,
