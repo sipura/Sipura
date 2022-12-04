@@ -104,4 +104,37 @@ object GraphRelations {
         g2.forEachEdge { v1, v2 -> res.addEdge(map2[v1]!!, map2[v2]!!) }
         return res
     }
+
+    /**
+     * @return The graph that is the union of [g1] and [g2] with their vertices mapped by [map1] and [map2] respectively.
+     */
+    fun <V1, V2, V3> mappedUnion(
+        g1: SimpleGraph<V1>,
+        map1: Map<V1, V3>,
+        g2: SimpleGraph<V2>,
+        map2: Map<V2, V3>
+    ): SimpleGraph<V3> {
+        val res = SimpleGraph<V3>()
+        for (v in g1.V) {
+            if (map1.containsKey(v)) {
+                res.addVertex(map1[v]!!)
+            }
+        }
+        for (v in g2.V) {
+            if (map2.containsKey(v)) {
+                res.addVertex(map2[v]!!)
+            }
+        }
+        g1.forEachEdge { v1, v2 ->
+            if (map1.containsKey(v1) && map1.containsKey(v2)) {
+                res.addEdge(map1[v1]!!, map1[v2]!!)
+            }
+        }
+        g2.forEachEdge { v1, v2 ->
+            if (map2.containsKey(v1) && map2.containsKey(v2)) {
+                res.addEdge(map2[v1]!!, map2[v2]!!)
+            }
+        }
+        return res
+    }
 }
