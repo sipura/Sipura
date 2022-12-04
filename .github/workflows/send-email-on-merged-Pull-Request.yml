@@ -1,0 +1,20 @@
+name: Send Email on merged Pull Request
+
+on:
+  pull_request:
+    types: [closed]
+
+jobs:
+  send-email:
+    runs-on: ubuntu-latest
+    steps:
+      # - uses: actions/checkout@v2
+      - uses: actions/send-email@v1
+        with:
+          to: hi@mgross.dev
+          subject: A pull request was merged
+          body: |
+            A pull request was just merged into branch 'main'.
+            See the details here: {{ github.event.pull_request.html_url }}
+        # env:
+          # GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
