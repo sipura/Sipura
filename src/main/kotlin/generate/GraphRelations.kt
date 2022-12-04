@@ -63,7 +63,7 @@ object GraphRelations {
      *
      * @return True if [sub] is a subgraph of [g], false otherwise.
      *
-     * @see <a href="https://en.wikipedia.org/wiki/Glossary_of_graph_theory#subgraph</a>
+     * @see <a href=https://en.wikipedia.org/wiki/Glossary_of_graph_theory#subgraph>Wikipedia: Subgraph</a>
      */
     fun <V> isSubgraph(sub: SimpleGraph<V>, g: SimpleGraph<V>): Boolean {
         if (!isSubset(sub.V, g.V)) return false
