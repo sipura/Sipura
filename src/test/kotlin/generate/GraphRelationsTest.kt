@@ -121,4 +121,99 @@ internal class GraphRelationsTest {
             assertEquals(3, res.m)
         }
     }
+
+    @Nested
+    internal inner class DisjointUnion {
+
+        @Test
+        fun `disjoint union of two graphs with overlapping vertices`() {
+            val line1 = createLine(3)
+            val line2 = createLine(4)
+            val res = GraphRelations.disjointUnion(line1, line2)
+
+            assertEquals(line1.n + line2.n, res.n)
+            assertEquals(line1.m + line2.m, res.m)
+        }
+
+        @Test
+        fun `disjoint union of two graphs with different vertex types`() {
+            val line1 = createLine(3) // has vertex type Int
+            val line2 = SimpleGraph<Float>() // has vertex type Float
+            line2.addVertex(1f)
+            line2.addVertex(2f)
+            line2.addVertex(3f)
+            line2.addVertex(4f)
+            line2.addEdge(1f, 2f)
+            line2.addEdge(2f, 3f)
+            line2.addEdge(3f, 4f)
+            val res = GraphRelations.disjointUnion(line1, line2)
+
+            assertEquals(line1.n + line2.n, res.n)
+            assertEquals(line1.m + line2.m, res.m)
+        }
+    }
+
+    @Nested
+    internal inner class MappedUnion {
+
+        @Test
+        fun `mapped union of two graphs with disjoint mappings`() {
+            val g1 = createLine(3)
+            val map1 = HashMap<Int, Int>()
+            map1[1] = 10; map1[2] = 20; map1[3] = 30
+            val g2 = createLine(3)
+            val map2 = HashMap<Int, Int>()
+            map2[1] = 100; map2[2] = 200; map2[3] = 300
+            val res = GraphRelations.mappedUnion(g1, map1, g2, map2)
+
+            assertEquals(g1.n + g2.n, res.n)
+            assertEquals(g1.m + g2.m, res.m)
+            for (v in setOf(10, 20, 30, 100, 200, 300)) {
+                assertTrue { res.contains(v) }
+            }
+            assertTrue { res.hasEdge(10, 20) }
+            assertTrue { res.hasEdge(20, 30) }
+            assertTrue { res.hasEdge(100, 200) }
+            assertTrue { res.hasEdge(200, 300) }
+        }
+
+        @Test
+        fun `mapped union of two graphs with partially disjoint mappings`() {
+            val g1 = createLine(3)
+            val map1 = HashMap<Int, Int>()
+            map1[1] = 10; map1[2] = 20; map1[3] = 30
+            val g2 = createLine(3)
+            val map2 = HashMap<Int, Int>()
+            map2[1] = 10; map2[2] = 200; map2[3] = 300
+            val res = GraphRelations.mappedUnion(g1, map1, g2, map2)
+
+            assertEquals(g1.n + g2.n - 1, res.n)
+            assertEquals(g1.m + g2.m, res.m)
+            for (v in setOf(10, 20, 30, 200, 300)) {
+                assertTrue { res.contains(v) }
+            }
+            assertTrue { res.hasEdge(10, 20) }
+            assertTrue { res.hasEdge(20, 30) }
+            assertTrue { res.hasEdge(10, 200) }
+            assertTrue { res.hasEdge(200, 300) }
+        }
+
+        @Test
+        fun `mapped union of two graphs with incomplete mappings`() {
+            val g1 = createLine(3)
+            val map1 = HashMap<Int, Int>()
+            map1[1] = 10; map1[2] = 20
+            val g2 = createLine(3)
+            val map2 = HashMap<Int, Int>()
+            map2[1] = 100; map2[3] = 300
+            val res = GraphRelations.mappedUnion(g1, map1, g2, map2)
+
+            assertEquals(4, res.n)
+            assertEquals(1, res.m)
+            for (v in setOf(10, 20, 100, 300)) {
+                assertTrue { res.contains(v) }
+            }
+            assertTrue { res.hasEdge(10, 20) }
+        }
+    }
 }
