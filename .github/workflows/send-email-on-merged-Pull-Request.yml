@@ -1,8 +1,6 @@
 name: Send Email on merged Pull Request
 
-on:
-  pull_request:
-    types: [closed]
+on: [push]
 
 jobs:
   send-email:
