@@ -268,4 +268,68 @@ internal class GraphPropertyTest {
             assertThrows<IllegalArgumentException> { GraphProperty.hIndex(SimpleGraph<Int>()) }
         }
     }
+
+    @Nested
+    internal inner class IsTriangleFree {
+
+        @Test
+        fun `triangle is not triangle free`() {
+            val g = SimpleGraph<Int>()
+            g.addVertex(1)
+            g.addVertex(2)
+            g.addVertex(3)
+            g.addEdge(1, 2)
+            g.addEdge(1, 3)
+            g.addEdge(2, 3)
+            assertFalse { GraphProperty.isTriangleFree(g) }
+        }
+
+        @Test
+        fun `path5 is triangle free`() {
+            assertTrue { GraphProperty.isTriangleFree(createLine(5)) }
+        }
+
+        @Test
+        fun `empty graph is triangle free`() {
+            assertTrue { GraphProperty.isTriangleFree(SimpleGraph<Int>()) }
+        }
+
+        @Test
+        fun `star4 is triangle free`() {
+            assertTrue { GraphProperty.isTriangleFree(createStar(4)) }
+        }
+
+        @Test
+        fun `complete4 is not triangle free`() {
+            assertFalse { GraphProperty.isTriangleFree(createCompleteGraph(4)) }
+        }
+
+        @Test
+        fun `bipartite graph is triangle free`() {
+            assertTrue { GraphProperty.isTriangleFree(createBipartite(10, 13)) }
+        }
+
+        @Test
+        fun `cube is not triangle free`() {
+            val cube = SimpleGraph<Int>()
+            (1..8).forEach { cube.addVertex(it) }
+
+            cube.addEdge(1, 2)
+            cube.addEdge(1, 3)
+            cube.addEdge(2, 4)
+            cube.addEdge(3, 4)
+
+            cube.addEdge(1, 5)
+            cube.addEdge(2, 6)
+            cube.addEdge(3, 7)
+            cube.addEdge(4, 8)
+
+            cube.addEdge(5, 6)
+            cube.addEdge(5, 7)
+            cube.addEdge(6, 8)
+            cube.addEdge(7, 8)
+
+            assertTrue { GraphProperty.isTriangleFree(cube) }
+        }
+    }
 }
