@@ -23,7 +23,11 @@ object VertexSets {
         while (copy.n > 2) {
             val newLeafs = HashSet<V>()
             for (leaf in leafs) {
-                newLeafs.addAll(copy.neighbors(leaf)) // has just 1 neighbour ...
+                for (n in copy.neighbors(leaf)) { // has just 1 neighbour
+                    if (copy.degreeOf(n) == 2) { // n will be a leaf after we remove vertex leaf
+                        newLeafs.add(n)
+                    }
+                }
                 copy.removeVertex(leaf)
             }
             leafs = newLeafs
@@ -35,7 +39,10 @@ object VertexSets {
     /**
      * @Runtime O( sum of degrees in [S] )  which is bounded by O( |S| * [g].maxDegree )
      * @see <a href="https://en.wikipedia.org/wiki/Independent_set_(graph_theory)">Wikipedia page</a>
-     * @return True iff [S] is an independent set of [g]
+     *
+     * @throws IllegalArgumentException if [S] contains a vertex that is not in [g].
+     *
+     * @return True iff [S] is an independent set of [g].
      */
     fun <V> isIndependentSet(g: SimpleGraph<V>, S: Set<V>): Boolean {
         for (s in S) {
@@ -48,13 +55,23 @@ object VertexSets {
 
     /**
      * @see <a href="https://en.wikipedia.org/wiki/Vertex_cover">Wikipedia page</a>
+     *
+     * @throws IllegalArgumentException if [S] contains a vertex that is not in [g].
+     *
      * @return True iff [S] is a vertex cover of [g]
      */
-    fun <V> isVertexCover(g: SimpleGraph<V>, S: Set<V>): Boolean =
-        g.edgeIterator().asSequence().all { (v1, v2) -> v1 in S || v2 in S }
+    fun <V> isVertexCover(g: SimpleGraph<V>, S: Set<V>): Boolean {
+        for (v in S) {
+            if (!g.contains(v)) throw IllegalArgumentException("Graph does not contain vertex $v.")
+        }
+        return g.edgeIterator().asSequence().all { (v1, v2) -> v1 in S || v2 in S }
+    }
 
     /**
      * @see <a href="https://tcs.rwth-aachen.de/~langer/pub/partial-vc-wg08.pdf">Wikipedia page</a>
+     *
+     * @throws IllegalArgumentException if [S] contains a vertex that is not in [g].
+     *
      * @return How many edges are covered by [S]
      */
     fun <V> countCoveredEdges(g: SimpleGraph<V>, S: Set<V>): Int {
@@ -75,9 +92,9 @@ object VertexSets {
     }
 
     /**
-     * Assumes that [S] is a subset of the vertices of [g].
-     *
      * Counts the number of edges in [g] between vertices in [S] and vertices not in [S].
+     *
+     * @throws IllegalArgumentException if [S] contains a vertex that is not in [g].
      */
     fun <V> cutSize(g: SimpleGraph<V>, S: Collection<V>): Int =
         S.sumOf { s -> g.neighbors(s).count { it !in S } }
