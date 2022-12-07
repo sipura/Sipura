@@ -1,6 +1,6 @@
 package generate
 
-import alg.Connectivity.listAllConnectedComponents
+import alg.Connectivity.numberOfConnectedComponents
 import graphs.SimpleGraph
 import utils.SetTheory.intersection
 import utils.SetTheory.isSubset
@@ -180,6 +180,6 @@ object GraphRelations {
         return g1.n == g2.n &&
             g1.m == g2.m &&
             g1.V.map { g1.degreeOf(it) }.sorted() == g2.V.map { g2.degreeOf(it) }.sorted() &&
-            listAllConnectedComponents(g1) == listAllConnectedComponents(g1)
+            numberOfConnectedComponents(g1) == numberOfConnectedComponents(g2)
     }
 }
