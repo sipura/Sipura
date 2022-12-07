@@ -1,6 +1,7 @@
 package alg
 
 import generate.Factory.createLine
+import generate.Factory.createStar
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -16,6 +17,16 @@ internal class NeighborsTest {
             val correctNB = setOf(2, 3, 4, 5, 6)
             assertEquals(correctNB, Neighbors.closedNeighborsDistK(createLine(7), v = 4, k = 2))
         }
+
+        @Test
+        fun `k is bigger than maximum diameter`() {
+            assertEquals(setOf(1, 2, 3, 4), Neighbors.closedNeighborsDistK(createLine(4), v = 2, k = 10))
+        }
+
+        @Test
+        fun `throws exception if v is not in graph`() {
+            assertThrows<IllegalArgumentException> { Neighbors.closedNeighborsDistK(createLine(1), v = 2, k = 1) }
+        }
     }
 
     @Nested
@@ -25,6 +36,16 @@ internal class NeighborsTest {
         fun `path of length 5 inside of path7`() {
             val correctNB = setOf(2, 6)
             assertEquals(correctNB, Neighbors.openNeighborsDistK(createLine(7), v = 4, k = 2))
+        }
+
+        @Test
+        fun `k is bigger than maximum diameter`() {
+            assertEquals(emptySet(), Neighbors.openNeighborsDistK(createStar(10), v = 1, k = 3))
+        }
+
+        @Test
+        fun `throws exception if v is not in graph`() {
+            assertThrows<IllegalArgumentException> { Neighbors.openNeighborsDistK(createLine(1), v = 2, k = 1) }
         }
     }
 
