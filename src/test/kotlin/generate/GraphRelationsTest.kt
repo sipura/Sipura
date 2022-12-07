@@ -2,6 +2,7 @@ package generate
 
 import generate.Factory.createCycle
 import generate.Factory.createLine
+import generate.GraphRelations.disjointUnion
 import generate.GraphRelations.inducedSubgraph
 import generate.GraphRelations.isSubgraph
 import graphs.SimpleGraph
@@ -129,7 +130,7 @@ internal class GraphRelationsTest {
         fun `disjoint union of two graphs with overlapping vertices`() {
             val line1 = createLine(3)
             val line2 = createLine(4)
-            val res = GraphRelations.disjointUnion(line1, line2)
+            val res = disjointUnion(line1, line2)
 
             assertEquals(line1.n + line2.n, res.n)
             assertEquals(line1.m + line2.m, res.m)
@@ -146,7 +147,7 @@ internal class GraphRelationsTest {
             line2.addEdge(1f, 2f)
             line2.addEdge(2f, 3f)
             line2.addEdge(3f, 4f)
-            val res = GraphRelations.disjointUnion(line1, line2)
+            val res = disjointUnion(line1, line2)
 
             assertEquals(line1.n + line2.n, res.n)
             assertEquals(line1.m + line2.m, res.m)
@@ -214,6 +215,61 @@ internal class GraphRelationsTest {
                 assertTrue { res.contains(v) }
             }
             assertTrue { res.hasEdge(10, 20) }
+        }
+    }
+
+    @Nested
+    internal inner class NecessaryConditionsForGraphIsomorphism {
+
+        @Test
+        fun `two graphs with different number of vertices are not isomorphic`() {
+            val g1 = createLine(3)
+            val g2 = createLine(4)
+            assertFalse { GraphRelations.checkNecessaryConditionsForIsomorphism(g1, g2) }
+        }
+
+        @Test
+        fun `two graphs with different number of edges are not isomorphic`() {
+            val g1 = createLine(3)
+            val g2 = createLine(3)
+            g2.addEdge(1, 3)
+            assertFalse { GraphRelations.checkNecessaryConditionsForIsomorphism(g1, g2) }
+        }
+
+        @Test
+        fun `two graphs with the same vertices and edges are isomorphic`() {
+            val g1 = createLine(3)
+            val g2 = createLine(3)
+            assertTrue { GraphRelations.checkNecessaryConditionsForIsomorphism(g1, g2) }
+        }
+
+        @Test
+        fun `two paths of length 3 with different vertices are isomorphic`() {
+            val g1 = createLine(3)
+            val g2 = SimpleGraph<Int>()
+            for (v in 5..7) {
+                g2.addVertex(v)
+            }
+            g2.addEdge(5, 6)
+            g2.addEdge(6, 7)
+            assertTrue { GraphRelations.checkNecessaryConditionsForIsomorphism(g1, g2) }
+        }
+
+        @Test
+        fun `two graphs with the same vertices but different degrees are not isomorphic`() {
+            val g1 = createLine(3)
+            val g2 = createLine(3)
+            g2.addEdge(1, 2)
+            g2.addEdge(2, 3)
+            g2.addEdge(1, 3)
+            assertFalse { GraphRelations.checkNecessaryConditionsForIsomorphism(g1, g2) }
+        }
+
+        @Test
+        fun `two triangles vs one circle of size 6`() {
+            val g1 = disjointUnion(createCycle(3), createCycle(3))
+            val g2 = createCycle(6)
+            assertFalse { GraphRelations.checkNecessaryConditionsForIsomorphism(g1, g2) }
         }
     }
 }
