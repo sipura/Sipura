@@ -1,5 +1,6 @@
 package generate
 
+import alg.Connectivity.numberOfConnectedComponents
 import graphs.SimpleGraph
 import utils.SetTheory.intersection
 import utils.SetTheory.isSubset
@@ -163,5 +164,22 @@ object GraphRelations {
             }
         }
         return res
+    }
+
+    /**
+     * Checks a bunch of conditions that are necessary for two graphs to be isomorphic. If any of these conditions
+     * are not met then the graphs cannot be isomorphic.
+     *
+     * Graph isomorphism is a hard problem which is why we provide a fast check that can often be used
+     * to find out if two graphs are not isomorphic. If this function returns true then the graphs may still be
+     * non-isomorphic but if it returns false then the graphs are definitely not isomorphic.
+     *
+     * @return True if the graphs may be isomorphic, false if they are definitely not isomorphic.
+     */
+    fun <V> checkNecessaryConditionsForIsomorphism(g1: SimpleGraph<V>, g2: SimpleGraph<V>): Boolean {
+        return g1.n == g2.n &&
+            g1.m == g2.m &&
+            g1.V.map { g1.degreeOf(it) }.sorted() == g2.V.map { g2.degreeOf(it) }.sorted() &&
+            numberOfConnectedComponents(g1) == numberOfConnectedComponents(g2)
     }
 }
