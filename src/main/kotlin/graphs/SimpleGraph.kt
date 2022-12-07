@@ -81,6 +81,8 @@ open class SimpleGraph<V> {
     }
 
     /**
+     * @throws IllegalArgumentException if [v1] or [v2] are the same vertex, or if [v1] or [v2] are not in the graph.
+     *
      * runtime: O(1)  ->  constant
      */
     fun removeEdge(v1: V, v2: V): Boolean {
@@ -98,6 +100,10 @@ open class SimpleGraph<V> {
 
     /**
      * runtime: O(1)  ->  constant
+     *
+     * @throws IllegalArgumentException if [v1] or [v2] are the same vertex, or if [v1] or [v2] are not in the graph.
+     *
+     * @return True if [v1] and [v2] are connected, false otherwise.
      */
     fun hasEdge(v1: V, v2: V): Boolean {
         if (v1 == v2) throw IllegalArgumentException("no loops are allowed. this is likely a false input")
@@ -212,6 +218,9 @@ open class SimpleGraph<V> {
         }
     }
 
+    /**
+     * @return A string representation of the graph.
+     */
     override fun toString(): String {
         val builder = StringBuilder()
         builder.append("n:          $n\n")

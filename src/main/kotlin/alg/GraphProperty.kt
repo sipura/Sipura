@@ -4,6 +4,13 @@ import graphs.SimpleGraph
 
 object GraphProperty {
 
+    /**
+     *
+     * @see <a href="https://en.wikipedia.org/wiki/Tree_(graph_theory)">Definition of a tree</a>
+     *
+     *
+     * @return true if [g] is a tree, false otherwise
+     */
     fun <V> isTree(g: SimpleGraph<V>): Boolean =
         (g.m == g.n - 1) && Connectivity.isConnected(g) // fail fast: checking edge count runs in constant time
 
@@ -22,6 +29,8 @@ object GraphProperty {
         g.m == g.n - Connectivity.numberOfConnectedComponents(g)
 
     /**
+     * @throws IllegalArgumentException if [g] is empty or if [k] is negative
+     *
      * @return True if every vertex in [g] has degree [k], false otherwise.
      */
     fun <V> isKRegular(g: SimpleGraph<V>, k: Int): Boolean {
@@ -33,6 +42,8 @@ object GraphProperty {
 
     /**
      * A graph is cubic if every vertex has degree 3. This is a special case of [isKRegular] with k = 3.
+     *
+     * @return True if every vertex in [g] has degree 3, false otherwise.
      */
     fun <V> isCubic(g: SimpleGraph<V>): Boolean = isKRegular(g, 3)
 
@@ -89,6 +100,8 @@ object GraphProperty {
 
     /**
      *  Checks if the graph has no triangles.
+     *
+     *  @return true if the graph has no triangles, false otherwise.
      */
     fun <V> isTriangleFree(g: SimpleGraph<V>): Boolean {
         for (v in g.V) {

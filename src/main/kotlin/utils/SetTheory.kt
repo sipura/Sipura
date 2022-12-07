@@ -81,7 +81,7 @@ object SetTheory {
         }
 
     /**
-     * runtime: O( |s1| )
+     * runtime: O( |[s1]| )
      * Is also fail fast if [s1] has more elements than [s2].
      *
      * @return True if all elements of [s1] are also in [s2]
