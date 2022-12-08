@@ -18,6 +18,10 @@ object Connectivity {
      * Does two BFSs at the same time starting from and alternating between [v1] and [v2]. Once one of them finds a
      * vertex that the other already found the function immediately stops and returns *true*. If one of the BFS ends
      * without that occurring then the function also stops and returns *false*.
+     *
+     * @throws IllegalArgumentException if [v1] or [v2] are not in [g].
+     *
+     * @return True if [v1] and [v2] are connected, false otherwise.
      */
     fun <V> checkIfConnected(g: SimpleGraph<V>, v1: V, v2: V): Boolean {
         if (v1 !in g.V) throw IllegalArgumentException("Graph does not contain vertex v1")
@@ -160,6 +164,8 @@ object Connectivity {
 
     /**
      * The distance of two neighboring vertices is 1, and the distance of a vertex to itself is 0.
+     *
+     * @throws IllegalArgumentException if [v1] or [v2] is not in the graph.
      *
      * @return The number of edges in the shortest path from [v1] to [v2] in graph [g]
      */

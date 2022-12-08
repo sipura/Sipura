@@ -5,6 +5,9 @@ import utils.SetTheory.isDisjoint
 
 object VertexSets {
 
+    /**
+     * @return a [MutableSet] of all vertices with at exactly 1 neighbor.
+     */
     fun <V> getLeafs(g: SimpleGraph<V>): MutableSet<V> =
         g.V.filterTo(HashSet()) { g.degreeOf(it) == 1 }
 

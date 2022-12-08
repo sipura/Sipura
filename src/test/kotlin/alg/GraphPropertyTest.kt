@@ -45,6 +45,11 @@ internal class GraphPropertyTest {
         fun `bipartite graph of size (4, 7) is not a tree`() {
             assertFalse { GraphProperty.isTree(createBipartite(4, 7)) }
         }
+
+        @Test
+        fun `empty graph is not a tree`() {
+            assertFalse { GraphProperty.isTree(SimpleGraph<Int>()) }
+        }
     }
 
     @Nested
