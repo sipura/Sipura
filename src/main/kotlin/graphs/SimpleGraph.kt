@@ -219,6 +219,22 @@ open class SimpleGraph<V> {
     }
 
     /**
+     * Checks if [other] is an exact copy of this graph. This means that [other] needs to contain the same
+     * vertex objects as this graph and the edges of [other] need to be between the same vertices as the edges of
+     * this graph.
+     *
+     * @return True if [other] is an exact copy of this graph. False otherwise.
+     */
+    override fun equals(other: Any?): Boolean {
+        return other != null &&
+            other is SimpleGraph<*> &&
+            other.n == this.n &&
+            other.m == this.m &&
+            other.V.all { it in this.V } &&
+            other.map == this.map
+    }
+
+    /**
      * @return A string representation of the graph.
      */
     override fun toString(): String {

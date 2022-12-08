@@ -2,6 +2,7 @@ package graphs
 
 import generate.Factory
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import utils.setFieldValue
@@ -485,6 +486,52 @@ internal class SimpleGraphTest {
         val g = SimpleGraph<Int>()
         val iter = g.edgeIterator() // should not throw exception
         assertFalse { iter.hasNext() }
+    }
+
+    @Nested
+    internal inner class Equals {
+
+        @Test
+        fun `a copied graph has to be equal to the original`() {
+            val g = Factory.createLine(10)
+            val clone = g.copy()
+            assertTrue { g == clone }
+            assertTrue { clone == g }
+        }
+
+        @Test
+        fun `null is not equal to graph`() {
+            val g = Factory.createStar(10)
+            assertFalse { g.equals(null) }
+        }
+
+        @Test
+        fun `other objects are not equal to a graph`() {
+            val g = Factory.createCycle(5)
+            assertFalse { g.equals(10) }
+            assertFalse { g == setOf(10, 14) }
+        }
+
+        @Test
+        fun `two graphs need the same vertex objects to be equal`() {
+            val g1 = Factory.createLine(3)
+            val g2 = SimpleGraph<Float>()
+            g2.addVertex(1f)
+            g2.addVertex(2f)
+            g2.addVertex(3f)
+            g2.addEdge(1f, 2f)
+            g2.addEdge(2f, 3f)
+            assertFalse { g1 == g2 }
+            assertFalse { g2 == g1 }
+        }
+
+        @Test
+        fun `two graphs need the same edges to be equal`() {
+            val g1 = Factory.createCycle(4)
+            val g2 = Factory.createLine(4)
+            assertFalse { g1 == g2 }
+            assertFalse { g2 == g1 }
+        }
     }
 
     @Test
