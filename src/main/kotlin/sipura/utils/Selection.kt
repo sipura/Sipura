@@ -1,7 +1,9 @@
 package sipura.utils
 
 import sipura.utils.Selection.takeTopK
-import java.util.*
+import java.util.Collections
+import java.util.LinkedList
+import java.util.PriorityQueue
 
 /**
  * Provides utility methods to work with collections, that are not provided by the standard library.

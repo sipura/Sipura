@@ -1,7 +1,7 @@
 package sipura.alg
 
 import sipura.graphs.SimpleGraph
-import java.util.*
+import java.util.LinkedList
 
 /**
  * Provides different methods for traversing graphs like Breadth First Search (BFS) or Depth First Search (DFS).
