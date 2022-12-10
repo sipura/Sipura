@@ -1,13 +1,13 @@
 name: Code-Checks
-on: [push]
+on: [ push ]
 
 jobs:
   gradle-tests:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - run: chmod +x ./gradlew
-    - run: ./gradlew test
+      - uses: actions/checkout@v2
+      - run: chmod +x ./gradlew
+      - run: ./gradlew test
 
 
   check-ktlint:
