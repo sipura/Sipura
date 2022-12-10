@@ -223,6 +223,8 @@ open class SimpleGraph<V> {
      * vertex objects as this graph and the edges of [other] need to be between the same vertices as the edges of
      * this graph.
      *
+     * The equals method of the vertex objects needs to be implemented properly for this method to work properly.
+     *
      * @return True if [other] is an exact copy of this graph. False otherwise.
      */
     override fun equals(other: Any?): Boolean {
