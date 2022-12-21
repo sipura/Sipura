@@ -18,7 +18,7 @@ internal class TraversalTest {
         @Test
         fun `BFS iterator reaches every vertex of path5 in the correct order`() {
             var expectedNext = 1
-            for (v in Traversal.breadthFirstSearchLayerIterator(Factory.createLine(5), 1)) {
+            for (v in Traversal.breadthFirstSearchLayerIterator(Factory.createPathGraph(5), 1)) {
                 assertEquals(setOf(expectedNext), v)
                 expectedNext++
             }
@@ -35,7 +35,7 @@ internal class TraversalTest {
         fun `BFS iterator throws exception if start-vertex does not exist`() {
             assertThrows<IllegalArgumentException> {
                 Traversal.breadthFirstSearchLayerIterator(
-                    Factory.createLine(5),
+                    Factory.createPathGraph(5),
                     6
                 )
             }
@@ -50,7 +50,7 @@ internal class TraversalTest {
 
         @Test
         fun `start BFS in the center of a line`() {
-            val iter = Traversal.breadthFirstSearchLayerIterator(Factory.createLine(5), 3)
+            val iter = Traversal.breadthFirstSearchLayerIterator(Factory.createPathGraph(5), 3)
             assertTrue { iter.next() == setOf(3) }
             assertEquals(setOf(2, 4), iter.next())
             assertEquals(setOf(1, 5), iter.next())
@@ -64,7 +64,7 @@ internal class TraversalTest {
         @Test
         fun `BFS iterator reaches every vertex of path5 in the correct order`() {
             var expectedNext = 1
-            for (v in Traversal.breadthFirstSearchIterator(Factory.createLine(5), 1)) {
+            for (v in Traversal.breadthFirstSearchIterator(Factory.createPathGraph(5), 1)) {
                 assertEquals(expectedNext, v)
                 expectedNext++
             }
@@ -80,7 +80,7 @@ internal class TraversalTest {
 
         @Test
         fun `BFS iterator throws exception if start-vertex does not exist`() {
-            assertThrows<IllegalArgumentException> { Traversal.breadthFirstSearchIterator(Factory.createLine(5), 6) }
+            assertThrows<IllegalArgumentException> { Traversal.breadthFirstSearchIterator(Factory.createPathGraph(5), 6) }
         }
 
         @Test
@@ -92,7 +92,7 @@ internal class TraversalTest {
 
         @Test
         fun `start BFS in the center of a path`() {
-            val iter = Traversal.breadthFirstSearchIterator(Factory.createLine(5), 3)
+            val iter = Traversal.breadthFirstSearchIterator(Factory.createPathGraph(5), 3)
             assertTrue { iter.next() == 3 }
             assertContains(setOf(2, 4), iter.next())
             assertContains(setOf(2, 4), iter.next())
@@ -108,7 +108,7 @@ internal class TraversalTest {
         @Test
         fun `DFS iterator reaches every vertex of path5 in the correct order`() {
             var expectedNext = 1
-            for (v in Traversal.depthFirstSearchIterator(Factory.createLine(5), 1)) {
+            for (v in Traversal.depthFirstSearchIterator(Factory.createPathGraph(5), 1)) {
                 assertEquals(expectedNext, v)
                 expectedNext++
             }
@@ -124,7 +124,7 @@ internal class TraversalTest {
 
         @Test
         fun `DFS iterator throws exception if start-vertex does not exist`() {
-            assertThrows<IllegalArgumentException> { Traversal.depthFirstSearchIterator(Factory.createLine(5), 6) }
+            assertThrows<IllegalArgumentException> { Traversal.depthFirstSearchIterator(Factory.createPathGraph(5), 6) }
         }
 
         @Test
@@ -136,7 +136,7 @@ internal class TraversalTest {
 
         @Test
         fun `start DFS in the center of a path`() {
-            val iter: Iterator<Int> = Traversal.depthFirstSearchIterator(Factory.createLine(5), 3)
+            val iter: Iterator<Int> = Traversal.depthFirstSearchIterator(Factory.createPathGraph(5), 3)
             val result = iter.asSequence().toList()
 
             // which neighbor gets picked first is arbitrary, so we need to check both valid orders

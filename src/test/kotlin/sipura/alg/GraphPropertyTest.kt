@@ -6,11 +6,11 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import sipura.Samples
-import sipura.generate.Factory.createBipartite
+import sipura.generate.Factory.createBipartiteGraph
 import sipura.generate.Factory.createCompleteGraph
-import sipura.generate.Factory.createCycle
-import sipura.generate.Factory.createLine
-import sipura.generate.Factory.createStar
+import sipura.generate.Factory.createCycleGraph
+import sipura.generate.Factory.createPathGraph
+import sipura.generate.Factory.createStarGraph
 import sipura.graphs.SimpleGraph
 import kotlin.test.assertEquals
 
@@ -28,12 +28,12 @@ internal class GraphPropertyTest {
 
         @Test
         fun `triangle is not a tree`() {
-            assertFalse { GraphProperty.isTree(createCycle(3)) }
+            assertFalse { GraphProperty.isTree(createCycleGraph(3)) }
         }
 
         @Test
         fun `path5 is a tree`() {
-            kotlin.test.assertTrue { GraphProperty.isTree(createLine(5)) }
+            kotlin.test.assertTrue { GraphProperty.isTree(createPathGraph(5)) }
         }
 
         @Test
@@ -43,7 +43,7 @@ internal class GraphPropertyTest {
 
         @Test
         fun `bipartite graph of size (4, 7) is not a tree`() {
-            assertFalse { GraphProperty.isTree(createBipartite(4, 7)) }
+            assertFalse { GraphProperty.isTree(createBipartiteGraph(4, 7)) }
         }
 
         @Test
@@ -62,7 +62,7 @@ internal class GraphPropertyTest {
 
         @Test
         fun `path4 is not complete`() {
-            assertFalse { GraphProperty.isComplete(createLine(4)) }
+            assertFalse { GraphProperty.isComplete(createPathGraph(4)) }
         }
 
         @Test
@@ -81,12 +81,12 @@ internal class GraphPropertyTest {
 
         @Test
         fun `graph with single connectivity component is acyclic`() {
-            assertTrue { GraphProperty.isAcyclic(createLine(5)) }
+            assertTrue { GraphProperty.isAcyclic(createPathGraph(5)) }
         }
 
         @Test
         fun `graph with single connectivity component is not acyclic`() {
-            val g = createLine(5)
+            val g = createPathGraph(5)
             g.addEdge(5, 1)
             assertFalse { GraphProperty.isAcyclic(g) }
         }
@@ -121,7 +121,7 @@ internal class GraphPropertyTest {
 
         @Test
         fun `path5 is not 2-regular`() {
-            assertFalse { GraphProperty.isKRegular(createLine(5), 2) }
+            assertFalse { GraphProperty.isKRegular(createPathGraph(5), 2) }
         }
 
         @Test
@@ -149,13 +149,13 @@ internal class GraphPropertyTest {
 
         @Test
         fun `cycle5 is 2-regular`() {
-            val g = createCycle(5)
+            val g = createCycleGraph(5)
             assertTrue { GraphProperty.isKRegular(g, 2) }
         }
 
         @Test
         fun `throws exception for k equal -2`() {
-            val g = createCycle(5)
+            val g = createCycleGraph(5)
             assertThrows<IllegalArgumentException> { GraphProperty.isKRegular(g, -2) }
         }
     }
@@ -165,17 +165,17 @@ internal class GraphPropertyTest {
 
         @Test
         fun `path5 is bipartite`() {
-            assertTrue { GraphProperty.isBipartite(createLine(5)) }
+            assertTrue { GraphProperty.isBipartite(createPathGraph(5)) }
         }
 
         @Test
         fun `cycle4 is not bipartite`() {
-            assertTrue { GraphProperty.isBipartite(createCycle(4)) }
+            assertTrue { GraphProperty.isBipartite(createCycleGraph(4)) }
         }
 
         @Test
         fun `cycle5 is not bipartite`() {
-            assertFalse { GraphProperty.isBipartite(createCycle(5)) }
+            assertFalse { GraphProperty.isBipartite(createCycleGraph(5)) }
         }
 
         @Test
@@ -190,12 +190,12 @@ internal class GraphPropertyTest {
 
         @Test
         fun `single vertex is bipartite`() {
-            assertTrue { GraphProperty.isBipartite(createLine(1)) }
+            assertTrue { GraphProperty.isBipartite(createPathGraph(1)) }
         }
 
         @Test
         fun `bipartite graph of size (10, 13) is bipartite (surprisingly)`() {
-            assertTrue { GraphProperty.isBipartite(createBipartite(10, 13)) }
+            assertTrue { GraphProperty.isBipartite(createBipartiteGraph(10, 13)) }
         }
     }
 
@@ -204,7 +204,7 @@ internal class GraphPropertyTest {
 
         @Test
         fun `path5 is not cubic`() {
-            assertFalse { GraphProperty.isCubic(createLine(5)) }
+            assertFalse { GraphProperty.isCubic(createPathGraph(5)) }
         }
 
         @Test
@@ -255,12 +255,12 @@ internal class GraphPropertyTest {
     internal inner class HIndex {
         @Test
         fun star4() {
-            assertEquals(1, GraphProperty.hIndex(createStar(4)))
+            assertEquals(1, GraphProperty.hIndex(createStarGraph(4)))
         }
 
         @Test
         fun path5() {
-            assertEquals(2, GraphProperty.hIndex(createLine(5)))
+            assertEquals(2, GraphProperty.hIndex(createPathGraph(5)))
         }
 
         @Test
@@ -291,7 +291,7 @@ internal class GraphPropertyTest {
 
         @Test
         fun `path5 is triangle free`() {
-            assertTrue { GraphProperty.isTriangleFree(createLine(5)) }
+            assertTrue { GraphProperty.isTriangleFree(createPathGraph(5)) }
         }
 
         @Test
@@ -301,7 +301,7 @@ internal class GraphPropertyTest {
 
         @Test
         fun `star4 is triangle free`() {
-            assertTrue { GraphProperty.isTriangleFree(createStar(4)) }
+            assertTrue { GraphProperty.isTriangleFree(createStarGraph(4)) }
         }
 
         @Test
@@ -311,7 +311,7 @@ internal class GraphPropertyTest {
 
         @Test
         fun `bipartite graph is triangle free`() {
-            assertTrue { GraphProperty.isTriangleFree(createBipartite(10, 13)) }
+            assertTrue { GraphProperty.isTriangleFree(createBipartiteGraph(10, 13)) }
         }
 
         @Test

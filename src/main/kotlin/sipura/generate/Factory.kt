@@ -9,7 +9,7 @@ object Factory {
      *
      * @return A [SimpleGraph] of the form:          (1) - (2) - ... - (n-1) - (n)
      */
-    fun createLine(n: Int): SimpleGraph<Int> {
+    fun createPathGraph(n: Int): SimpleGraph<Int> {
         if (n < 0) throw IllegalArgumentException("size can not be negative")
         return SimpleGraph<Int>().apply {
             (1..n).forEach { addVertex(it) }
@@ -26,7 +26,7 @@ object Factory {
      *                                                |                         |
      * @return A [SimpleGraph] of the form:          (1) - (2) - ... - (n-1) - (n)
      */
-    fun createCycle(n: Int): SimpleGraph<Int> {
+    fun createCycleGraph(n: Int): SimpleGraph<Int> {
         if (n < 3) throw IllegalArgumentException("A cycle must have at least 3 vertices")
         return SimpleGraph<Int>().apply {
             (1..n).forEach { addVertex(it) }
@@ -63,11 +63,11 @@ object Factory {
      *                                              |
      *                                              4
      */
-    fun createStar(n: Int) = createBipartite(1, n - 1)
+    fun createStarGraph(n: Int) = createBipartiteGraph(1, n - 1)
 
     /**@return A bipartite graph, whose vertex partition has sizes [sizeA] and [sizeB]. Any two vertices of from
      * different sides in the graph are connected, thus there are [sizeA] * [sizeB] edges in total.*/
-    fun createBipartite(sizeA: Int, sizeB: Int): SimpleGraph<Int> {
+    fun createBipartiteGraph(sizeA: Int, sizeB: Int): SimpleGraph<Int> {
         if (sizeA < 0 || sizeB < 0) throw IllegalArgumentException("Both sides must have non-negative size")
         return SimpleGraph<Int>().apply {
             (1..(sizeA + sizeB)).forEach { addVertex(it) }
