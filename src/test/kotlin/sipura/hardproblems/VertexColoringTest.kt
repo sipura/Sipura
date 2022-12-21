@@ -11,12 +11,12 @@ internal class VertexColoringTest {
     @Test
     fun `line4 has 2-coloring`() {
         for (k in 2..10)
-            assertTrue { hasKColoring(Factory.createLine(4), k) }
+            assertTrue { hasKColoring(Factory.createPathGraph(4), k) }
     }
 
     @Test
     fun `cycle5 has no 2-coloring`() {
-        assertFalse { hasKColoring(Factory.createCycle(5), 2) }
+        assertFalse { hasKColoring(Factory.createCycleGraph(5), 2) }
     }
 
     @Test
@@ -30,8 +30,8 @@ internal class VertexColoringTest {
     @Test
     fun `line25 has 2-coloring`() {
         for (k in 0..1)
-            assertFalse { hasKColoring(Factory.createLine(25), k) }
+            assertFalse { hasKColoring(Factory.createPathGraph(25), k) }
         for (k in 2..10)
-            assertTrue { hasKColoring(Factory.createLine(25), k) }
+            assertTrue { hasKColoring(Factory.createPathGraph(25), k) }
     }
 }

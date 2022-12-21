@@ -159,7 +159,7 @@ internal class GraphIOTest {
         @Test
         @Ignore
         fun `exportSimpleGraphToFile exports graph correctly`(@TempDir tempDir: File) {
-            val g = Factory.createLine(5)
+            val g = Factory.createPathGraph(5)
             val outputFile = File(tempDir, "output.graph")
             GraphIO.exportSimpleGraphToFile(g, outputFile.absolutePath) { v1, v2 ->
                 "${v1 + v2}"
@@ -173,7 +173,7 @@ internal class GraphIOTest {
         @Test
         @Ignore
         fun `exportSimpleGraphToFileSpaceSeparated exports graph correctly`(@TempDir tempDir: File) {
-            val g = Factory.createLine(4)
+            val g = Factory.createPathGraph(4)
             val outputFile = File(tempDir, "output.graph")
             GraphIO.exportSimpleGraphToFileSpaceSeparated(g, outputFile.absolutePath)
             val expected = mutableSetOf(setOf("1 2", "2 1"), setOf("2 3", "3 2"), setOf("3 4", "4 3"))

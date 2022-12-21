@@ -424,7 +424,7 @@ internal class SimpleGraphTest {
 
     @Test
     fun `path has maximal degree of 2`() {
-        assertEquals(2, Factory.createLine(7).maxDegree())
+        assertEquals(2, Factory.createPathGraph(7).maxDegree())
     }
 
     @Test
@@ -445,7 +445,7 @@ internal class SimpleGraphTest {
 
     @Test
     fun `throws exception when calling next() on edge twice iterator when hasNext() is false`() {
-        val g = Factory.createLine(2)
+        val g = Factory.createPathGraph(2)
         val iter = g.edgeTwiceIterator()
         iter.next()
         iter.next()
@@ -474,7 +474,7 @@ internal class SimpleGraphTest {
 
     @Test
     fun `throws exception when calling next() on edge-once-iterator when hasNext() is false`() {
-        val g = Factory.createLine(2)
+        val g = Factory.createPathGraph(2)
         val iter = g.edgeIterator()
         iter.next()
         assertFalse { iter.hasNext() }
@@ -493,7 +493,7 @@ internal class SimpleGraphTest {
 
         @Test
         fun `a copied graph has to be equal to the original`() {
-            val g = Factory.createLine(10)
+            val g = Factory.createPathGraph(10)
             val clone = g.copy()
             assertTrue { g == clone }
             assertTrue { clone == g }
@@ -501,20 +501,20 @@ internal class SimpleGraphTest {
 
         @Test
         fun `null is not equal to graph`() {
-            val g = Factory.createStar(10)
+            val g = Factory.createStarGraph(10)
             assertFalse { g.equals(null) }
         }
 
         @Test
         fun `other objects are not equal to a graph`() {
-            val g = Factory.createCycle(5)
+            val g = Factory.createCycleGraph(5)
             assertFalse { g.equals(10) }
             assertFalse { g == setOf(10, 14) }
         }
 
         @Test
         fun `two graphs need the same vertex objects to be equal`() {
-            val g1 = Factory.createLine(3)
+            val g1 = Factory.createPathGraph(3)
             val g2 = SimpleGraph<Float>()
             g2.addVertex(1f)
             g2.addVertex(2f)
@@ -527,8 +527,8 @@ internal class SimpleGraphTest {
 
         @Test
         fun `two graphs need the same edges to be equal`() {
-            val g1 = Factory.createCycle(4)
-            val g2 = Factory.createLine(4)
+            val g1 = Factory.createCycleGraph(4)
+            val g2 = Factory.createPathGraph(4)
             assertFalse { g1 == g2 }
             assertFalse { g2 == g1 }
         }
@@ -536,7 +536,7 @@ internal class SimpleGraphTest {
 
     @Test
     fun `test toString() on line4`() {
-        val g = Factory.createLine(4)
+        val g = Factory.createPathGraph(4)
         val correctString = "n:          4\n" +
             "m:          3\n" +
             "max-degree: 2\n" +
