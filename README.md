@@ -5,7 +5,7 @@ An easy-to-use, safe and transparent library for graph datastructures and algori
 ### Installation
 
 To install the library in your project, download the
-JAR [here](https://www.dropbox.com/s/pyf669f9c2tu13t/sipura-22.12.1-all.jar?dl=0) and add it to the classpath of your
+JAR from *releases* on the right and add it to the classpath of your
 project.
 If you use IntelliJ, you can easily do this under File -> Project Structure -> Libraries -> + -> Java
 This approach is documented by
