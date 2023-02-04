@@ -77,6 +77,11 @@ open class SimpleGraphUndo<V>() : SimpleGraph<V>() {
     }
 
     override fun copy(): SimpleGraph<V> {
-        return super.copy()
+        val copy = SimpleGraphUndo(this)
+        for (f in undoStack) {
+            copy.undoStack.push(f)
+        }
+        copy.undoStack.reverse()
+        return copy
     }
 }
