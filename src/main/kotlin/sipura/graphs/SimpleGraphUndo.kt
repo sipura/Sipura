@@ -1,6 +1,11 @@
 package sipura.graphs
 
+import java.util.*
+
 class SimpleGraphUndo<V> : SimpleGraph<V>() {
+
+    private val undoStack: Stack<() -> Unit> = Stack<() -> Unit>()
+
     override fun addVertex(v: V): Boolean {
         return super.addVertex(v)
     }
