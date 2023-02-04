@@ -34,7 +34,7 @@ open class SimpleGraph<V> {
     /**
      * runtime: O(1)  ->  constant
      */
-    fun addVertex(v: V): Boolean {
+    open fun addVertex(v: V): Boolean {
         return if (v !in map) {
             map[v] = mutableSetOf()
             true
@@ -46,7 +46,7 @@ open class SimpleGraph<V> {
     /**
      * runtime: O([degreeOf] [v])  ->  each neighbour needs to be updated that [v] is not in its neighbourhood anymore
      */
-    fun removeVertex(v: V): Boolean {
+    open fun removeVertex(v: V): Boolean {
         if (v !in map) return false
         for (nb in map[v]!!) {
             map[nb]!!.remove(v)
@@ -59,7 +59,7 @@ open class SimpleGraph<V> {
     /**
      * runtime: O(1)  ->  constant
      */
-    fun degreeOf(v: V): Int {
+    open fun degreeOf(v: V): Int {
         assertVertexExists(v, "v")
         return map[v]!!.size
     }
@@ -67,7 +67,7 @@ open class SimpleGraph<V> {
     /**
      * runtime: O(1)  ->  constant
      */
-    fun addEdge(v1: V, v2: V): Boolean {
+    open fun addEdge(v1: V, v2: V): Boolean {
         assertVertexExists(v1, "v1")
         assertVertexExists(v2, "v2")
         if (v1 == v2) throw IllegalArgumentException("no loops are allowed")
@@ -85,7 +85,7 @@ open class SimpleGraph<V> {
      *
      * runtime: O(1)  ->  constant
      */
-    fun removeEdge(v1: V, v2: V): Boolean {
+    open fun removeEdge(v1: V, v2: V): Boolean {
         assertVertexExists(v1, "v1")
         assertVertexExists(v2, "v2")
         if (v1 == v2) throw IllegalArgumentException("no loops are allowed")
@@ -105,7 +105,7 @@ open class SimpleGraph<V> {
      *
      * @return True if [v1] and [v2] are connected, false otherwise.
      */
-    fun hasEdge(v1: V, v2: V): Boolean {
+    open fun hasEdge(v1: V, v2: V): Boolean {
         if (v1 == v2) throw IllegalArgumentException("no loops are allowed. this is likely a false input")
         assertVertexExists(v1, "v1")
         assertVertexExists(v2, "v2")
@@ -116,7 +116,7 @@ open class SimpleGraph<V> {
     /**
      * runtime: O( [m] * [f] )  ->  calls [f] for each edge
      */
-    fun forEachEdge(f: (V, V) -> Unit) {
+    open fun forEachEdge(f: (V, V) -> Unit) {
         val visited = mutableSetOf<V>()
         for (v1 in map.keys) {
             visited.add(v1)
@@ -134,7 +134,7 @@ open class SimpleGraph<V> {
      *
      * runtime: O(1)  ->  constant. This is possible the neighbourhood that is already stored gets returned.
      */
-    fun neighbors(v: V): Set<V> {
+    open fun neighbors(v: V): Set<V> {
         assertVertexExists(v, "v")
         return map[v]!!
     }
@@ -142,7 +142,7 @@ open class SimpleGraph<V> {
     /**
      * shallow copy
      */
-    fun copy(): SimpleGraph<V> {
+    open fun copy(): SimpleGraph<V> {
         val copy = SimpleGraph<V>()
 
         for (v in V) copy.addVertex(v)
@@ -154,12 +154,12 @@ open class SimpleGraph<V> {
     /**
      * runtime: O([n])  ->  for every vertex, the degree gets checked in constant time
      */
-    fun maxDegree(): Int = V.maxOf { degreeOf(it) }
+    open fun maxDegree(): Int = V.maxOf { degreeOf(it) }
 
     /**
      * returns edge each twice, as Pair(v1, v2) and as Pair(v2, v1)
      */
-    fun edgeTwiceIterator(): Iterator<Pair<V, V>> {
+    open fun edgeTwiceIterator(): Iterator<Pair<V, V>> {
         if (n == 0) { // please wash your eyes
             return object : Iterator<Pair<V, V>> {
                 override fun hasNext() = false
@@ -193,7 +193,7 @@ open class SimpleGraph<V> {
     /**
      * returns edge each twice, as Pair(v1, v2) and as Pair(v2, v1)
      */
-    fun edgeIterator(): Iterator<Pair<V, V>> {
+    open fun edgeIterator(): Iterator<Pair<V, V>> {
         return object : Iterator<Pair<V, V>> {
 
             var eCtr = 0
