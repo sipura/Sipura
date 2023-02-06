@@ -8,7 +8,13 @@ import java.util.*
  */
 open class SimpleGraphUndo<V>() : SimpleGraph<V>() {
 
-    protected val undoStack: Stack<() -> Unit> = Stack<() -> Unit>()
+    /**
+     * Returns the amount of undo operations that can be performed on this graph at this moment.
+     */
+    open val undoSize: Int
+        get() = undoStack.size
+
+    protected val undoStack: LinkedList<() -> Unit> = LinkedList<() -> Unit>()
 
     /**
      * Adds all vertices and edges in [g] to this graph without adding the necessary operations to the undo stack.
@@ -27,7 +33,7 @@ open class SimpleGraphUndo<V>() : SimpleGraph<V>() {
      */
     open fun undo() {
         if (undoStack.isNotEmpty()) {
-            undoStack.pop()()
+            undoStack.removeFirst()()
         }
     }
 
@@ -40,7 +46,7 @@ open class SimpleGraphUndo<V>() : SimpleGraph<V>() {
 
     override fun addVertex(v: V): Boolean {
         if (super.addVertex(v)) {
-            undoStack.push { super.removeVertex(v) }
+            undoStack.addFirst { super.removeVertex(v) }
             return true
         }
         return false
@@ -49,7 +55,7 @@ open class SimpleGraphUndo<V>() : SimpleGraph<V>() {
     override fun removeVertex(v: V): Boolean {
         val neighborSet = super.neighbors(v).toSet()
         if (super.removeVertex(v)) {
-            undoStack.push {
+            undoStack.addFirst {
                 addVertex(v)
                 for (n in neighborSet) {
                     super.addEdge(v, n)
@@ -62,7 +68,7 @@ open class SimpleGraphUndo<V>() : SimpleGraph<V>() {
 
     override fun addEdge(v1: V, v2: V): Boolean {
         if (super.addEdge(v1, v2)) {
-            undoStack.push { super.removeEdge(v1, v2) }
+            undoStack.addFirst { super.removeEdge(v1, v2) }
             return true
         }
         return false
@@ -70,7 +76,7 @@ open class SimpleGraphUndo<V>() : SimpleGraph<V>() {
 
     override fun removeEdge(v1: V, v2: V): Boolean {
         if (super.removeEdge(v1, v2)) {
-            undoStack.push { super.addEdge(v1, v2) }
+            undoStack.addFirst { super.addEdge(v1, v2) }
             return true
         }
         return false
@@ -79,9 +85,8 @@ open class SimpleGraphUndo<V>() : SimpleGraph<V>() {
     override fun copy(): SimpleGraph<V> {
         val copy = SimpleGraphUndo(this)
         for (f in undoStack) {
-            copy.undoStack.push(f)
+            copy.undoStack.addLast(f)
         }
-        copy.undoStack.reverse()
         return copy
     }
 }
