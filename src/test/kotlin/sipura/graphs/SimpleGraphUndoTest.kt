@@ -24,7 +24,6 @@ class SimpleGraphUndoTest {
             val g = SimpleGraphUndo(Factory.createCompleteGraph(10))
             assertEquals(0, g.undoSize)
         }
-
     }
 
     @Nested
@@ -52,7 +51,6 @@ class SimpleGraphUndoTest {
             assertTrue(g.addVertex(6))
             assertEquals(1, g.undoSize)
         }
-
     }
 
     @Nested
