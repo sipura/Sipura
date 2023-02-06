@@ -86,12 +86,4 @@ open class SimpleGraphUndo<V>() : SimpleGraph<V>() {
         }
         return false
     }
-
-    override fun copy(): SimpleGraph<V> {
-        val copy = SimpleGraphUndo(this)
-        for (f in undoStack) {
-            copy.undoStack.addLast(f)
-        }
-        return copy
-    }
 }
