@@ -29,7 +29,8 @@ open class SimpleGraphUndo<V>() : SimpleGraph<V>() {
     }
 
     /**
-     * Reverts the last operation that has been performed on this graph.
+     * Reverts the last operation that has been performed on this graph. Does nothing if no operation exists that
+     * can be reverted.
      */
     open fun undo() {
         if (undoStack.isNotEmpty()) {
@@ -53,7 +54,11 @@ open class SimpleGraphUndo<V>() : SimpleGraph<V>() {
     }
 
     override fun removeVertex(v: V): Boolean {
-        val neighborSet = super.neighbors(v).toSet()
+        val neighborSet = if (v in super.V) {
+            super.neighbors(v).toSet()
+        } else {
+            emptySet()
+        }
         if (super.removeVertex(v)) {
             undoStack.addFirst {
                 addVertex(v)
