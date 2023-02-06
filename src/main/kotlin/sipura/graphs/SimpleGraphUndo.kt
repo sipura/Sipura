@@ -1,6 +1,6 @@
 package sipura.graphs
 
-import java.util.*
+import java.util.LinkedList
 
 /**
  * A SimpleGraph implementation that keeps track of all [addVertex], [removeVertex], [addEdge] and [removeEdge]
