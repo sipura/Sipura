@@ -299,4 +299,8 @@ open class SimpleGraph<V> {
             builder.append("$v1: [${neighbors(v1).joinToString()}]\n")
         return builder.toString()
     }
+
+    override fun hashCode(): Int {
+        return map.hashCode()
+    }
 }
