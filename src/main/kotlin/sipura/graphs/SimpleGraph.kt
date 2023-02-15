@@ -1,23 +1,36 @@
 package sipura.graphs
 
+/**
+ * A class representing a simple undirected graph.
+ */
 open class SimpleGraph<V> {
 
     // If v1 and v2 are connected, then *v1 in map[v2]* and *v2 in map[v1]* has to hold
     private val map = HashMap<V, MutableSet<V>>()
 
+    /**
+     * The number of vertices in this graph.
+     *
+     * Runtime: O(1)  ->  constant
+     */
     val n: Int
         get() = map.size
 
     /**
-     * runtime: O(1)  ->  constant, because [m] gets updated every time an edge gets added or removed
+     * The number of edges in this graph.
+     *
+     * Runtime: O(1)  ->  constant
      */
     var m: Int = 0
         private set
 
     /**
-     * Uses an immutable set because no elements should be removed from this set. The set that is
-     * returned is used in the internal data structure of this class. Removing elements from this
-     * set may cause incorrect behaviour of the graph in future calls.
+     * The set of all vertices in this graph.
+     *
+     * Runtime: O(1)  ->  constant
+     *
+     * Warning: Do not try to remove any elements from this set. This set is part of the internal data structure of
+     * this class. Removing elements would lead to undefined behaviour.
      */
     val V: Set<V>
         get() = map.keys
@@ -27,12 +40,18 @@ open class SimpleGraph<V> {
     }
 
     /**
-     * runtime: O(1)  ->  constant
+     * Checks if the given vertex [v] is part of this graph.
+     *
+     * Runtime: O(1)  ->  constant
+     * @return True if [v] is in this graph. False otherwise.
      */
     operator fun contains(v: V): Boolean = v in map
 
     /**
-     * runtime: O(1)  ->  constant
+     * Adds the given vertex [v] to this graph. If [v] is already in this graph, nothing happens.
+     *
+     * Runtime: O(1)  ->  constant
+     * @return True if [v] is successfully added to this graph. False if [v] is already in this graph.
      */
     open fun addVertex(v: V): Boolean {
         return if (v !in map) {
@@ -44,7 +63,10 @@ open class SimpleGraph<V> {
     }
 
     /**
-     * runtime: O([degreeOf] [v])  ->  each neighbour needs to be updated that [v] is not in its neighbourhood anymore
+     * Removes the given vertex [v] from this graph. If [v] is not in this graph, nothing happens.
+     *
+     * Runtime: O(degree of [v])  ->  each neighbour needs to be updated that [v] is not in its neighbourhood anymore
+     * @return True if [v] is successfully removed from this graph. False if [v] is not in this graph.
      */
     open fun removeVertex(v: V): Boolean {
         if (v !in map) return false
@@ -57,7 +79,12 @@ open class SimpleGraph<V> {
     }
 
     /**
-     * runtime: O(1)  ->  constant
+     * Returns the amount of neighbors of the given vertex [v], i.e. the number of other vertices that are connected
+     * to [v] via an edge.
+     *
+     * Runtime: O(1)  ->  constant
+     * @throws IllegalArgumentException if [v] is not in this graph.
+     * @return the amount of neighbors of [v].
      */
     open fun degreeOf(v: V): Int {
         assertVertexExists(v, "v")
@@ -65,7 +92,11 @@ open class SimpleGraph<V> {
     }
 
     /**
-     * runtime: O(1)  ->  constant
+     * Adds an edge between the given vertices [v1] and [v2]. If the edge already exists, nothing happens.
+     *
+     * Runtime: O(1)  ->  constant
+     * @throws IllegalArgumentException if [v1] or [v2] are the same vertex, or if either of them is not in the graph.
+     * @return True if the edge is successfully added to the graph. False if the edge already exists.
      */
     open fun addEdge(v1: V, v2: V): Boolean {
         assertVertexExists(v1, "v1")
@@ -81,9 +112,11 @@ open class SimpleGraph<V> {
     }
 
     /**
-     * @throws IllegalArgumentException if [v1] or [v2] are the same vertex, or if [v1] or [v2] are not in the graph.
+     * Removes the edge between the two given vertices [v1] and [v2]. If the edge does not exist, nothing happens.
      *
-     * runtime: O(1)  ->  constant
+     * Runtime: O(1)  ->  constant
+     * @throws IllegalArgumentException if [v1] or [v2] are the same vertex, or if either of them is not in the graph.
+     * @return True if the edge is successfully removed. False if the edge does not exist.
      */
     open fun removeEdge(v1: V, v2: V): Boolean {
         assertVertexExists(v1, "v1")
@@ -99,10 +132,10 @@ open class SimpleGraph<V> {
     }
 
     /**
-     * runtime: O(1)  ->  constant
+     * Checks if [v1] and [v2] are connected via an edge.
      *
-     * @throws IllegalArgumentException if [v1] or [v2] are the same vertex, or if [v1] or [v2] are not in the graph.
-     *
+     * Runtime: O(1)  ->  constant
+     * @throws IllegalArgumentException if [v1] or [v2] are the same vertex, or if either of them is not in the graph.
      * @return True if [v1] and [v2] are connected, false otherwise.
      */
     open fun hasEdge(v1: V, v2: V): Boolean {
@@ -114,7 +147,9 @@ open class SimpleGraph<V> {
     }
 
     /**
-     * runtime: O( [m] * [f] )  ->  calls [f] for each edge
+     * Executes the given function [f] for every pair of vertices that is connected via an edge.
+     *
+     * Runtime: O( [m] * [f] )  ->  calls [f] for each edge
      */
     open fun forEachEdge(f: (V, V) -> Unit) {
         val visited = mutableSetOf<V>()
@@ -128,11 +163,15 @@ open class SimpleGraph<V> {
     }
 
     /**
-     * Uses an immutable set because no elements should be removed from this set. The set that is
-     * returned is used in the internal data structure of this class. Removing elements from this
-     * set may cause incorrect behaviour of the graph in future calls.
+     * Returns the set of all neighbors of the given vertex [v], i.e. the set of all other vertices that are connected
+     * to [v] via an edge.
      *
-     * runtime: O(1)  ->  constant. This is possible the neighbourhood that is already stored gets returned.
+     * Runtime: O(1)  ->  constant
+     *
+     * Warning: Do not try to remove any elements from this set. This set is part of the internal data structure of
+     * this class. Removing elements would lead to undefined behaviour.
+     * @throws IllegalArgumentException if [v] is not in this graph.
+     * @return The set of neighbors of [v].
      */
     open fun neighbors(v: V): Set<V> {
         assertVertexExists(v, "v")
@@ -140,7 +179,9 @@ open class SimpleGraph<V> {
     }
 
     /**
-     * shallow copy
+     * Creates a shallow copy of this graph. Copies all vertices and edges but uses the same instance of each vertex
+     * as this graph.
+     * @return the copy of this graph.
      */
     open fun copy(): SimpleGraph<V> {
         val copy = SimpleGraph<V>()
@@ -152,18 +193,24 @@ open class SimpleGraph<V> {
     }
 
     /**
-     * runtime: O([n])  ->  for every vertex, the degree gets checked in constant time
+     * Calculates the largest degree of any vertex in this graph.
+     *
+     * Runtime: O([n])  ->  for every vertex, the degree gets checked in constant time
+     * @throws NoSuchElementException if the graph does not contain any vertices.
+     * @return the largest degree of any vertex in this graph.
      */
     open fun maxDegree(): Int = V.maxOf { degreeOf(it) }
 
     /**
-     * returns edge each twice, as Pair(v1, v2) and as Pair(v2, v1)
+     * Iterates over every directed edge in this graph, i.e. for every two vertices v1 and v2 that are connected via
+     * an edge, this iterator iterates over both pairs (v1, v2) and (v2, v1).
+     * @return an iterator for every directed edge in this graph.
      */
     open fun edgeTwiceIterator(): Iterator<Pair<V, V>> {
         if (n == 0) { // please wash your eyes
             return object : Iterator<Pair<V, V>> {
                 override fun hasNext() = false
-                override fun next(): Pair<V, V> = throw NoSuchElementException("alg.Traversal has finished")
+                override fun next(): Pair<V, V> = throw NoSuchElementException("Traversal has finished")
             }
         }
 
@@ -178,7 +225,7 @@ open class SimpleGraph<V> {
             override fun hasNext() = eCtr < 2 * m
 
             override fun next(): Pair<V, V> {
-                if (!hasNext()) throw NoSuchElementException("alg.Traversal has finished")
+                if (!hasNext()) throw NoSuchElementException("Traversal has finished")
                 while (!v2Iterator.hasNext()) {
                     v1Curr = v1Iterator.next()
                     v2Iterator = neighbors(v1Curr).iterator()
@@ -191,7 +238,9 @@ open class SimpleGraph<V> {
     }
 
     /**
-     * returns edge each twice, as Pair(v1, v2) and as Pair(v2, v1)
+     * Iterates over every undirected edge in this graph, i.e. for every two vertices v1 and v2 that are connected via
+     * an edge, this iterator iterates over only exactly one of the pairs (v1, v2) and (v2, v1).
+     * @return an iterator for every undirected edge in this graph.
      */
     open fun edgeIterator(): Iterator<Pair<V, V>> {
         return object : Iterator<Pair<V, V>> {
@@ -213,7 +262,7 @@ open class SimpleGraph<V> {
                     seen.add(next.first)
                     return next
                 }
-                throw NoSuchElementException("alg.Traversal has finished")
+                throw NoSuchElementException("Traversal has finished")
             }
         }
     }
@@ -237,7 +286,9 @@ open class SimpleGraph<V> {
     }
 
     /**
-     * @return A string representation of the graph.
+     * Creates a string containing the number of vertices in this graph, the number of edges in this graph, the
+     * maximum degree of this graph and a list of all neighbors of every vertex in this graph.
+     * @return A string representation of this graph.
      */
     override fun toString(): String {
         val builder = StringBuilder()
