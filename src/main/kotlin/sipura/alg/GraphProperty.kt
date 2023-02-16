@@ -1,6 +1,7 @@
 package sipura.alg
 
 import sipura.graphs.SimpleGraph
+import kotlin.math.max
 
 object GraphProperty {
 
@@ -79,10 +80,14 @@ object GraphProperty {
     }
 
     /**
-     * Runtime: O([g].maxDegree)
+     * Calculates the h-index of the given graph [g].
      *
-     * @return The h-Index of [g], i.e. the biggest natural number *h* so that there are at
-     * least *h* vertices with degree of at least *h*
+     * The h-index is defined as the largest natural number *h* such that [g] has at least *h* vertices
+     * with degree at least *h*.
+     *
+     * Runtime: O(n)
+     *
+     * @return The h-index of [g].
      */
     fun <V> hIndex(g: SimpleGraph<V>): Int {
         if (g.n == 0) throw IllegalArgumentException()
@@ -113,5 +118,49 @@ object GraphProperty {
             }
         }
         return true
+    }
+
+    /**
+     * Calculates the diameter of the given graph [g] by performing a breadth-first-search from every vertex
+     * in the graph.
+     *
+     * Runtime: O(n * m)
+     * @return the diameter of the graph. 0 if the graph is empty. -1 if the graph is not connected.
+     */
+    fun <V> diameter(g: SimpleGraph<V>): Int {
+        if (g.V.isEmpty()) return 0
+        if (!Connectivity.isConnected(g)) return -1
+        var diameter = 0
+        for (v in g.V) {
+            var dist = -1
+            for (l in Traversal.breadthFirstSearchLayerIterator(g, v)) {
+                dist++
+            }
+            diameter = max(diameter, dist)
+        }
+        return diameter
+    }
+
+    /**
+     * Calculates the smallest degree of any vertex in the given graph [g].
+     *
+     * Runtime: O(n)
+     * @throws NoSuchElementException if the graph does not contain any vertices.
+     * @return the smallest degree of any vertex in the graph.
+     */
+    fun <V> minDegree(g: SimpleGraph<V>): Int {
+        return g.V.minOf { g.degreeOf(it) }
+    }
+
+    /**
+     * Calculates the average degree of all vertices in the given graph [g].
+     *
+     * Runtime: O(n)
+     * @throws NoSuchElementException if the graph does not contain any vertices.
+     * @return the average degree of all vertex in the graph.
+     */
+    fun <V> averageDegree(g: SimpleGraph<V>): Float {
+        if (g.V.isEmpty()) throw NoSuchElementException("The given graph is empty.")
+        return g.V.sumOf { g.degreeOf(it) }.toFloat() / g.V.size.toFloat()
     }
 }

@@ -11,6 +11,7 @@ import sipura.generate.Factory.createCompleteGraph
 import sipura.generate.Factory.createCycleGraph
 import sipura.generate.Factory.createPathGraph
 import sipura.generate.Factory.createStarGraph
+import sipura.generate.GraphRelations
 import sipura.graphs.SimpleGraph
 import kotlin.test.assertEquals
 
@@ -335,6 +336,76 @@ internal class GraphPropertyTest {
             cube.addEdge(7, 8)
 
             assertTrue { GraphProperty.isTriangleFree(cube) }
+        }
+    }
+
+    @Nested
+    internal inner class Diameter {
+
+        @Test
+        fun `diameter of star is 2`() {
+            val g = createStarGraph(30)
+            assertEquals(2, GraphProperty.diameter(g))
+        }
+
+        @Test
+        fun `diameter of cycle graph is half half of n`() {
+            val g = createCycleGraph(30)
+            assertEquals(15, GraphProperty.diameter(g))
+        }
+
+        @Test
+        fun `diameter of unconnected graph is -1`() {
+            val g1 = createStarGraph(20)
+            val g2 = createCycleGraph(10)
+            val g = GraphRelations.disjointUnion(g1, g2)
+            assertEquals(-1, GraphProperty.diameter(g))
+        }
+
+        @Test
+        fun `diameter of empty graph is 0`() {
+            val g = SimpleGraph<Int>()
+            assertEquals(0, GraphProperty.diameter(g))
+        }
+    }
+
+    @Nested
+    internal inner class Degree {
+
+        @Test
+        fun `minDegree of cycle is 2`() {
+            val g = createCycleGraph(10)
+            assertEquals(2, GraphProperty.minDegree(g))
+        }
+
+        @Test
+        fun `averageDegree of cycle is 2`() {
+            val g = createCycleGraph(10)
+            assertEquals(2f, GraphProperty.averageDegree(g))
+        }
+
+        @Test
+        fun `minDegree of complete graph is n-1`() {
+            val g = createCompleteGraph(20)
+            assertEquals(19, GraphProperty.minDegree(g))
+        }
+
+        @Test
+        fun `averageDegree of complete graph is n-1`() {
+            val g = createCompleteGraph(20)
+            assertEquals(19f, GraphProperty.averageDegree(g))
+        }
+
+        @Test
+        fun `minDegree of empty graph leads to exception`() {
+            val g = SimpleGraph<Int>()
+            assertThrows<NoSuchElementException> { GraphProperty.minDegree(g) }
+        }
+
+        @Test
+        fun `averageDegree of empty graph leads to exception`() {
+            val g = SimpleGraph<Int>()
+            assertThrows<NoSuchElementException> { GraphProperty.averageDegree(g) }
         }
     }
 }
