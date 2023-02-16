@@ -8,6 +8,8 @@ import org.junit.jupiter.api.assertThrows
 import sipura.Samples
 import sipura.alg.Connectivity.cutVerticesAndBridgeEdges
 import sipura.alg.Connectivity.getConnectedComponent
+import sipura.alg.Connectivity.is2EdgeConnected
+import sipura.alg.Connectivity.isBiconnected
 import sipura.alg.Connectivity.shortestPath
 import sipura.generate.Factory
 import sipura.generate.Factory.createCompleteGraph
@@ -340,6 +342,69 @@ internal class ConnectivityTest {
             assertEquals(2, bE.size)
             assertTrue { Pair(2, 3) in bE || Pair(3, 2) in bE }
             assertTrue { Pair(6, 7) in bE || Pair(7, 6) in bE }
+        }
+    }
+
+    @Nested
+    internal inner class Biconnected2EdgeConnected {
+
+        @Test
+        fun `cycle graph is biconnected and 2-edge-connected`() {
+            val g = createCycleGraph(30)
+            assertTrue { isBiconnected(g) }
+            assertTrue { is2EdgeConnected(g) }
+        }
+
+        @Test
+        fun `complete graph is biconnected and 2-edge-connected`() {
+            val g = createCompleteGraph(30)
+            assertTrue { isBiconnected(g) }
+            assertTrue { is2EdgeConnected(g) }
+        }
+
+        @Test
+        fun `two cycle graphs joint at one vertex are 2-edge-connected but not biconnected`() {
+            val g = createCycleGraph(10)
+            g.addVertex(11)
+            g.addVertex(12)
+            g.addVertex(13)
+            g.addVertex(14)
+            g.addVertex(15)
+            g.addEdge(10, 11)
+            g.addEdge(11, 12)
+            g.addEdge(12, 13)
+            g.addEdge(13, 14)
+            g.addEdge(14, 15)
+            g.addEdge(15, 10)
+            assertFalse { isBiconnected(g) }
+            assertTrue { is2EdgeConnected(g) }
+        }
+
+        @Test
+        fun `a graph with multiple biconnected components is not biconnected`() {
+            val g1 = createCycleGraph(20)
+            val g2 = createCompleteGraph(10)
+            val g = GraphRelations.disjointUnion(g1, g2)
+            assertFalse { isBiconnected(g) }
+            assertTrue { isBiconnected(g1) }
+            assertTrue { isBiconnected(g2) }
+        }
+
+        @Test
+        fun `a graph with multiple 2-edge-connected components is not 2-edge-connected`() {
+            val g1 = createCycleGraph(20)
+            val g2 = createCompleteGraph(10)
+            val g = GraphRelations.disjointUnion(g1, g2)
+            assertFalse { is2EdgeConnected(g) }
+            assertTrue { is2EdgeConnected(g1) }
+            assertTrue { is2EdgeConnected(g2) }
+        }
+
+        @Test
+        fun `empty graph throws exception`() {
+            val g = SimpleGraph<Int>()
+            assertThrows<IllegalArgumentException> { isBiconnected(g) }
+            assertThrows<IllegalArgumentException> { is2EdgeConnected(g) }
         }
     }
 }

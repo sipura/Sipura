@@ -115,10 +115,10 @@ object Connectivity {
     /**
      * @throws IllegalArgumentException if [g] is empty.
      *
-     * @return True if the graph is connected, false otherwise.
+     * @return True if the graph is connected, False otherwise.
      */
     fun <V> isConnected(g: SimpleGraph<V>): Boolean {
-        if (g.n == 0) throw IllegalArgumentException("alg.Connectivity for empty graph is ambiguous, so exception for good measure")
+        if (g.n == 0) throw IllegalArgumentException("Connectivity for empty graph is ambiguous, so exception for good measure")
         return getConnectedComponent(g, g.V.first()).size == g.n
     }
 
@@ -243,5 +243,29 @@ object Connectivity {
             }
         }
         return Pair(cutVertices, bridgeEdges)
+    }
+
+    /**
+     * Checks if the given graph [g] is biconnected.
+     * A graph is biconnected if it is connected and if it is still connected after removing any one vertex.
+     * @throws IllegalArgumentException if [g] is empty.
+     * @return True if the graph is biconnected, False otherwise.
+     */
+    fun <V> isBiconnected(g: SimpleGraph<V>): Boolean {
+        if (g.n == 0) throw IllegalArgumentException("Connectivity for empty graph is ambiguous, so exception for good measure")
+        val (cV, bE) = cutVerticesAndBridgeEdges(g)
+        return cV.isEmpty() && isConnected(g)
+    }
+
+    /**
+     * Checks if the given graph [g] is 2-edge-connected.
+     * A graph is 2-edge-connected if it is connected and if it is still connected after removing any one edge.
+     * @throws IllegalArgumentException if [g] is empty.
+     * @return True if the graph is 2-edge-connected, False otherwise.
+     */
+    fun <V> is2EdgeConnected(g: SimpleGraph<V>): Boolean {
+        if (g.n == 0) throw IllegalArgumentException("Connectivity for empty graph is ambiguous, so exception for good measure")
+        val (cV, bE) = cutVerticesAndBridgeEdges(g)
+        return bE.isEmpty() && isConnected(g)
     }
 }
