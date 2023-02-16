@@ -132,4 +132,52 @@ class SimpleGraphUndoTest {
             assertEquals(1, g.undoSize)
         }
     }
+
+    @Nested
+    internal inner class General {
+
+        @Test
+        fun `multiple different undo operations back to back`() {
+            val g1 = Factory.createStarGraph(7)
+            val g2 = SimpleGraphUndo(g1)
+            assertTrue(g2.removeEdge(1, 2))
+            assertTrue(g2.removeEdge(1, 3))
+            assertTrue(g2.removeEdge(1, 4))
+            assertTrue(g2.addEdge(2, 3))
+            assertTrue(g2.addEdge(2, 4))
+            assertTrue(g2.removeVertex(6))
+            assertTrue(g2.addEdge(3, 4))
+            assertTrue(g2.addVertex(6))
+            assertTrue(g2.addEdge(1, 6))
+            assertEquals(9, g2.stackSize())
+            g2.undo(9)
+            assertEquals(g1, g2)
+        }
+
+        @Test
+        fun `switching between undoing operations and doing normal operations`() {
+            val g1 = Factory.createStarGraph(7)
+            val g2 = SimpleGraphUndo(g1)
+            assertTrue(g2.removeEdge(1, 2))
+            assertTrue(g2.removeEdge(1, 3))
+            assertTrue(g2.removeEdge(1, 4))
+            assertEquals(3, g2.stackSize())
+            g2.undo(2)
+            assertTrue(g2.removeEdge(1, 4))
+            assertTrue(g2.addEdge(2, 3))
+            assertTrue(g2.addEdge(2, 4))
+            assertTrue(g2.removeVertex(6))
+            assertEquals(5, g2.stackSize())
+            g2.undo(2)
+            assertTrue(g2.addEdge(3, 4))
+            assertTrue(g2.addEdge(2, 4))
+            assertTrue(g2.removeVertex(6))
+            assertEquals(6, g2.stackSize())
+            g2.undo(3)
+            assertTrue(g2.removeEdge(1, 6))
+            assertEquals(4, g2.stackSize())
+            g2.undo(4)
+            assertEquals(g1, g2)
+        }
+    }
 }

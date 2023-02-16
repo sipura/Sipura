@@ -29,12 +29,14 @@ open class SimpleGraphUndo<V>() : SimpleGraph<V>() {
     }
 
     /**
-     * Reverts the last operation that has been performed on this graph. Does nothing if no operation exists that
-     * can be reverted.
+     * Reverts the last operation that has been performed on this graph [times] many times. Does nothing if no
+     * operation exists that can be reverted.
      */
-    open fun undo() {
-        if (undoStack.isNotEmpty()) {
-            undoStack.removeFirst()()
+    open fun undo(times: Int = 1) {
+        repeat(times) {
+            if (undoStack.isNotEmpty()) {
+                undoStack.removeFirst()()
+            }
         }
     }
 
@@ -44,6 +46,11 @@ open class SimpleGraphUndo<V>() : SimpleGraph<V>() {
     open fun clearStack() {
         undoStack.clear()
     }
+
+    /**
+     * Returns the amount of undo operations that are currently available.
+     */
+    open fun stackSize(): Int = undoStack.size
 
     override fun addVertex(v: V): Boolean {
         if (super.addVertex(v)) {
@@ -61,7 +68,7 @@ open class SimpleGraphUndo<V>() : SimpleGraph<V>() {
         }
         if (super.removeVertex(v)) {
             undoStack.addFirst {
-                addVertex(v)
+                super.addVertex(v)
                 for (n in neighborSet) {
                     super.addEdge(v, n)
                 }
@@ -85,5 +92,12 @@ open class SimpleGraphUndo<V>() : SimpleGraph<V>() {
             return true
         }
         return false
+    }
+
+    /**
+     * Only copies the vertices and edges of this graph. Does NOT copy the undo operations.
+     */
+    override fun copy(): SimpleGraphUndo<V> {
+        return SimpleGraphUndo(super.copy())
     }
 }

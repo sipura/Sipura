@@ -438,7 +438,7 @@ internal class SimpleGraphTest {
             3 to 4,
             3 to 5,
             4 to 3,
-            5 to 3
+            5 to 3,
         )
         assertEquals(edgesCorrect, edgesFromIterator)
     }
@@ -467,7 +467,7 @@ internal class SimpleGraphTest {
             1 to 2,
             1 to 3,
             3 to 4,
-            3 to 5
+            3 to 5,
         )
         assertEquals(edgesCorrect, edgesFromIterator)
     }
@@ -497,6 +497,7 @@ internal class SimpleGraphTest {
             val clone = g.copy()
             assertTrue { g == clone }
             assertTrue { clone == g }
+            assertEquals(clone.hashCode(), g.hashCode())
         }
 
         @Test
