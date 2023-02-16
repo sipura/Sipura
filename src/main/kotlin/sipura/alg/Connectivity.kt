@@ -170,4 +170,78 @@ object Connectivity {
      * @return The number of edges in the shortest path from [v1] to [v2] in graph [g]
      */
     fun <V> distance(g: SimpleGraph<V>, v1: V, v2: V): Int = shortestPath(g, v1, v2).size - 1
+
+    /**
+     * Calculates all cut-vertices and all bridge-edges of the given graph [g].
+     * A vertex v is a cut-vertex if the graph has more connected components after v is removed from it.
+     * An edge (v1,v2) is a bridge-edge if the graph has more connected components after (v1,v2) is removed from it.
+     *
+     * Runtime: O(n + m)
+     * @return A [Pair] containing a set of all cut-vertices and a set of all bridge-edges.
+     */
+    fun <V> cutVerticesAndBridgeEdges(g: SimpleGraph<V>): Pair<Set<V>, Set<Pair<V, V>>> {
+        val cutVertices = HashSet<V>()
+        val bridgeEdges = HashSet<Pair<V, V>>()
+        val remaining = g.V.toHashSet()
+        // make sure we visit all connected components
+        while (remaining.isNotEmpty()) {
+            // choose starting vertex
+            val first = remaining.first()
+
+            // create dfs tree
+            val order = LinkedList<V>()
+            val parent = HashMap<V, V>()
+            val stack = LinkedList<V>()
+            val visited = HashSet<V>()
+            stack.addFirst(first)
+            parent[first] = first
+            while (stack.isNotEmpty()) {
+                val v = stack.removeFirst()
+                if (v !in visited) {
+                    visited.add(v)
+                    remaining.remove(v)
+                    order.addLast(v)
+                    for (n in g.neighbors(v)) {
+                        if (n in visited) continue
+                        stack.addFirst(n)
+                        parent[n] = v
+                    }
+                }
+            }
+            visited.clear()
+
+            // calculate chain decomposition and all cut-vertices and bridge-edges for this connected component
+            val chainVisited = HashSet<V>()
+            val remainingEdges = order.toHashSet()
+            remainingEdges.remove(first)
+            for (v in order) {
+                for (n in g.neighbors(v)) {
+                    // check that (v,n) is not part of the tree and that n has not been visited yet
+                    if (n in chainVisited || parent[v] == n || parent[n] == v) continue
+                    // at this point n has been discovered by dfs after v and v must be an ancestor of n
+                    // traverse the parent edges until a visited vertex is found or until we reach v
+                    chainVisited.add(v)
+                    var next = n
+                    while (next !in chainVisited) {
+                        chainVisited.add(next)
+                        remainingEdges.remove(next)
+                        next = parent[next]!!
+                    }
+                    // v is a cut-vertex if the chain reaches it and v is not the first vertex
+                    if (v == next && v != first) {
+                        cutVertices.add(v)
+                    }
+                }
+            }
+            chainVisited.clear()
+            // all edges of the tree that are not part of a chain are bridge-edges
+            // their endpoints are cut-vertices unless they have degree 1
+            for (v in remainingEdges) {
+                bridgeEdges.add(Pair(v, parent[v]!!))
+                if (g.degreeOf(parent[v]!!) > 1) cutVertices.add(parent[v]!!)
+                if (g.degreeOf(v) > 1) cutVertices.add(v)
+            }
+        }
+        return Pair(cutVertices, bridgeEdges)
+    }
 }
