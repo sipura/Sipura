@@ -6,7 +6,7 @@ plugins {
 }
 
 group = "org.sipura"
-version = "22.12.1"
+version = "23.02.1"
 
 repositories {
     mavenCentral()
