@@ -15,12 +15,14 @@ import java.util.LinkedList
 object Connectivity {
 
     /**
+     * Checks if the two given vertices [v1] and [v2] are connected in [g].
+     *
      * Does two BFSs at the same time starting from and alternating between [v1] and [v2]. Once one of them finds a
      * vertex that the other already found the function immediately stops and returns *true*. If one of the BFS ends
      * without that occurring then the function also stops and returns *false*.
      *
+     * Runtime: O(n + m)
      * @throws IllegalArgumentException if [v1] or [v2] are not in [g].
-     *
      * @return True if [v1] and [v2] are connected, false otherwise.
      */
     fun <V> checkIfConnected(g: SimpleGraph<V>, v1: V, v2: V): Boolean {
@@ -56,13 +58,11 @@ object Connectivity {
     }
 
     /**
-     * Does a BFS starting from [v] and returns a set of all vertices that are reachable from [v].
+     * Calculates the connected component in the given graph [g] containing the vertex [v].
      *
-     * runtime: O(n + m)  ->  every vertex and every edge is visited
-     *
-     * @throws IllegalArgumentException if [v] is not in the graph
-     *
-     * @return a set of all vertices that are reachable from [v]
+     * Runtime: O(n + m)
+     * @throws IllegalArgumentException if [v] is not in the graph.
+     * @return a set of all vertices that are reachable from [v].
      */
     fun <V> getConnectedComponent(g: SimpleGraph<V>, v: V): MutableSet<V> {
         if (v !in g.V) throw IllegalArgumentException("Graph does not contain vertex v")
@@ -71,14 +71,15 @@ object Connectivity {
     }
 
     /**
-     * Returns a map where the keys of which are all vertices in the graph and
-     * the values of which are the connected components, represented as sets of vertices.
+     * Calculates all connected components of the given graph [g].
      *
      * The connected components are disjoint, i.e. no vertex is contained in more than one connected component.
-     * The connected components are maximal, i.e. no vertex can be added to a connected component without
      *
-     * @return a map where the keys of which are all vertices in the graph and the values are sets of the
-     * respective connected component.
+     * The connected components are maximal, i.e. adding any vertex to it will disconnect the component.
+     *
+     * Runtime: O(n + m)
+     * @return a map mapping every vertex to its connected component. Connected components are represented
+     * as sets of vertices.
      */
     fun <V> listAllConnectedComponents(g: SimpleGraph<V>): MutableMap<V, MutableSet<V>> {
         val result = HashMap<V, MutableSet<V>>()
@@ -94,8 +95,10 @@ object Connectivity {
     }
 
     /**
+     * Counts the number of connected components in the given graph [g].
      * Unlike [listAllConnectedComponents] does not need to store all components in memory at the same time.
      *
+     * Runtime: O(n + m)
      * @return The number of connected components in the graph.
      */
     fun <V> numberOfConnectedComponents(g: SimpleGraph<V>): Int {
@@ -113,8 +116,12 @@ object Connectivity {
     }
 
     /**
-     * @throws IllegalArgumentException if [g] is empty.
+     * Checks if the given graph [g] is connected.
      *
+     * A graph is connected if every pair of vertices is connected via at least one path.
+     *
+     * Runtime: O(n + m)
+     * @throws IllegalArgumentException if [g] is empty.
      * @return True if the graph is connected, False otherwise.
      */
     fun <V> isConnected(g: SimpleGraph<V>): Boolean {
@@ -123,11 +130,11 @@ object Connectivity {
     }
 
     /**
-     * Returns the shortest path from [vStart] to [vEnd] by doing a BFS starting from [vStart].
+     * Calculates the shortest path from [vStart] to [vEnd] by doing a BFS starting from [vStart].
      * The result is stored in a list of vertices, where the first element is [vStart] and the last element is [vEnd].
      *
+     * Runtime: O(n + m)
      * @throws IllegalArgumentException if [vStart] or [vEnd] is not in the graph or if [g] is empty.
-     *
      * @return a list of vertices representing the shortest path from [vStart] to [vEnd].
      */
     fun <V> shortestPath(g: SimpleGraph<V>, vStart: V, vEnd: V): List<V> {
@@ -163,16 +170,20 @@ object Connectivity {
     }
 
     /**
+     * Calculates the distance between the two given vertices [v1] and [v2].
+     *
+     * The distance is defined as the number of edges in the shortest path between the two vertices.
      * The distance of two neighboring vertices is 1, and the distance of a vertex to itself is 0.
      *
+     * Runtime: O(n + m)
      * @throws IllegalArgumentException if [v1] or [v2] is not in the graph.
-     *
-     * @return The number of edges in the shortest path from [v1] to [v2] in graph [g]
+     * @return The distance between [v1] and [v2].
      */
     fun <V> distance(g: SimpleGraph<V>, v1: V, v2: V): Int = shortestPath(g, v1, v2).size - 1
 
     /**
      * Calculates all cut-vertices and all bridge-edges of the given graph [g].
+     *
      * A vertex v is a cut-vertex if the graph has more connected components after v is removed from it.
      * An edge (v1,v2) is a bridge-edge if the graph has more connected components after (v1,v2) is removed from it.
      *
@@ -247,7 +258,10 @@ object Connectivity {
 
     /**
      * Checks if the given graph [g] is biconnected.
+     *
      * A graph is biconnected if it is connected and if it is still connected after removing any one vertex.
+     *
+     * Runtime: O(n + m)
      * @throws IllegalArgumentException if [g] is empty.
      * @return True if the graph is biconnected, False otherwise.
      */
@@ -259,7 +273,10 @@ object Connectivity {
 
     /**
      * Checks if the given graph [g] is 2-edge-connected.
+     *
      * A graph is 2-edge-connected if it is connected and if it is still connected after removing any one edge.
+     *
+     * Runtime: O(n + m)
      * @throws IllegalArgumentException if [g] is empty.
      * @return True if the graph is 2-edge-connected, False otherwise.
      */
