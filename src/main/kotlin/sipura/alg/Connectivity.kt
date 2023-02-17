@@ -187,6 +187,9 @@ object Connectivity {
      * A vertex v is a cut-vertex if the graph has more connected components after v is removed from it.
      * An edge (v1,v2) is a bridge-edge if the graph has more connected components after (v1,v2) is removed from it.
      *
+     * Uses an algorithm that calculates a dfs-tree and a chain decomposition based on that tree. The cut-vertices
+     * and bridge-edges can then easily be determined from the chain decomposition.
+     *
      * Runtime: O(n + m)
      * @return A [Pair] containing a set of all cut-vertices and a set of all bridge-edges.
      */
