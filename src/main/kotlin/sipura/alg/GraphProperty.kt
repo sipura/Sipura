@@ -1,6 +1,7 @@
 package sipura.alg
 
 import sipura.graphs.SimpleGraph
+import java.util.LinkedList
 import kotlin.math.max
 
 object GraphProperty {
@@ -162,5 +163,60 @@ object GraphProperty {
     fun <V> averageDegree(g: SimpleGraph<V>): Float {
         if (g.V.isEmpty()) throw NoSuchElementException("The given graph is empty.")
         return g.V.sumOf { g.degreeOf(it) }.toFloat() / g.V.size.toFloat()
+    }
+
+    /**
+     * Calculates the degeneracy and a degeneracy ordering of the given graph [g].
+     *
+     * The degeneracy of [g] is defined as the smallest natural number *d* such that every subgraph of [g] has
+     * minimum degree of at most *d*.
+     *
+     * An ordering of the vertices in [g] is a degeneracy ordering if every vertex has at most *d*
+     * many neighbors that come later in the ordering.
+     *
+     * Uses an algorithm that repeatedly chooses the vertex with the smallest degree in [g] and adds it to the
+     * ordering. The sorting is done using bucket queues which makes a linear running time possible.
+     *
+     * Runtime: O(n + m)
+     * @throws NoSuchElementException if the graph does not contain any vertices.
+     * @return A [Pair] containing the degeneracy and a degeneracy ordering of [g] as a list of vertices.
+     */
+    fun <V> degeneracyOrdering(g: SimpleGraph<V>): Pair<Int, List<V>> {
+        if (g.V.isEmpty()) throw NoSuchElementException("The given graph is empty.")
+        val ordering = LinkedList<V>()
+        val degrees = HashMap<V, Int>()
+        val degreeSets = Array<HashSet<V>>(g.n) { HashSet() }
+        var degeneracy = 0
+        // initialize degrees and degree sets
+        for (v in g.V) {
+            degrees[v] = g.degreeOf(v)
+            degreeSets[degrees[v]!!].add(v)
+        }
+        repeat(g.n) {
+            // find vertex with current minimum degree
+            var i = 0
+            while (i < g.n) {
+                if (degreeSets[i].isEmpty()) {
+                    i++
+                    continue
+                }
+                // update degeneracy since remaining subgraph has minimum degree i
+                degeneracy = max(degeneracy, i)
+                // v is a vertex with current minimum degree
+                val v = degreeSets[i].first()
+                degrees.remove(v)
+                degreeSets[i].remove(v)
+                ordering.addLast(v)
+                // update degrees of all neighbors of v as if v was removed from the graph
+                for (n in g.neighbors(v)) {
+                    if (n !in degrees) continue
+                    degreeSets[degrees[n]!!].remove(n)
+                    degrees[n] = degrees[n]!! - 1
+                    degreeSets[degrees[n]!!].add(n)
+                }
+                break
+            }
+        }
+        return Pair(degeneracy, ordering)
     }
 }

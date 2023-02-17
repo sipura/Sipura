@@ -13,6 +13,7 @@ import sipura.generate.Factory.createPathGraph
 import sipura.generate.Factory.createStarGraph
 import sipura.generate.GraphRelations
 import sipura.graphs.SimpleGraph
+import kotlin.math.max
 import kotlin.test.assertEquals
 
 internal class GraphPropertyTest {
@@ -406,6 +407,66 @@ internal class GraphPropertyTest {
         fun `averageDegree of empty graph leads to exception`() {
             val g = SimpleGraph<Int>()
             assertThrows<NoSuchElementException> { GraphProperty.averageDegree(g) }
+        }
+    }
+
+    @Nested
+    internal inner class Degeneracy {
+
+        /**
+         * Asserts that the given degeneracy ordering [ordering] is correct for the given graph [g] assuming
+         * that [g] has degeneracy [d].
+         */
+        private fun <V> assertOrderingCorrect(g: SimpleGraph<V>, d: Int, ordering: List<V>) {
+            val indices = HashMap<V, Int>()
+            ordering.forEachIndexed { index, v -> indices[v] = index }
+            for (v in ordering) {
+                assertTrue { d >= g.neighbors(v).count { indices[it]!! > indices[v]!! } }
+            }
+        }
+
+        @Test
+        fun `cycle graph has degeneracy of 2`() {
+            val g = createCycleGraph(10)
+            val (d, order) = GraphProperty.degeneracyOrdering(g)
+            assertEquals(2, d)
+            assertOrderingCorrect(g, d, order)
+        }
+
+        @Test
+        fun `star graph has degeneracy of 1`() {
+            val g = createStarGraph(15)
+            val (d, order) = GraphProperty.degeneracyOrdering(g)
+            assertEquals(1, d)
+            assertOrderingCorrect(g, d, order)
+        }
+
+        @Test
+        fun `complete graph has degeneracy of n-1`() {
+            val g = createCompleteGraph(30)
+            val (d, order) = GraphProperty.degeneracyOrdering(g)
+            assertEquals(29, d)
+            assertOrderingCorrect(g, d, order)
+        }
+
+        @Test
+        fun `degeneracy of graph with multiple components is max degeneracy of components`() {
+            val g1 = createCycleGraph(20)
+            val g2 = createBipartiteGraph(10, 12)
+            val g = GraphRelations.disjointUnion(g1, g2)
+            val (d1, order1) = GraphProperty.degeneracyOrdering(g1)
+            val (d2, order2) = GraphProperty.degeneracyOrdering(g2)
+            val (d, order) = GraphProperty.degeneracyOrdering(g)
+            assertEquals(max(d1, d2), d)
+            assertOrderingCorrect(g1, d1, order1)
+            assertOrderingCorrect(g2, d2, order2)
+            assertOrderingCorrect(g, d, order)
+        }
+
+        @Test
+        fun `degeneracyOrdering throws exception for empty graph`() {
+            val g = SimpleGraph<Int>()
+            assertThrows<NoSuchElementException> { GraphProperty.degeneracyOrdering(g) }
         }
     }
 }
