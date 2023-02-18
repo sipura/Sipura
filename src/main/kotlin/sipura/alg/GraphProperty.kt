@@ -125,6 +125,9 @@ object GraphProperty {
      * Calculates the diameter of the given graph [g] by performing a breadth-first-search from every vertex
      * in the graph.
      *
+     * The diameter of [g] is defined as the largest distance between any two vertices where the distance is
+     * defined as the number of edges on the shortest path between the two vertices.
+     *
      * Runtime: O(n * m)
      * @return the diameter of the graph. 0 if the graph is empty. -1 if the graph is not connected.
      */
