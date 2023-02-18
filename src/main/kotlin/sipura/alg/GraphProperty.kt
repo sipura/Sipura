@@ -156,13 +156,13 @@ object GraphProperty {
     /**
      * Calculates the average degree of all vertices in the given graph [g].
      *
-     * Runtime: O(n)
+     * Runtime: O(1)  ->  can be calculated as 2m/n
      * @throws NoSuchElementException if the graph does not contain any vertices.
-     * @return the average degree of all vertex in the graph.
+     * @return the average degree of all vertices in the graph.
      */
     fun <V> averageDegree(g: SimpleGraph<V>): Float {
-        if (g.V.isEmpty()) throw NoSuchElementException("The given graph is empty.")
-        return g.V.sumOf { g.degreeOf(it) }.toFloat() / g.V.size.toFloat()
+        if (g.n == 0) throw NoSuchElementException("The given graph is empty.")
+        return (2f * g.m.toFloat()) / g.n.toFloat()
     }
 
     /**
