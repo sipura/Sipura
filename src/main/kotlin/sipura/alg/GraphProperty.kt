@@ -1,6 +1,8 @@
 package sipura.alg
 
 import sipura.graphs.SimpleGraph
+import java.util.LinkedList
+import kotlin.math.max
 
 object GraphProperty {
 
@@ -79,10 +81,14 @@ object GraphProperty {
     }
 
     /**
-     * Runtime: O([g].maxDegree)
+     * Calculates the h-index of the given graph [g].
      *
-     * @return The h-Index of [g], i.e. the biggest natural number *h* so that there are at
-     * least *h* vertices with degree of at least *h*
+     * The h-index is defined as the largest natural number *h* such that [g] has at least *h* vertices
+     * with degree at least *h*.
+     *
+     * Runtime: O(n)
+     *
+     * @return The h-index of [g].
      */
     fun <V> hIndex(g: SimpleGraph<V>): Int {
         if (g.n == 0) throw IllegalArgumentException()
@@ -113,5 +119,107 @@ object GraphProperty {
             }
         }
         return true
+    }
+
+    /**
+     * Calculates the diameter of the given graph [g] by performing a breadth-first-search from every vertex
+     * in the graph.
+     *
+     * The diameter of [g] is defined as the largest distance between any two vertices where the distance is
+     * defined as the number of edges on the shortest path between the two vertices.
+     *
+     * Runtime: O(n * m)
+     * @return the diameter of the graph. 0 if the graph is empty. -1 if the graph is not connected.
+     */
+    fun <V> diameter(g: SimpleGraph<V>): Int {
+        if (g.V.isEmpty()) return 0
+        if (!Connectivity.isConnected(g)) return -1
+        var diameter = 0
+        for (v in g.V) {
+            var dist = -1
+            for (l in Traversal.breadthFirstSearchLayerIterator(g, v)) {
+                dist++
+            }
+            diameter = max(diameter, dist)
+        }
+        return diameter
+    }
+
+    /**
+     * Calculates the smallest degree of any vertex in the given graph [g].
+     *
+     * Runtime: O(n)
+     * @throws NoSuchElementException if the graph does not contain any vertices.
+     * @return the smallest degree of any vertex in the graph.
+     */
+    fun <V> minDegree(g: SimpleGraph<V>): Int {
+        return g.V.minOf { g.degreeOf(it) }
+    }
+
+    /**
+     * Calculates the average degree of all vertices in the given graph [g].
+     *
+     * Runtime: O(1)  ->  can be calculated as 2m/n
+     * @throws NoSuchElementException if the graph does not contain any vertices.
+     * @return the average degree of all vertices in the graph.
+     */
+    fun <V> averageDegree(g: SimpleGraph<V>): Float {
+        if (g.n == 0) throw NoSuchElementException("The given graph is empty.")
+        return (2f * g.m.toFloat()) / g.n.toFloat()
+    }
+
+    /**
+     * Calculates the degeneracy and a degeneracy ordering of the given graph [g].
+     *
+     * The degeneracy of [g] is defined as the smallest natural number *d* such that every subgraph of [g] has
+     * minimum degree of at most *d*.
+     *
+     * An ordering of the vertices in [g] is a degeneracy ordering if every vertex has at most *d*
+     * many neighbors that come later in the ordering.
+     *
+     * Uses an algorithm that repeatedly chooses the vertex with the smallest degree in [g] and adds it to the
+     * ordering. The sorting is done using bucket queues which makes a linear running time possible.
+     *
+     * Runtime: O(n + m)
+     * @throws NoSuchElementException if the graph does not contain any vertices.
+     * @return A [Pair] containing the degeneracy and a degeneracy ordering of [g] as a list of vertices.
+     */
+    fun <V> degeneracyOrdering(g: SimpleGraph<V>): Pair<Int, List<V>> {
+        if (g.V.isEmpty()) throw NoSuchElementException("The given graph is empty.")
+        val ordering = LinkedList<V>()
+        val degrees = HashMap<V, Int>()
+        val degreeSets = Array<HashSet<V>>(g.n) { HashSet() }
+        var degeneracy = 0
+        // initialize degrees and degree sets
+        for (v in g.V) {
+            degrees[v] = g.degreeOf(v)
+            degreeSets[degrees[v]!!].add(v)
+        }
+        repeat(g.n) {
+            // find vertex with current minimum degree
+            var i = 0
+            while (i < g.n) {
+                if (degreeSets[i].isEmpty()) {
+                    i++
+                    continue
+                }
+                // update degeneracy since remaining subgraph has minimum degree i
+                degeneracy = max(degeneracy, i)
+                // v is a vertex with current minimum degree
+                val v = degreeSets[i].first()
+                degrees.remove(v)
+                degreeSets[i].remove(v)
+                ordering.addLast(v)
+                // update degrees of all neighbors of v as if v was removed from the graph
+                for (n in g.neighbors(v)) {
+                    if (n !in degrees) continue
+                    degreeSets[degrees[n]!!].remove(n)
+                    degrees[n] = degrees[n]!! - 1
+                    degreeSets[degrees[n]!!].add(n)
+                }
+                break
+            }
+        }
+        return Pair(degeneracy, ordering)
     }
 }
