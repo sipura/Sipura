@@ -104,6 +104,13 @@ object VertexSets {
     fun <V> cutSize(g: SimpleGraph<V>, S: Collection<V>): Int =
         S.sumOf { s -> g.neighbors(s).count { it !in S } }
 
+    /**
+     * A data structure that allows fast calculation of the k-cores of [g] for all k in the range of 0 to n.
+     *
+     * @constructor Creates the k-core decomposition based on the given graph [g].
+     *
+     * Runtime: O(n + m)
+     */
     class KCoreDecomposition<V>(val g: SimpleGraph<V>) {
 
         private val lists: Array<LinkedList<V>> = Array(g.n) { LinkedList() }
