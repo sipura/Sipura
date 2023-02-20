@@ -15,7 +15,7 @@ object GraphIO {
     fun <V> importSimpleGraphFromFile(
         filePath: String,
         commentPrefix: String = "#",
-        lineParser: (String) -> Pair<V, V>
+        lineParser: (String) -> Pair<V, V>,
     ): SimpleGraph<V> {
         val g = SimpleGraph<V>()
         val inputFile = File(filePath)

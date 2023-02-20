@@ -36,7 +36,7 @@ internal class TraversalTest {
             assertThrows<IllegalArgumentException> {
                 Traversal.breadthFirstSearchLayerIterator(
                     Factory.createPathGraph(5),
-                    6
+                    6,
                 )
             }
         }

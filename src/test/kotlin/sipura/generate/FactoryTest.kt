@@ -40,7 +40,7 @@ internal class FactoryTest {
                 2 to setOf(1, 3),
                 3 to setOf(2, 4),
                 4 to setOf(3, 5),
-                5 to setOf(4)
+                5 to setOf(4),
             )
             assertEquals(correctMap, getFieldValue(mapName, g, g.javaClass))
         }
@@ -51,7 +51,7 @@ internal class FactoryTest {
             val g = Factory.createPathGraph(n)
             val correctMap = mutableMapOf(
                 1 to setOf(2),
-                n to setOf(n - 1)
+                n to setOf(n - 1),
             )
             for (i in 2 until n) correctMap[i] = setOf(i - 1, i + 1)
 
@@ -75,7 +75,7 @@ internal class FactoryTest {
             val correctMap = mapOf(
                 1 to setOf(2, 3),
                 2 to setOf(1, 3),
-                3 to setOf(1, 2)
+                3 to setOf(1, 2),
             )
             assertEquals(correctMap, getFieldValue(mapName, g, g.javaClass))
         }
@@ -88,7 +88,7 @@ internal class FactoryTest {
                 2 to setOf(1, 3),
                 3 to setOf(2, 4),
                 4 to setOf(3, 5),
-                5 to setOf(1, 4)
+                5 to setOf(1, 4),
             )
             assertEquals(correctMap, getFieldValue(mapName, g, g.javaClass))
         }
@@ -99,7 +99,7 @@ internal class FactoryTest {
             val g = Factory.createCycleGraph(n)
             val correctMap = mutableMapOf(
                 1 to setOf(2, n),
-                n to setOf(1, n - 1)
+                n to setOf(1, n - 1),
             )
             for (i in 2 until n) correctMap[i] = setOf(i - 1, i + 1)
 
@@ -123,7 +123,7 @@ internal class FactoryTest {
             val correctMap = mapOf(
                 1 to setOf(2, 3),
                 2 to setOf(1, 3),
-                3 to setOf(1, 2)
+                3 to setOf(1, 2),
             )
             assertEquals(correctMap, getFieldValue(mapName, g, g.javaClass))
         }

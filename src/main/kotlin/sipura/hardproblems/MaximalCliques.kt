@@ -12,7 +12,7 @@ object MaximalCliques {
         g: SimpleGraph<V>,
         R: MutableSet<V>,
         P: MutableSet<V>,
-        X: MutableSet<V>
+        X: MutableSet<V>,
     ): Set<Set<V>> {
         if (P.isEmpty() && X.isEmpty()) {
             return setOf(R)
@@ -35,6 +35,6 @@ object MaximalCliques {
         g,
         R = mutableSetOf(),
         X = mutableSetOf(),
-        P = g.V.toMutableSet()
+        P = g.V.toMutableSet(),
     )
 }

@@ -2,7 +2,7 @@ package sipura.alg
 
 import sipura.graphs.SimpleGraph
 import sipura.utils.SetTheory.isDisjoint
-import java.util.*
+import java.util.LinkedList
 import kotlin.collections.HashSet
 
 object VertexSets {
