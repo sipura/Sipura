@@ -11,6 +11,7 @@ import sipura.alg.VertexSets.getLeafs
 import sipura.alg.VertexSets.isIndependentSet
 import sipura.alg.VertexSets.isVertexCover
 import sipura.alg.VertexSets.treeCenter
+import sipura.generate.Factory.createCompleteGraph
 import sipura.generate.Factory.createCycleGraph
 import sipura.generate.Factory.createPathGraph
 import sipura.generate.Factory.createStarGraph
@@ -164,6 +165,25 @@ internal class VertexSetsTest {
         fun `throws IllegalArgumentException if S contains vertices that are not in g`() {
             val g = createPathGraph(4)
             assertThrows<IllegalArgumentException> { cutSize(g, setOf(1, 5)) }
+        }
+    }
+
+    @Nested
+    internal inner class KCore {
+
+        @Test
+        fun `clique 5 k 1 2 3 4`() {
+            val g = createCompleteGraph(5)
+            val decomposition = VertexSets.KCoreDecomposition(g)
+            for (k in 1..4) {
+                assertEquals(setOf(1, 2, 3, 4, 5), decomposition.kCore(k))
+            }
+        }
+
+        @Test
+        fun `clique 5 k 5`() {
+            val g = createCompleteGraph(5)
+            assertThrows<IllegalArgumentException> { VertexSets.KCoreDecomposition(g).kCore(5) }
         }
     }
 }

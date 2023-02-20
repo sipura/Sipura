@@ -24,7 +24,7 @@ fun <O, V> invokeMethod(
     o: O,
     oClass: Class<O>,
     args: Array<Any?>?,
-    parameterTypes: Array<Class<*>?>
+    parameterTypes: Array<Class<*>?>,
 ): V {
     val method: Method = oClass.getMethod(methodName, *parameterTypes)
     method.isAccessible = true

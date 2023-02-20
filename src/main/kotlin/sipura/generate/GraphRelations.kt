@@ -140,7 +140,7 @@ object GraphRelations {
         g1: SimpleGraph<V1>,
         map1: Map<V1, V3>,
         g2: SimpleGraph<V2>,
-        map2: Map<V2, V3>
+        map2: Map<V2, V3>,
     ): SimpleGraph<V3> {
         val res = SimpleGraph<V3>()
         for (v in g1.V) {

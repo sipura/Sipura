@@ -90,7 +90,7 @@ internal class GraphIOTest {
                 GraphIO.importSimpleGraphFromFile(nonExistingFilePath) {
                     Pair(
                         1,
-                        2
+                        2,
                     )
                 }
             }
