@@ -136,11 +136,8 @@ object GraphProperty {
         if (!Connectivity.isConnected(g)) return -1
         var diameter = 0
         for (v in g.V) {
-            var dist = -1
-            for (l in Traversal.breadthFirstSearchLayerIterator(g, v)) {
-                dist++
-            }
-            diameter = max(diameter, dist)
+            val numEdges = Traversal.breadthFirstSearchLayerIterator(g, v).asSequence().drop(1).count()
+            diameter = max(diameter, numEdges)
         }
         return diameter
     }
