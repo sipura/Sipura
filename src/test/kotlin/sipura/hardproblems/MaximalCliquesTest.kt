@@ -28,6 +28,6 @@ internal class MaximalCliquesTest {
             setOf(4, 6),
         )
 
-        assertEquals(correctCliques, MaximalCliques.listMaximalCliques(g))
+        assertEquals(correctCliques, MaximalCliques.listMaximalCliques(g).toSet())
     }
 }
