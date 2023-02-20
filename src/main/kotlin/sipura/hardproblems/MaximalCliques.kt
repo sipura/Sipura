@@ -99,4 +99,22 @@ object MaximalCliques {
         }
         return results
     }
+
+    /**
+     * Calculates the largest clique in the given graph [g].
+     *
+     * A clique is defined as a subgraph c of [g] where every pair of vertices is connected via an edge.
+     *
+     * Uses a version of the Bron-Kerbosch algorithm that uses a pivot vertex in every recursive call and
+     * a degeneracy ordering of the vertices in [g] for the initial calls.
+     *
+     * This version of the algorithm has a running time bound of O(3^(d/3) * d * n) where d is the degeneracy of
+     * the graph.
+     *
+     * @return a set containing the vertices of the largest clique in [g].
+     * @see <a href=https://arxiv.org/abs/1006.5440>Listing All Maximal Cliques in Sparse Graphs in Near-optimal Time</a>
+     */
+    fun <V> maximumClique(g: SimpleGraph<V>): Set<V> {
+        return listMaximalCliques(g).maxByOrNull { it.size } ?: emptySet()
+    }
 }
