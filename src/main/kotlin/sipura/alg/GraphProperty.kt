@@ -219,4 +219,51 @@ object GraphProperty {
         }
         return Pair(degeneracy, ordering)
     }
+
+    /**
+     * Calculates the splittance of the given graph [g].
+     *
+     * The splittance of [g] is the smallest number of edge deletions or edge insertions that are required to
+     * transform [g] into a split graph.
+     *
+     * Runtime: O(n + m)
+     * @return the splittance of [g].
+     */
+    fun <V> minSplittance(g: SimpleGraph<V>): Int {
+        val maxDegree = g.maxDegree()
+        var degreeSumTotal = 0
+        val degreeOrdering = Array<LinkedList<V>>(maxDegree + 1) { LinkedList() }
+        for (v in g.V) {
+            degreeSumTotal += g.degreeOf(v)
+            degreeOrdering[g.degreeOf(v)].addLast(v)
+        }
+        var q = 1
+        var degreeSumLarge = 0
+        var curDegree = maxDegree
+        while (curDegree >= 0) {
+            for (v in degreeOrdering[curDegree]) {
+                if (curDegree >= q - 1) {
+                    degreeSumLarge += curDegree
+                    q++
+                } else {
+                    q--
+                    curDegree = -1
+                    break
+                }
+            }
+            curDegree--
+        }
+        // the splittance is now (q choose 2) - (sum of largest q degrees divided by 2) + (sum of smallest n - q degrees divided by 2)
+        return ((q * (q - 1)) - degreeSumLarge + (degreeSumTotal - degreeSumLarge)) / 2
+    }
+
+    /**
+     * Checks if the given graph [g] is a split graph.
+     *
+     * A split graph is a graph where the vertex set can be partitioned into a clique and an independent set.
+     *
+     * Runtime: O(n + m)
+     * @return True if [g] is a split graph, false otherwise.
+     */
+    fun <V> isSplitGraph(g: SimpleGraph<V>): Boolean = minSplittance(g) == 0
 }
