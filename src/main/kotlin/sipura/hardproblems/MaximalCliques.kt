@@ -8,113 +8,156 @@ import java.util.LinkedList
 object MaximalCliques {
 
     /**
-     * Recursive part of Bron-Kerbosch algorithm used in [listMaximalCliques].
-     *
-     * @param g the graph.
-     * @param k the current clique.
-     * @param c the set of candidates that may be added to [k] in the future.
-     * @param f the set of vertices that may not be added to [k] in the future.
-     */
-    private fun <V> bronKerboschPivot(
-        g: SimpleGraph<V>,
-        k: MutableSet<V>,
-        c: MutableSet<V>,
-        f: MutableSet<V>,
-        results: MutableList<Set<V>>,
-    ) {
-        // if c and f are empty then k is a maximal clique
-        if (c.isEmpty() && f.isEmpty()) {
-            results.add(k)
-            return
-        }
-        // if c is empty but f not then c is not maximal and we can return
-        if (c.isEmpty()) return
-        // find pivot vertex that has the largest number of neighbors in c
-        var pivot = c.first()
-        var size = -1
-        var curSize = 0
-        for (v in c) {
-            curSize = SetTheory.intersectionSize(c, g.neighbors(v))
-            if (curSize > size) {
-                size = curSize
-                pivot = v
-            }
-        }
-        for (v in f) {
-            curSize = SetTheory.intersectionSize(c, g.neighbors(v))
-            if (curSize > size) {
-                size = curSize
-                pivot = v
-            }
-        }
-        // now do recursive call for each candidate in c that is not a neighbor of pivot
-        val cIter = c.iterator()
-        while (cIter.hasNext()) {
-            val v = cIter.next()
-            if (v in g.neighbors(pivot)) continue
-            // create new sets for next call
-            val newK = k.toMutableSet()
-            newK.add(v)
-            val newC = SetTheory.intersection(c, g.neighbors(v))
-            val newF = SetTheory.intersection(f, g.neighbors(v))
-            bronKerboschPivot(g, newK, newC, newF, results)
-            // update candidate set and ignore set
-            cIter.remove()
-            f.add(v)
-        }
-    }
-
-    /**
-     * Enumerates the vertex set of every maximal clique in the given graph [g].
+     * Iterates over every maximal clique in the given graph [g].
      *
      * A maximal clique is defined as a subgraph c of [g] with the following two properties:
      * - c is a clique, i.e. every pair of vertices in c is connected via an edge.
      * - c is maximal, i.e. there is no vertex in [g] that is connected to every vertex in c.
      *
-     * Uses a version of the Bron-Kerbosch algorithm that uses a pivot vertex in every recursive call and
+     * Uses an iterative implementation of the Bron-Kerbosch algorithm that uses pivot vertices and
      * a degeneracy ordering of the vertices in [g] for the initial calls.
      *
-     * This version of the algorithm has a running time bound of O(3^(d/3) * d * n) where d is the degeneracy of
-     * the graph.
+     * This version of the algorithm has a running time bound of O(3^(d/3) * d * n) for iterating over all maximal
+     * cliques where d is the degeneracy of the graph.
      *
-     * @return a [LinkedList] containing the vertex sets of every maximal clique in [g].
+     * @return an [Iterator] that iterates over the vertex sets of every maximal clique in [g].
      * @see <a href=https://arxiv.org/abs/1006.5440>Listing All Maximal Cliques in Sparse Graphs in Near-optimal Time</a>
      */
-    fun <V> listMaximalCliques(g: SimpleGraph<V>): LinkedList<Set<V>> {
-        val results = LinkedList<Set<V>>()
-        if (g.n == 0) return results
-        // call bronKerboschPivot() once for each vertex with its neighbors that come later in the degeneracy ordering
-        // as the candidate set. This guarantees that c will not be bigger than the degeneracy.
-        val (_, ordering) = GraphProperty.degeneracyOrdering(g)
-        val lookedAt = HashSet<V>()
-        for (v in ordering) {
-            val k = HashSet<V>()
-            k.add(v)
-            val c = HashSet<V>()
-            g.neighbors(v).filterTo(c) { it !in lookedAt }
-            val f = HashSet<V>()
-            g.neighbors(v).filterTo(f) { it in lookedAt }
-            bronKerboschPivot(g, k, c, f, results)
-            lookedAt.add(v)
-        }
-        return results
-    }
+    fun <V> maximalCliqueIterator(g: SimpleGraph<V>): Iterator<MutableSet<V>> = object : Iterator<MutableSet<V>> {
 
-    /**
-     * Calculates the largest clique in the given graph [g].
-     *
-     * A clique is defined as a subgraph c of [g] where every pair of vertices is connected via an edge.
-     *
-     * Uses a version of the Bron-Kerbosch algorithm that uses a pivot vertex in every recursive call and
-     * a degeneracy ordering of the vertices in [g] for the initial calls.
-     *
-     * This version of the algorithm has a running time bound of O(3^(d/3) * d * n) where d is the degeneracy of
-     * the graph.
-     *
-     * @return a set containing the vertices of the largest clique in [g].
-     * @see <a href=https://arxiv.org/abs/1006.5440>Listing All Maximal Cliques in Sparse Graphs in Near-optimal Time</a>
-     */
-    fun <V> maximumClique(g: SimpleGraph<V>): Set<V> {
-        return listMaximalCliques(g).maxByOrNull { it.size } ?: emptySet()
+        var iterationDone = false // true only if the iteration over all maximal cliques is done
+        val degeneracyIter: Iterator<V> // iterator over a degeneracy ordering, used for initial calls in recursion tree
+        val lookedAt = HashSet<V>() // saves for which vertices the initial call has already been performed
+        val k = LinkedList<V>() // contains the vertices of the current clique in the recursion tree
+        val c: Array<MutableSet<V>> // contains the candidate sets for each level in the recursion tree
+        val f: Array<MutableSet<V>> // contains the set of vertices that are not allowed for each level in the recursion tree
+        val pivotNeighbors: Array<Set<V>> // contains the neighbors of the pivot vertex for each level in the recursion tree
+        val candidateIter: Array<MutableIterator<V>> // contains an iterator over the candidate set for each level in the recursion tree
+        var curDepth = -1 // saves the current level of the recursion tree, -1 is an initial call
+        var foundMaximal = false // true if the algorithm has found a new maximal clique
+
+        init {
+            // initialize all data structures and variables that are necessary for the iteration to work
+            if (g.n == 0) {
+                degeneracyIter = setOf<V>().iterator()
+                iterationDone = true
+                c = Array(0) { HashSet() }
+                f = Array(0) { HashSet() }
+                pivotNeighbors = Array(0) { HashSet() }
+                candidateIter = Array(0) { mutableSetOf<V>().iterator() }
+            } else {
+                val maxDegree = g.maxDegree()
+                c = Array(maxDegree + 1) { HashSet() }
+                f = Array(maxDegree + 1) { HashSet() }
+                pivotNeighbors = Array(maxDegree) { HashSet() }
+                candidateIter = Array(maxDegree) { mutableSetOf<V>().iterator() }
+                val (_, ordering) = GraphProperty.degeneracyOrdering(g)
+                degeneracyIter = ordering.iterator()
+                calcNextMaximalClique()
+            }
+        }
+
+        override fun hasNext(): Boolean = !iterationDone
+
+        override fun next(): MutableSet<V> {
+            if (!hasNext()) throw NoSuchElementException("The iteration is done.")
+            val copy = k.toMutableSet()
+            calcNextMaximalClique()
+            return copy
+        }
+
+        private fun calcNextMaximalClique() {
+            foundMaximal = false
+            while (!foundMaximal) {
+                if (curDepth == -1) {
+                    // curDepth == -1 means that we are doing an initial call in the recursive tree
+                    if (!degeneracyIter.hasNext()) {
+                        // in this case we are already done with all initial calls meaning we will not find any more
+                        // maximal cliques
+                        iterationDone = true
+                        return
+                    } else {
+                        // make sure that the vertex that was previously added is removed
+                        if (k.size == 1) k.pop()
+                        // create sets for next call
+                        val v = degeneracyIter.next()
+                        k.push(v)
+                        c[0].clear()
+                        g.neighbors(v).filterTo(c[0]) { it !in lookedAt }
+                        f[0].clear()
+                        g.neighbors(v).filterTo(f[0]) { it in lookedAt }
+                        lookedAt.add(v)
+                        curDepth = 0
+                        prepareCurDepth()
+                    }
+                } else {
+                    // walk through recursion tree until a maximal clique has been found or until we are back to an
+                    // initial call
+                    while (curDepth >= 0 && !foundMaximal) {
+                        if (!candidateIter[curDepth].hasNext()) {
+                            // make sure that the vertex that was previously added is removed
+                            if (k.size == curDepth + 2) k.pop()
+                            curDepth--
+                        } else {
+                            val v = candidateIter[curDepth].next()
+                            if (v in pivotNeighbors[curDepth]) continue
+                            // make sure that the vertex that was previously added is removed
+                            if (k.size == curDepth + 2) k.pop()
+                            // update sets for next call
+                            k.push(v)
+                            c[curDepth + 1] = SetTheory.intersection(c[curDepth], g.neighbors(v))
+                            f[curDepth + 1] = SetTheory.intersection(f[curDepth], g.neighbors(v))
+                            // update current candidate set and ignore set
+                            candidateIter[curDepth].remove()
+                            f[curDepth].add(v)
+                            curDepth++
+                            prepareCurDepth()
+                        }
+                    }
+                }
+            }
+        }
+
+        /**
+         * Does three things:
+         * - Checks if the current node in the in the recursion tree represents a maximal clique.
+         * - Checks if there are more candidates to add to the current clique.
+         * - If there are more candidates then the pivot vertex is selected.
+         *
+         * In all three cases the data structures and variables are updated accordingly.
+         */
+        private fun prepareCurDepth() {
+            // if c and f are empty then k is a maximal clique
+            if (c[curDepth].isEmpty() && f[curDepth].isEmpty()) {
+                foundMaximal = true
+                curDepth--
+                return
+            }
+            // if c is empty but f not then c is not maximal and we can return
+            if (c[curDepth].isEmpty()) {
+                curDepth--
+                return
+            }
+            // find pivot vertex that has the largest number of neighbors in c
+            var pivot = c[curDepth].first()
+            var size = -1
+            var curSize = 0
+            for (v in c[curDepth]) {
+                curSize = SetTheory.intersectionSize(c[curDepth], g.neighbors(v))
+                if (curSize > size) {
+                    size = curSize
+                    pivot = v
+                }
+            }
+            for (v in f[curDepth]) {
+                curSize = SetTheory.intersectionSize(c[curDepth], g.neighbors(v))
+                if (curSize > size) {
+                    size = curSize
+                    pivot = v
+                }
+            }
+            pivotNeighbors[curDepth] = g.neighbors(pivot)
+            candidateIter[curDepth] = c[curDepth].iterator()
+        }
     }
 }
