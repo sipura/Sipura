@@ -86,7 +86,7 @@ object Factory {
      * The vertices of the independent set are [1, ..., [sizeIS]] and the vertices of the clique
      * are [[sizeIS] + 1, ..., [sizeIS] + [sizeC]].
      *
-     * @throws IllegalArgumentException if either [sizeIS] or [sizeC] are not positive.
+     * @throws IllegalArgumentException if either [sizeIS] or [sizeC] are negative.
      * @return The created split graph.
      */
     fun createSplitGraph(sizeIS: Int, sizeC: Int): SimpleGraph<Int> {
