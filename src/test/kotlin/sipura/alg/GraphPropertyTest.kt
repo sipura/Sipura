@@ -10,6 +10,7 @@ import sipura.generate.Factory.createBipartiteGraph
 import sipura.generate.Factory.createCompleteGraph
 import sipura.generate.Factory.createCycleGraph
 import sipura.generate.Factory.createPathGraph
+import sipura.generate.Factory.createSplitGraph
 import sipura.generate.Factory.createStarGraph
 import sipura.generate.GraphRelations
 import sipura.graphs.SimpleGraph
@@ -467,6 +468,74 @@ internal class GraphPropertyTest {
         fun `degeneracyOrdering throws exception for empty graph`() {
             val g = SimpleGraph<Int>()
             assertThrows<NoSuchElementException> { GraphProperty.degeneracyOrdering(g) }
+        }
+    }
+
+    @Nested
+    internal inner class SplitGraphAndSplittance {
+
+        @Test
+        fun `empty graph has splittance 0 and is split graph`() {
+            val g = SimpleGraph<Int>()
+            assertEquals(0, GraphProperty.minSplittance(g))
+            assertTrue { GraphProperty.isSplitGraph(g) }
+        }
+
+        @Test
+        fun `graph with one vertex has splittance 0 and is split graph`() {
+            val g = SimpleGraph<Int>()
+            g.addVertex(1)
+            assertEquals(0, GraphProperty.minSplittance(g))
+            assertTrue { GraphProperty.isSplitGraph(g) }
+        }
+
+        @Test
+        fun `independent set has splittance 0 and is split graph`() {
+            val g = SimpleGraph<Int>()
+            g.addVertex(1)
+            g.addVertex(2)
+            g.addVertex(3)
+            g.addVertex(4)
+            g.addVertex(5)
+            g.addVertex(6)
+            assertEquals(0, GraphProperty.minSplittance(g))
+            assertTrue { GraphProperty.isSplitGraph(g) }
+        }
+
+        @Test
+        fun `complete graph has splittance 0 and is split graph`() {
+            val g = createCompleteGraph(10)
+            assertEquals(0, GraphProperty.minSplittance(g))
+            assertTrue { GraphProperty.isSplitGraph(g) }
+        }
+
+        @Test
+        fun `split graph has splittance 0 and is split graph`() {
+            var g = createSplitGraph(10, 15)
+            assertEquals(0, GraphProperty.minSplittance(g))
+            assertTrue { GraphProperty.isSplitGraph(g) }
+            g = createSplitGraph(23, 2)
+            assertEquals(0, GraphProperty.minSplittance(g))
+            assertTrue { GraphProperty.isSplitGraph(g) }
+            g = createSplitGraph(1, 5)
+            assertEquals(0, GraphProperty.minSplittance(g))
+            assertTrue { GraphProperty.isSplitGraph(g) }
+        }
+
+        @Test
+        fun `graph has correct non zero splittance 1`() {
+            val g = createSplitGraph(10, 10)
+            g.removeEdge(11, 14)
+            assertEquals(1, GraphProperty.minSplittance(g))
+        }
+
+        @Test
+        fun `graph has correct non zero splittance 2`() {
+            val g = createSplitGraph(10, 10)
+            g.removeEdge(11, 14)
+            g.removeEdge(12, 17)
+            g.addEdge(5, 6) // this edge does not have to be removed since 5 and 6 can now be part of the clique
+            assertEquals(2, GraphProperty.minSplittance(g))
         }
     }
 }

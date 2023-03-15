@@ -90,6 +90,7 @@ object Factory {
      * @return The created split graph.
      */
     fun createSplitGraph(sizeIS: Int, sizeC: Int): SimpleGraph<Int> {
+        if (sizeIS < 0 || sizeC < 0) throw IllegalArgumentException("Both sides must have non-negative size")
         val g = SimpleGraph<Int>()
         // add all vertices
         for (v in 1..(sizeIS + sizeC)) {

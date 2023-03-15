@@ -224,19 +224,23 @@ object GraphProperty {
      * Calculates the splittance of the given graph [g].
      *
      * The splittance of [g] is the smallest number of edge deletions or edge insertions that are required to
-     * transform [g] into a split graph.
+     * transform [g] into a split graph. That means the splittance of [g] is zero if and only if [g] is a split graph.
      *
      * Runtime: O(n + m)
      * @return the splittance of [g].
      */
     fun <V> minSplittance(g: SimpleGraph<V>): Int {
+        if (g.n == 0) return 0 // special case because maxDegree() throws exception for size 0
         val maxDegree = g.maxDegree()
         var degreeSumTotal = 0
+        // order vertices by degree in linear time
         val degreeOrdering = Array<LinkedList<V>>(maxDegree + 1) { LinkedList() }
         for (v in g.V) {
             degreeSumTotal += g.degreeOf(v)
             degreeOrdering[g.degreeOf(v)].addLast(v)
         }
+        // q is the largest number such that d_q >= q - 1 in the degree sequence d_1, ..., d_n
+        // with d_1 >= d_2 >= ... >= d_n
         var q = 1
         var degreeSumLarge = 0
         var curDegree = maxDegree
@@ -253,6 +257,9 @@ object GraphProperty {
             }
             curDegree--
         }
+        // if q > maxDegree every vertex is part of the clique meaning the else case is never entered
+        // because of that q is one bigger than it should be and needs to be decreased
+        if (q > maxDegree) q--
         // the splittance is now (q choose 2) - (sum of largest q degrees divided by 2) + (sum of smallest n - q degrees divided by 2)
         return ((q * (q - 1)) - degreeSumLarge + (degreeSumTotal - degreeSumLarge)) / 2
     }
