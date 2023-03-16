@@ -228,6 +228,7 @@ object GraphProperty {
      *
      * Runtime: O(n + m)
      * @return the splittance of [g].
+     * @see <a href="https://link.springer.com/article/10.1007/BF02579333">The splittance of a graph</a>
      */
     fun <V> minSplittance(g: SimpleGraph<V>): Int {
         if (g.n == 0) return 0 // special case because maxDegree() throws exception for size 0
