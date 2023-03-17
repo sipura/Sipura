@@ -127,4 +127,9 @@ object Traversal {
             }
         }
     }
+
+    fun <V> degreeSort(g: SimpleGraph<V>, ascending : Boolean = true): List<V> {
+        return if (ascending)  g.V.sortedBy { g.degreeOf(it) } else g.V.sortedByDescending { g.degreeOf(it) }
+    }
+
 }
