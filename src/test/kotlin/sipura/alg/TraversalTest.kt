@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import sipura.Samples
+import sipura.alg.Traversal.degreeSort
 import sipura.generate.Factory
 import kotlin.test.assertContains
 import kotlin.test.assertEquals
@@ -142,6 +143,23 @@ internal class TraversalTest {
             // which neighbor gets picked first is arbitrary, so we need to check both valid orders
             assertTrue { result == listOf(3, 2, 1, 4, 5) || result == listOf(3, 4, 5, 2, 1) }
             assertFalse { iter.hasNext() }
+        }
+    }
+
+    @Nested
+    internal inner class VerticesOrderedByDegree {
+
+        @Test
+        fun `vertices sorted by degree`() {
+            assertEquals(degreeSort(Samples.star4Plus1IsolatedVertex()).last(), 1)
+            assertEquals(degreeSort(Samples.star4Plus1IsolatedVertex(), ascending = false).first(), 1)
+        }
+
+        @Test
+        fun `path of length 3`() {
+            val path3 = Factory.createPathGraph(3)
+            assertEquals(degreeSort(path3).last(), 2)
+            assertEquals(degreeSort(path3, ascending = false).first(), 2)
         }
     }
 }
