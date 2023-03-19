@@ -3,7 +3,6 @@ package sipura.alg
 import sipura.graphs.SimpleGraph
 import sipura.utils.SetTheory.isDisjoint
 import java.util.LinkedList
-import kotlin.collections.HashSet
 
 object VertexSets {
 
@@ -150,6 +149,105 @@ object VertexSets {
                 i = nextNonEmpty[i]
             }
             return core
+        }
+    }
+
+    /**
+     * Iterates over every triangle in the given graph [g].
+     *
+     * A triangle is a set of three vertices that are all connected to each other.
+     *
+     * Uses a simple algorithm due to Chiba and Nishizeki that has a running time bound of O(m * d) for iterating
+     * over all triangles where d is the degeneracy of the graph.
+     *
+     * @return an [Iterator] that iterates over the vertex sets of every Triangle in [g]. The vertex sets are
+     * represented as a [Triple].
+     * @see <a href=https://doi.org/10.1137/0214017>Arboricity and Subgraph Listing Algorithms</a>
+     */
+    fun <V> triangleIterator(g: SimpleGraph<V>): Iterator<Triple<V, V, V>> = object : Iterator<Triple<V, V, V>> {
+
+        private val copy = g.copy()
+        private val degreeOrdering: Array<LinkedList<V>>
+        private var curDegree = 0
+        private var iterationDone = false
+        private var nextTriangle = Triple(g.V.first(), g.V.first(), g.V.first())
+        private val marked = HashSet<V>()
+        private var curV: V? = null
+        private var curU: V? = null
+        private var outerIterator = setOf<V>().iterator()
+        private var innerIterator = setOf<V>().iterator()
+
+        init {
+            // sort vertices by degree in linear time
+            val maxDegree = copy.maxDegree()
+            degreeOrdering = Array(maxDegree + 1) { LinkedList() }
+            for (v in copy.V) {
+                degreeOrdering[copy.degreeOf(v)].addFirst(v)
+            }
+            calcNextTriangle()
+        }
+
+        override fun hasNext(): Boolean = !iterationDone
+
+        override fun next(): Triple<V, V, V> {
+            if (!hasNext()) throw NoSuchElementException("The iteration is done.")
+            val curTriangle = nextTriangle
+            calcNextTriangle()
+            return curTriangle
+        }
+
+        private fun calcNextTriangle() {
+            var triangleFound = false
+            // either find the next triangle or finish the iteration
+            while (!triangleFound && !iterationDone) {
+                prepareIterators()
+                if (iterationDone) continue
+                // at this point innerIterator must have a next element
+                val w = innerIterator.next()
+                if (w in marked) {
+                    nextTriangle = Triple(curV!!, curU!!, w)
+                    triangleFound = true
+                }
+            }
+        }
+
+        /**
+         * After this function has been called either the innerIterator has a next element or iterationDone is true.
+         */
+        private fun prepareIterators() {
+            // check if outerIterator has next element
+            while (outerIterator.hasNext() && !innerIterator.hasNext()) {
+                if (curU != null) marked.remove(curU!!)
+                curU = outerIterator.next()
+                innerIterator = copy.neighbors(curU!!).iterator()
+            }
+            // check if inner iterator has next element
+            if (innerIterator.hasNext()) return
+            // a new v needs to be selected
+            if (curV != null) copy.removeVertex(curV!!)
+            if (curU != null) {
+                marked.remove(curU!!)
+                curU = null
+            }
+            while (copy.n > 2) {
+                // find next vertex in degreeOrdering
+                while (degreeOrdering[curDegree].isEmpty()) {
+                    curDegree++
+                }
+                curV = degreeOrdering[curDegree].removeFirst()
+                // mark all neighbors of v
+                marked.addAll(copy.neighbors(curV!!))
+                // make sure v has neighbors and that one of those neighbors also has neighbors
+                outerIterator = copy.neighbors(curV!!).iterator()
+                while (outerIterator.hasNext()) {
+                    if (curU != null) marked.remove(curU!!)
+                    curU = outerIterator.next()
+                    innerIterator = copy.neighbors(curU!!).iterator()
+                    if (innerIterator.hasNext()) return
+                }
+                copy.removeVertex(curV!!)
+            }
+            iterationDone = true
         }
     }
 }

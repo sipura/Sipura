@@ -15,6 +15,7 @@ import sipura.generate.Factory.createCompleteGraph
 import sipura.generate.Factory.createCycleGraph
 import sipura.generate.Factory.createPathGraph
 import sipura.generate.Factory.createStarGraph
+import sipura.graphs.SimpleGraph
 import kotlin.test.assertEquals
 
 internal class VertexSetsTest {
@@ -184,6 +185,85 @@ internal class VertexSetsTest {
         fun `clique 5 k 5`() {
             val g = createCompleteGraph(5)
             assertThrows<IllegalArgumentException> { VertexSets.KCoreDecomposition(g).kCore(5) }
+        }
+    }
+
+    @Nested
+    internal inner class TriangleEnumeration {
+
+        @Test
+        fun `a tree does not have any triangles`() {
+            val g = createStarGraph(10)
+            assertFalse { VertexSets.triangleIterator(g).hasNext() }
+        }
+
+        @Test
+        fun `a complete graph has every possible triangle`() {
+            val g = createCompleteGraph(10)
+            val triangleSet = HashSet<Set<Int>>()
+            for (v1 in 1..8) {
+                for (v2 in (v1 + 1)..9) {
+                    for (v3 in (v2 + 1)..10) {
+                        triangleSet.add(setOf(v1, v2, v3))
+                    }
+                }
+            }
+            val result =
+                VertexSets.triangleIterator(g).asSequence().map { setOf(it.first, it.second, it.third) }.toSet()
+            assertEquals(triangleSet, result)
+        }
+
+        @Test
+        fun `triangles of custom graph 1`() {
+            val g = SimpleGraph<Int>()
+            for (v in 1..10) g.addVertex(v)
+            g.addEdge(1, 2)
+            g.addEdge(1, 3)
+            g.addEdge(2, 3)
+            g.addEdge(1, 5)
+            g.addEdge(1, 6)
+            g.addEdge(5, 6)
+            g.addEdge(2, 5)
+            g.addEdge(7, 8)
+            g.addEdge(8, 9)
+            g.addEdge(9, 10)
+            g.addEdge(10, 7)
+            val triangleSet = setOf(
+                setOf(1, 2, 3),
+                setOf(1, 5, 6),
+                setOf(1, 2, 5),
+            )
+            val result =
+                VertexSets.triangleIterator(g).asSequence().map { setOf(it.first, it.second, it.third) }.toSet()
+            assertEquals(triangleSet, result)
+        }
+
+        @Test
+        fun `triangles of custom graph 2`() {
+            val g = SimpleGraph<Int>()
+            for (v in 1..7) g.addVertex(v)
+            g.addEdge(1, 2)
+            g.addEdge(1, 3)
+            g.addEdge(1, 4)
+            g.addEdge(2, 3)
+            g.addEdge(2, 4)
+            g.addEdge(3, 4)
+            g.addEdge(5, 6)
+            g.addEdge(5, 7)
+            g.addEdge(6, 7)
+            g.addEdge(1, 5)
+            g.addEdge(3, 6)
+            g.addEdge(4, 7)
+            val triangleSet = setOf(
+                setOf(1, 2, 3),
+                setOf(1, 2, 4),
+                setOf(1, 3, 4),
+                setOf(2, 3, 4),
+                setOf(5, 6, 7),
+            )
+            val result =
+                VertexSets.triangleIterator(g).asSequence().map { setOf(it.first, it.second, it.third) }.toSet()
+            assertEquals(triangleSet, result)
         }
     }
 }
