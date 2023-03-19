@@ -78,4 +78,36 @@ object Factory {
             }
         }
     }
+
+    /**
+     * Creates a split graph with an independent set of size [sizeIS] and a clique of size [sizeC]. Also adds all
+     * possible edges between the independent set and the clique.
+     *
+     * The vertices of the independent set are [1, ..., [sizeIS]] and the vertices of the clique
+     * are [[sizeIS] + 1, ..., [sizeIS] + [sizeC]].
+     *
+     * @throws IllegalArgumentException if either [sizeIS] or [sizeC] are negative.
+     * @return The created split graph.
+     */
+    fun createSplitGraph(sizeIS: Int, sizeC: Int): SimpleGraph<Int> {
+        if (sizeIS < 0 || sizeC < 0) throw IllegalArgumentException("Both sides must have non-negative size")
+        val g = SimpleGraph<Int>()
+        // add all vertices
+        for (v in 1..(sizeIS + sizeC)) {
+            g.addVertex(v)
+        }
+        // add edges of clique
+        for (v1 in (sizeIS + 1) until sizeIS + sizeC) {
+            for (v2 in (v1 + 1)..(sizeIS + sizeC)) {
+                g.addEdge(v1, v2)
+            }
+        }
+        // add all edges between IS and Clique
+        for (v1 in 1..sizeIS) {
+            for (v2 in (sizeIS + 1)..(sizeIS + sizeC)) {
+                g.addEdge(v1, v2)
+            }
+        }
+        return g
+    }
 }

@@ -5,6 +5,8 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import sipura.utils.getFieldValue
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
+import kotlin.test.assertTrue
 
 internal class FactoryTest {
 
@@ -189,6 +191,55 @@ internal class FactoryTest {
             val g = Factory.createStarGraph(1)
             val correctMap = mapOf(1 to setOf<Int>())
             assertEquals(correctMap, getFieldValue(mapName, g, g.javaClass))
+        }
+    }
+
+    @Nested
+    internal inner class SplitGraph {
+
+        @Test
+        fun `can't create split graph with negative size`() {
+            assertThrows<IllegalArgumentException> { Factory.createSplitGraph(-1, 10) }
+            assertThrows<IllegalArgumentException> { Factory.createSplitGraph(23, -123) }
+            assertThrows<IllegalArgumentException> { Factory.createSplitGraph(-29, -5) }
+        }
+
+        @Test
+        fun `create split graph with empty independent set`() {
+            val g = Factory.createSplitGraph(0, 5)
+            assertEquals(5, g.n)
+            assertEquals(10, g.m)
+        }
+
+        @Test
+        fun `create split graph with empty clique`() {
+            val g = Factory.createSplitGraph(10, 0)
+            assertEquals(10, g.n)
+            assertEquals(0, g.m)
+        }
+
+        @Test
+        fun `create split graph with both sides not empty`() {
+            val g = Factory.createSplitGraph(5, 4)
+            assertEquals(9, g.n)
+            // check edges of independent set
+            for (v1 in 1..4) {
+                for (v2 in (v1 + 1)..5) {
+                    assertFalse { g.hasEdge(v1, v2) }
+                }
+            }
+            // check edges of clique
+            for (v1 in 6..8) {
+                for (v2 in (v1 + 1)..9) {
+                    assertTrue { g.hasEdge(v1, v2) }
+                }
+            }
+            // check edges between IS and Clique
+            for (v1 in 1..5) {
+                for (v2 in 6..9) {
+                    assertTrue { g.hasEdge(v1, v2) }
+                }
+            }
         }
     }
 }
