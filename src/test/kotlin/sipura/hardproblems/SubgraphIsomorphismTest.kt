@@ -36,6 +36,8 @@ class SubgraphIsomorphismTest {
 
         val res = SubgraphIsomorphism.getAllSubgraphIsomorphism(pattern, data, l1, l2)
         assertEquals(res.size, 2)
+        val it = SubgraphIsomorphism.subgraphIsomorphismIterator(pattern, data, l1, l2).asSequence()
+        assertEquals(res.size, it.count())
     }
 
     @Test
@@ -70,6 +72,8 @@ class SubgraphIsomorphismTest {
 
         val res = SubgraphIsomorphism.getAllSubgraphIsomorphism(pattern, data, l1, l2)
         assertEquals(res.size, 4)
+        val it = SubgraphIsomorphism.subgraphIsomorphismIterator(pattern, data, l1, l2).asSequence()
+        assertEquals(res.size, it.count())
     }
 
     @Test
@@ -117,5 +121,7 @@ class SubgraphIsomorphismTest {
 
         val res = SubgraphIsomorphism.getAllSubgraphIsomorphism(g1, g2, l1, l2)
         assertEquals(res.size, 1)
+        val it = SubgraphIsomorphism.subgraphIsomorphismIterator(g1, g2, l1, l2).asSequence()
+        assertEquals(res.size, it.count())
     }
 }

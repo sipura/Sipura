@@ -52,29 +52,57 @@ object SubgraphIsomorphism {
         data: SimpleGraph<W>,
         labelsPattern: HashMap<V, Int>,
         labelsData: HashMap<W, Int>,
-    ) {
-        private val state = AlgoState(pattern, data, labelsPattern, labelsData)
+    ) : Iterator<Map<V, W>> {
+        private val state: AlgoState<V, W>
+        private var currentResults = 0
+        private var returnedResults = 0
+        private var reachedEnd = false
+
+        init {
+            state = AlgoState(pattern, data, labelsPattern, labelsData)
+        }
+
+        override fun hasNext(): Boolean {
+            if (reachedEnd) return false
+            if (currentResults > returnedResults) return true
+
+            val res = findNextIsomorphism()
+            if (res != null) {
+                currentResults++
+                return true
+            } else {
+                reachedEnd = true
+                return false
+            }
+        }
+
+        override fun next(): Map<V, W> {
+            if (reachedEnd) throw NoSuchElementException("The iteration is done.")
+            if (currentResults > returnedResults) {
+                returnedResults++
+                return state.solutions[state.solutions.size - 1]
+            }
+            val res = findNextIsomorphism()
+            if (res != null) {
+                currentResults++
+                returnedResults++
+                return res
+            } else {
+                reachedEnd = true
+                throw NoSuchElementException("The iteration is done.")
+            }
+        }
 
         /**
          * @return the next subgraph isomorphism or null if there are no more isomorphisms
          */
-        fun findNextIsomorphism(): HashMap<V, W>? {
+        private fun findNextIsomorphism(): HashMap<V, W>? {
             var res: HashMap<V, W>?
             do {
                 if (state.currentLevel == -1) return null
                 res = makeBranchStep()
             } while (res == null)
             return res
-        }
-
-        /**
-         * @return all subgraph isomorphisms in a [List]
-         */
-        fun findAllIsomorphisms(): ArrayList<HashMap<V, W>> {
-            while (true) {
-                findNextIsomorphism() ?: break
-            }
-            return state.solutions
         }
 
         private fun makeBranchStep(): HashMap<V, W>? {
